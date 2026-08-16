@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+
+description: Runtime BLE transmit-power control
+compatible: "zmk,behavior-rf-power"
+include: zero_param.yaml
+
+properties:
+  command:
+    type: int
+    required: true
+    description: 0=down, 1=zero, 2=up, 3=max

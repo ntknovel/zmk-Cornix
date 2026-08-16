@@ -1,0 +1,32 @@
+manifest:
+  version: "1.2"
+
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+    - name: hitsmaxft
+      url-base: https://github.com/hitsmaxft
+
+  projects:
+    # Pinned ZMK main revision used with the current Zephyr 4.1 Cornix module.
+    - name: zmk
+      remote: zmkfirmware
+      revision: 6e2ef41e022d555b10f116e395832913f71717b3
+      clone-depth: 1
+      import:
+        file: app/west.yml
+
+    # Complete Jezail Funder Cornix hardware module.
+    - name: zmk-keyboard-cornix
+      remote: hitsmaxft
+      revision: ee80f2475b4310e761f5f271371e41172db8b5ca
+      clone-depth: 1
+
+    # Production Cornix battery/Bluetooth indicator and WS2812 power manager.
+    - name: zmk-rgbled-widget
+      remote: hitsmaxft
+      revision: 7cf90cd829a2f15772f47f70d04780118510e20b
+      clone-depth: 1
+
+  self:
+    path: config

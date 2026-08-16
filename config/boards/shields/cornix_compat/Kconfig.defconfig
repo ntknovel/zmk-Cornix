@@ -1,0 +1,10 @@
+# Copyright (c) 2026
+# SPDX-License-Identifier: MIT
+
+# Compatibility shim for the out-of-tree Cornix HWMv2 ZMK variants.
+# Current Cornix board definitions declare //zmk variants but do not yet
+# select the hidden ZMK_BOARD_COMPAT symbol required by current ZMK CI.
+config ZMK_CORNIX_BOARD_COMPAT_SHIM
+    bool
+    default y if BOARD_CORNIX_LEFT_NRF52840_ZMK || BOARD_CORNIX_RIGHT_NRF52840_ZMK || BOARD_CORNIX_PH_LEFT_NRF52840_ZMK
+    select ZMK_BOARD_COMPAT

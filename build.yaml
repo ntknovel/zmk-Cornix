@@ -1,0 +1,18 @@
+---
+include:
+  # Dongle-free Cornix: left half is the central and connects directly to the host.
+  # The production Cornix indicator owns battery/Bluetooth status; the local shield adds STENO feedback.
+  - board: cornix_left//zmk
+    shield: cornix_indicator cornix_steno_led
+    artifact-name: cornix_left_maxrange_steno_indicator
+
+  # Right half is the split peripheral; STENO held-count state is dispatched globally.
+  - board: cornix_right//zmk
+    shield: cornix_indicator cornix_steno_led
+    artifact-name: cornix_right_maxrange_steno_indicator
+
+  # Reset image intentionally does not enable the indicator hardware.
+  - board: cornix_right//zmk
+    shield: settings_reset
+    snippet: studio-rpc-usb-uart nrf52840-nosd
+    artifact-name: cornix_settings_reset

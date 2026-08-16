@@ -1,0 +1,106 @@
+/* Logical STENO behavior nodes; physical placement stays in cornix.keymap. */
+/* SPDX-License-Identifier: MIT */
+
+/ {
+    behaviors {
+        st_i_kh: st_i_kh { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_KH>; display-name = "ST I-KH"; };
+        st_i_b: st_i_b { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_B>; display-name = "ST I-B"; };
+        st_i_j: st_i_j { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_J>; display-name = "ST I-J"; };
+        st_i_h: st_i_h { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_H>; display-name = "ST I-H"; };
+        st_i_n: st_i_n { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_N>; display-name = "ST I-N"; };
+        st_i_d: st_i_d { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_D>; display-name = "ST I-D"; };
+        st_i_s: st_i_s { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_S>; display-name = "ST I-S"; };
+        st_i_g: st_i_g { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_G>; display-name = "ST I-G"; };
+        st_i_double: st_i_double { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_DOUBLE>; display-name = "ST Double-I"; };
+        st_i_ng: st_i_ng { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_NG>; display-name = "ST I-NG"; };
+        st_i_p: st_i_p { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_P>; display-name = "ST I-P"; };
+        st_i_ch: st_i_ch { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_CH>; display-name = "ST I-CH"; };
+        st_i_t: st_i_t { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_T>; display-name = "ST I-T"; };
+        st_i_m: st_i_m { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_M>; display-name = "ST I-M"; };
+        st_i_r: st_i_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_I_R>; display-name = "ST I-R"; };
+
+        st_f_ng: st_f_ng { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_NG>; display-name = "ST F-NG"; };
+        st_f_d: st_f_d { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_D>; display-name = "ST F-D"; };
+        st_f_b: st_f_b { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_B>; display-name = "ST F-B"; };
+        st_f_m: st_f_m { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_M>; display-name = "ST F-M"; };
+        st_f_t: st_f_t { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_T>; display-name = "ST F-T"; };
+        st_f_r: st_f_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_R>; display-name = "ST F-R"; };
+        st_f_double: st_f_double { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_DOUBLE>; display-name = "ST Double-F"; };
+        st_f_g: st_f_g { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_G>; display-name = "ST F-G"; };
+        st_f_s: st_f_s { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_S>; display-name = "ST F-S"; };
+        st_f_p: st_f_p { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_P>; display-name = "ST F-P"; };
+        st_f_n: st_f_n { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_N>; display-name = "ST F-N"; };
+        st_f_kh: st_f_kh { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_KH>; display-name = "ST F-KH"; };
+        st_f_h: st_f_h { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_H>; display-name = "ST F-H"; };
+        st_f_j: st_f_j { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_J>; display-name = "ST F-J"; };
+        st_f_ch: st_f_ch { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_F_CH>; display-name = "ST F-CH"; };
+
+        st_v_o: st_v_o { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_O>; display-name = "ST V-O"; };
+        st_v_eu: st_v_eu { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_EU>; display-name = "ST V-EU"; };
+        st_v_i: st_v_i { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_I>; display-name = "ST V-I"; };
+        st_v_eo: st_v_eo { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_EO>; display-name = "ST V-EO"; };
+        st_vext_l: st_vext_l { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_VEXT_L>; display-name = "ST VEXT-L"; };
+        st_vext_r: st_vext_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_VEXT_R>; display-name = "ST VEXT-R"; };
+        st_abbr_l: st_abbr_l { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_ABBR_L>; display-name = "ST ABBR-L"; };
+        st_abbr_r: st_abbr_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_ABBR_R>; display-name = "ST ABBR-R"; };
+        st_symbol_l: st_symbol_l { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_SYMBOL_L>; display-name = "ST SYMBOL-L"; };
+        st_symbol_r: st_symbol_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_SYMBOL_R>; display-name = "ST SYMBOL-R"; };
+
+        st_vu_enter: st_vu_enter {
+            compatible = "zmk,behavior-cornix-steno-dual";
+            #binding-cells = <0>;
+            policy = <CST_DUAL_VOWEL>;
+            role = <CST_R_V_U>;
+            tap-key = <ENTER>;
+            display-name = "ST V-U / Enter";
+        };
+        st_va_space: st_va_space {
+            compatible = "zmk,behavior-cornix-steno-dual";
+            #binding-cells = <0>;
+            policy = <CST_DUAL_VOWEL>;
+            role = <CST_R_V_A>;
+            tap-key = <SPACE>;
+            display-name = "ST V-A / Space";
+        };
+
+        st_tab_once: st_tab_once {
+            compatible = "zmk,behavior-cornix-steno-tab";
+            #binding-cells = <0>;
+            display-name = "ST One-shot Tab";
+        };
+        st_mode: st_mode {
+            compatible = "zmk,behavior-cornix-steno-mode";
+            #binding-cells = <0>;
+            layer = <STENO>;
+            display-name = "BASE / STENO";
+        };
+        st_lang: st_lang {
+            compatible = "zmk,behavior-cornix-steno-pulse";
+            #binding-cells = <0>;
+            keycode = <RALT>;
+            cancel-stroke;
+            display-name = "ST RAlt";
+        };
+        st_arrow: st_arrow {
+            compatible = "zmk,behavior-cornix-steno-arrow";
+            #binding-cells = <1>;
+            display-name = "ST Arrow";
+        };
+        st_led: st_led {
+            compatible = "zmk,behavior-cornix-steno-led";
+            #binding-cells = <1>;
+            display-name = "STENO LED State";
+        };
+        st_led_toggle: st_led_toggle {
+            compatible = "zmk,behavior-cornix-steno-led-toggle";
+            #binding-cells = <0>;
+            display-name = "STENO LED On/Off";
+        };
+        st_enc: st_enc {
+            compatible = "zmk,behavior-sensor-rotate-var";
+            #sensor-binding-cells = <2>;
+            bindings = <&st_arrow>, <&st_arrow>;
+            tap-ms = <5>;
+        };
+    };
+};

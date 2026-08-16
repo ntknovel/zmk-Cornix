@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+
+config SHIELD_CORNIX_STENO_LED
+    def_bool $(shields_list_contains,cornix_steno_led)

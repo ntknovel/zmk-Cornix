@@ -1,0 +1,24 @@
+name: Build Cornix ZMK Max Range + STENO
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "boards/**"
+      - "config/**"
+      - "dts/**"
+      - "include/**"
+      - "src/**"
+      - "tools/**"
+      - "zephyr/**"
+      - "CMakeLists.txt"
+      - "Kconfig"
+      - "build.yaml"
+      - ".github/workflows/build.yml"
+    tags-ignore:
+      - "*"
+
+jobs:
+  build:
+    # Keep the reusable workflow on the same pinned ZMK commit as config/west.yml.
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@6e2ef41e022d555b10f116e395832913f71717b3

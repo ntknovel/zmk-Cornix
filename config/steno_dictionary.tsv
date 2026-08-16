@@ -1,0 +1,64 @@
+# output	bank	logical roles (physical positions are intentionally absent)
+# Final mirrored Cornix/KLOR layout: 61 exact-mask entries, validated by logical role and finger group.
+그런	1	I_G+F_R
+다른	1	F_D+I_R
+같은	1	I_G+F_NG
+다시	1	F_D+I_S
+조금	1	I_J+F_G
+그렇게	2	I_G+F_R+F_G
+이런	1	I_NG+F_R
+그리고	1	I_G+F_R+F_G
+하지만	1	I_H+I_J+F_M
+이렇게	1	I_NG+F_R+F_G
+함께	2	I_H+F_G
+없이	1	I_NG+F_NG
+커다란	1	I_KH+F_D+I_R
+이미	1	I_NG+F_M
+전부	1	I_J+F_B
+너무	1	I_N+F_M
+말했다	1	I_M+F_H+F_D
+그러자	1	I_G+F_R+F_J
+완전히	1	F_NG+I_J+I_H
+그대로	1	I_G+I_D+F_R
+아닌	1	I_NG+F_N
+바로	1	I_B+F_R
+점점	1	I_J+F_J
+그래도	1	I_G+I_R+F_D
+계속해서	1	F_G+I_S+I_H+F_S
+빠르게	1	I_DOUBLE+I_B+F_R+F_G
+천천히	1	I_CH+F_H
+가만히	1	I_G+F_M+I_H
+결국	1	I_G+F_G
+곧바로	1	I_G+F_B+F_R
+그때	2	I_G+F_D
+잠시	1	I_J+F_S
+그럼	2	I_G+F_R
+정말로	1	I_J+F_M+F_R
+때문에	2	I_D+I_M+F_NG
+조용히	2	F_NG+I_J+I_H
+그러면	1	I_G+F_R+F_M
+동시에	1	I_D+I_S+F_NG
+오히려	1	I_NG+F_H+F_R
+갑자기	1	I_G+F_J
+서서히	1	I_S+F_S+I_H
+그럼에도	1	F_G+F_R+I_NG+I_D
+아니면	1	I_NG+F_N+F_M
+순식간에	1	I_S+F_S+F_G+I_NG
+그러니까	2	I_G+F_R+I_N+F_G
+그렇다면	1	I_G+I_R+F_D+F_M
+그런데	2	I_G+I_R+F_D
+말 없이	1	I_M+F_NG
+잠시 후	1	I_J+F_S+I_H
+그러나	1	I_G+F_R+I_N
+그렇군	1	I_G+I_R+F_G
+바라봤다	1	I_B+I_R+F_B+F_D
+한숨을 쉬었다	1	I_H+I_S+F_NG+F_S+I_D
+자신도 모르게	1	I_J+I_S+I_D+F_M+F_R+F_G
+고개를 끄덕였다	1	I_G+F_G+I_DOUBLE+F_D
+눈을 크게 떴다	2	I_N+I_KH+F_G+F_D
+침을 꿀꺽 삼켰다	1	F_CH+I_DOUBLE+I_KH+I_D
+# 최근 대화에서 요청한 공용 표현/어미의 초기 논리 매핑
+근데	1	I_G+F_D
+였다	1	I_NG+F_D
+했다	1	I_H+F_D
+으면	2	I_NG+F_M

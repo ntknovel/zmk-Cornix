@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+description: Globally mirrored Cornix STENO RGB status state
+compatible: "zmk,behavior-cornix-steno-led"
+include: one_param.yaml

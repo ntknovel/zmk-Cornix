@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+description: One logical Cornix Korean STENO role
+compatible: "zmk,behavior-cornix-steno-role"
+include: zero_param.yaml
+properties:
+  role:
+    type: int
+    required: true
+    description: Logical role ID from dt-bindings/zmk/cornix_steno.h

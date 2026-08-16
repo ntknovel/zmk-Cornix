@@ -1,0 +1,93 @@
+# SPDX-License-Identifier: MIT
+
+config ZMK_BEHAVIOR_RF_POWER
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_RF_POWER_ENABLED
+
+menuconfig CORNIX_STENO
+    bool "Cornix Korean STENO engine"
+    default y
+    help
+      Enable the Cornix BASE/STENO mode switch, Korean chord decoder,
+      context-sensitive STENO keys, and exact-mask abbreviation dictionary.
+
+if CORNIX_STENO
+
+config CORNIX_STENO_MAX_POSITIONS
+    int "Maximum physical positions tracked by the STENO engine"
+    range 50 64
+    default 50
+
+config CORNIX_STENO_CHORD_SETTLE_MS
+    int "Initial STENO chord settle window (ms)"
+    range 0 100
+    default 40
+
+config CORNIX_STENO_KEYUP_CORRECTION_MS
+    int "Late-key release correction window (ms)"
+    range 0 150
+    default 50
+
+config CORNIX_STENO_LATE_TAP_MAX_MS
+    int "Maximum held time for a removable late key (ms)"
+    range 20 300
+    default 120
+
+
+config CORNIX_STENO_DUAL_TAPPING_TERM_MS
+    int "STENO context-key tapping term (ms)"
+    range 80 500
+    default 200
+
+config CORNIX_STENO_OUTPUT_QUEUE_SIZE
+    int "STENO HID output queue length"
+    range 64 512
+    default 256
+
+config CORNIX_STENO_OUTPUT_HOLD_MS
+    int "STENO HID key hold time (ms)"
+    range 1 20
+    default 4
+
+config CORNIX_STENO_OUTPUT_GAP_MS
+    int "STENO HID inter-key gap (ms)"
+    range 1 30
+    default 4
+
+config CORNIX_STENO_DICTIONARY
+    bool "Enable the generated exact-mask abbreviation dictionary"
+    default y
+
+config CORNIX_STENO_LED
+    bool "Enable Cornix STENO input-count indicators"
+    default n
+    depends on RGBLED_WIDGET_WS2812
+    help
+      Keep the production Cornix battery/Bluetooth indicators in BASE and
+      temporarily take over the same two WS2812 LEDs on each half in STENO.
+      Entering STENO flashes all four physical indicators, then clears them.
+      Recognized held STENO keys light the four indicators one by one.
+
+if CORNIX_STENO_LED
+
+config CORNIX_STENO_LED_ENTRY_FLASH_MS
+    int "STENO mode-entry all-on duration (ms)"
+    range 100 3000
+    default 600
+    help
+      Duration of the all-indicators-on confirmation immediately after
+      switching from BASE to STENO.
+
+config CORNIX_STENO_LED_REASSERT_DELAY_MS
+    int "STENO overlay reassert delay after status events (ms)"
+    range 1 250
+    default 40
+    help
+      Delay before re-applying STENO input feedback after the normal Cornix
+      battery/Bluetooth widget reacts to the same system event.
+
+endif
+
+
+endif

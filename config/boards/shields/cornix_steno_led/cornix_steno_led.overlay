@@ -1,0 +1,6 @@
+/* SPDX-License-Identifier: MIT */
+/*
+ * Intentionally empty: the official cornix_indicator shield enables the
+ * side-specific WS2812 chain, its power manager, and the status LED alias.
+ * This companion shield adds only firmware behavior.
+ */

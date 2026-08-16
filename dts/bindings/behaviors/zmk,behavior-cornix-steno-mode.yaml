@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+description: Key-up BASE and STENO mode toggle
+compatible: "zmk,behavior-cornix-steno-mode"
+include: zero_param.yaml
+properties:
+  layer:
+    type: int
+    required: true

@@ -1,0 +1,51 @@
+/* SPDX-License-Identifier: MIT */
+#pragma once
+
+#define CST_R_NONE 0
+#define CST_R_I_KH 1
+#define CST_R_I_B 2
+#define CST_R_I_J 3
+#define CST_R_I_H 4
+#define CST_R_I_N 5
+#define CST_R_I_D 6
+#define CST_R_I_S 7
+#define CST_R_I_G 8
+#define CST_R_I_DOUBLE 9
+#define CST_R_I_NG 10
+#define CST_R_I_P 11
+#define CST_R_I_CH 12
+#define CST_R_I_T 13
+#define CST_R_I_M 14
+#define CST_R_I_R 15
+#define CST_R_F_NG 16
+#define CST_R_F_D 17
+#define CST_R_F_B 18
+#define CST_R_F_M 19
+#define CST_R_F_T 20
+#define CST_R_F_R 21
+#define CST_R_F_DOUBLE 22
+#define CST_R_F_G 23
+#define CST_R_F_S 24
+#define CST_R_F_P 25
+#define CST_R_F_N 26
+#define CST_R_F_KH 27
+#define CST_R_F_H 28
+#define CST_R_F_J 29
+#define CST_R_F_CH 30
+#define CST_R_V_O 31
+#define CST_R_V_EU 32
+#define CST_R_V_U 33
+#define CST_R_V_A 34
+#define CST_R_V_I 35
+#define CST_R_V_EO 36
+#define CST_R_VEXT_L 37
+#define CST_R_VEXT_R 38
+#define CST_R_ABBR_L 39
+#define CST_R_ABBR_R 40
+#define CST_R_SYMBOL_L 41
+#define CST_R_SYMBOL_R 42
+#define CST_R_EDIT 43
+
+#define CST_DUAL_VOWEL 0
+#define CST_DUAL_EDIT 1
+#define CST_DUAL_MOD_TAP 2
