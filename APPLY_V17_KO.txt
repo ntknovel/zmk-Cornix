@@ -1,0 +1,14 @@
+Cornix STENO v1.7.0 canonical dictionary 적용
+=============================================
+
+기존 저장소 루트에서 UPLOAD ZIP을 덮어쓴 뒤:
+
+  python3 tools/validate_package.py .
+  bash validation/run_host_tests.sh
+
+  git add -A
+  git commit -m "Update Cornix STENO to v1.7.0 canonical dictionary"
+  git push
+
+GitHub Actions에서 left/right/settings_reset 빌드가 모두 성공한 뒤 좌우 UF2를 구분해
+플래시합니다. settings_reset은 페어링 초기화가 필요할 때만 사용합니다.

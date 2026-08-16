@@ -89,26 +89,19 @@ static void process_stroke(uint64_t position_mask, uint64_t role_mask, int64_t t
     }
 
 #if IS_ENABLED(CONFIG_CORNIX_STENO_DICTIONARY)
-    const bool has_base_vowel = (role_mask & CST_BASE_VOWEL_MASK) != 0;
-    const bool has_abbr_marker = (role_mask & CST_ABBR_MASK) != 0;
-    const bool has_vext_marker = (role_mask & CST_VEXT_MASK) != 0;
-    const bool has_symbol_marker = (role_mask & CST_SYMBOL_MASK) != 0;
-    uint8_t bank = CST_DICT_NONE;
-    if (!has_base_vowel && !has_symbol_marker && has_abbr_marker && !has_vext_marker)
-        bank = CST_DICT_ABBR;
-    else if (!has_base_vowel && !has_symbol_marker && has_vext_marker && !has_abbr_marker)
-        bank = CST_DICT_VEXT;
-
-    if (bank != CST_DICT_NONE) {
-        const uint64_t clean_roles = role_mask & ~(CST_ABBR_MASK | CST_VEXT_MASK |
-                                                   CST_SYMBOL_MASK | CST_ROLE_BIT(CST_R_EDIT));
-        const struct cornix_steno_dictionary_entry *entry =
-            cornix_steno_dictionary_lookup(bank, clean_roles);
-        if (entry) cornix_steno_output_enqueue_sequence(entry->keys, entry->key_count);
-        else LOG_DBG("No exact STENO abbreviation: bank=%u mask=0x%llx", bank,
-                     (unsigned long long)clean_roles);
+    /*
+     * Canonical dictionary lookup uses the complete logical role mask.
+     * Direct consonant chords, ABBR_L, ABBR_R and AB2 are distinct.  Only
+     * AB2 is side-flexible; the dictionary module normalizes one VEXT side.
+     */
+    const struct cornix_steno_dictionary_entry *entry =
+        cornix_steno_dictionary_lookup(role_mask);
+    if (entry) {
+        cornix_steno_output_enqueue_sequence(entry->keys, entry->key_count);
         return;
     }
+    LOG_DBG("No exact canonical STENO abbreviation: mask=0x%llx",
+            (unsigned long long)role_mask);
 #endif
     /* Unknown chords are intentionally silent rather than guessed. */
 }
@@ -130,10 +123,20 @@ static void schedule_next_correction_locked(int64_t now) {
 static bool dictionary_anchor_active_locked(void) {
     const uint64_t roles = roles_from_positions_locked(state.accepted_mask);
     const bool has_abbr = (roles & CST_ABBR_MASK) != 0;
-    const bool has_vext_bank = (roles & CST_VEXT_MASK) != 0 &&
-                               (roles & CST_BASE_VOWEL_MASK) == 0 &&
-                               (roles & (CST_INITIAL_MASK | CST_FINAL_MASK)) != 0;
-    return has_abbr || has_vext_bank;
+    const bool has_vext_selector = (roles & CST_VEXT_MASK) != 0 &&
+                                   (roles & CST_BASE_VOWEL_MASK) == 0 &&
+                                   (roles & (CST_INITIAL_MASK | CST_FINAL_MASK)) != 0;
+#if IS_ENABLED(CONFIG_CORNIX_STENO_DICTIONARY)
+    /*
+     * Direct canonical abbreviations have no bank key.  Once the complete
+     * accepted mask is an exact entry, do not let 50 ms late-key correction
+     * shrink a longer word (for example 그리고) into a shorter valid word.
+     */
+    const bool exact_dictionary = cornix_steno_dictionary_has_exact(roles);
+#else
+    const bool exact_dictionary = false;
+#endif
+    return has_abbr || has_vext_selector || exact_dictionary;
 }
 
 static void correction_work_handler(struct k_work *work) {
@@ -148,14 +151,10 @@ static void correction_work_handler(struct k_work *work) {
     }
 
     /*
-     * ABBR/VEXT bank keys are intentionally usable as held anchors.  The user
-     * may hold the bank key and tap the consonant roles one after another;
-     * those released roles must remain in the final exact mask.  The previous
-     * 40/50 ms late-key correction treated the taps as typos and collapsed the
-     * stroke to the marker itself ("!", '"', '[' or '?').  Preserve every
-     * released role once an abbreviation bank is active.  Exact lookup is the
-     * safety net: an accidental extra role makes the entry miss and therefore
-     * remains silent rather than producing a different word.
+     * Selector keys remain usable as held anchors, and a fully assembled
+     * direct canonical dictionary mask is protected as well.  This preserves
+     * sequential selector input and prevents a long direct exact mask from
+     * being reduced to a shorter registered word by key-up correction.
      */
     if (dictionary_anchor_active_locked()) {
         state.release_candidate_mask = 0;

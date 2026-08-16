@@ -178,16 +178,34 @@ def validate_dictionary(root: Path) -> int:
         )
         if temp.read_bytes() != generated.read_bytes():
             fail("generated dictionary source is stale; regenerate it before packaging")
-    count = sum(1 for line in source.read_text(encoding="utf-8").splitlines()
-                if line.strip() and not line.lstrip().startswith("#"))
-    required_outputs = {"근데", "였다", "했다", "으면"}
-    outputs = {line.split("\t", 1)[0] for line in source.read_text(encoding="utf-8").splitlines()
-               if line.strip() and not line.lstrip().startswith("#")}
+    dictionary_rows = [line.split("\t") for line in source.read_text(encoding="utf-8").splitlines()
+                       if line.strip() and not line.lstrip().startswith("#")]
+    count = len(dictionary_rows)
+    required_outputs = {
+        "그런", "그럼", "그리고", "그렇게", "였다", "없다", "었다",
+        "이었다", "했다", "는데", "습니다", "하는게",
+    }
+    outputs = {row[2] for row in dictionary_rows if len(row) >= 4}
     missing = sorted(required_outputs - outputs)
     if missing:
-        fail(f"required recent abbreviation entries are missing: {missing}")
-    if count != 61:
-        fail(f"expected 61 dictionary rows, found {count}")
+        fail(f"required canonical abbreviation entries are missing: {missing}")
+    if count != 42:
+        fail(f"expected 42 canonical dictionary rows, found {count}")
+
+    source_text = source.read_text(encoding="utf-8")
+    if re.search(r"(?m)^.*\t[12]\t(?:I_|F_)", source_text):
+        fail("legacy banked dictionary rows remain in the canonical source")
+    generated_text = generated.read_text(encoding="utf-8")
+    for token in [
+        "cornix_steno_dictionary_normalize_mask",
+        "cornix_steno_dictionary_lookup(uint64_t role_mask)",
+        "cornix_steno_dictionary_has_exact",
+        "ABBR_L/R distinct",
+    ]:
+        if token not in generated_text:
+            fail(f"canonical dictionary generator output missing: {token}")
+    if ".bank" in generated_text or "uint8_t bank" in generated_text:
+        fail("legacy dictionary bank field remains in generated C")
 
     quick_gen = root / "tools/generate_steno_quick.py"
     quick_src = root / "config/steno_quick_abbreviations.tsv"
@@ -538,7 +556,7 @@ def main() -> None:
     print("- Final convenience keys + Shift/JLKI select layer: PASS")
     print("- Final mirrored consonant layout: PASS")
     print(f"- Kconfig assignments checked: {kconfig_count}")
-    print(f"- Dictionary entries: {dictionary_count} + 12 GUI-editable quick macros")
+    print(f"- Canonical exact-mask dictionary entries: {dictionary_count} + 12 GUI-editable quick macros")
     print(f"- Host decoder: {host}")
     print(f"- ZMK/Zephyr API-shaped syntax: {api_syntax}")
     print(f"- Engine state: {engine_state}")

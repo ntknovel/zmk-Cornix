@@ -1,0 +1,4423 @@
+{
+  "schema_version": "0.1.0",
+  "dictionary_version": "0.1-draft",
+  "title": "한국어 STENO 약어사전파일",
+  "created_date": "2026-08-16",
+  "encoding": "UTF-8",
+  "canonical_file": "약어사전파일_v0.1.json",
+  "scope": {
+    "active_mode": "STENO only",
+    "base_mode_behavior": "All abbreviation, connective, TAIL, quick-slot, and Latin-gate processing is disabled in BASE.",
+    "categories": {
+      "basic_word": "접속어 목록과 TAIL에 속하지 않는 일반 단어. 초성·종성 혼합 허용.",
+      "connective": "사용자가 확정한 55개 접속/연결 조각. 최대한 초성 중심, 세로 충돌 때 종성 최소 사용.",
+      "tail": "앞말에 공백 없이 붙는 말의 끝. 최대한 오른손 종성 중심.",
+      "quick": "프로젝트별 인명·지명·조직명 등을 위한 비어 있는 12개 동적 매크로 슬롯."
+    },
+    "single_syllable_policy": "한 음절 단어는 약어 사전에 등록하지 않는다."
+  },
+  "current_cornix_layout": {
+    "left_onset_rows": [
+      [
+        "Q:ㅋ",
+        "W:ㅈ",
+        "E:ㄴ",
+        "R:ㅎ",
+        "T:ㅌ"
+      ],
+      [
+        "A:ㅅ",
+        "S:ㄱ",
+        "D:ㄹ",
+        "F:ㅇ",
+        "G:쌍초"
+      ],
+      [
+        "Z:ㅊ",
+        "X:ㅂ",
+        "C:ㄷ",
+        "V:ㅁ",
+        "B:ㅍ"
+      ]
+    ],
+    "right_coda_rows": [
+      [
+        "Y:종ㅌ",
+        "U:종ㅎ",
+        "I:종ㄴ",
+        "O:종ㅈ",
+        "P:종ㅋ"
+      ],
+      [
+        "H:쌍종",
+        "J:종ㅇ",
+        "K:종ㄹ",
+        "L:종ㄱ",
+        ";:종ㅅ"
+      ],
+      [
+        "N:종ㅍ",
+        "M:종ㅁ",
+        ",:종ㄷ",
+        ".:종ㅂ",
+        "/:종ㅊ"
+      ]
+    ],
+    "finger_groups": {
+      "LP": [
+        "Q",
+        "A",
+        "Z",
+        "<ABBR_L>"
+      ],
+      "LR": [
+        "W",
+        "S",
+        "X"
+      ],
+      "LM": [
+        "E",
+        "D",
+        "C"
+      ],
+      "LI": [
+        "R",
+        "T",
+        "F",
+        "G",
+        "V",
+        "B"
+      ],
+      "RI": [
+        "Y",
+        "U",
+        "H",
+        "J",
+        "N",
+        "M"
+      ],
+      "RM": [
+        "I",
+        "K",
+        ","
+      ],
+      "RR": [
+        "O",
+        "L",
+        "."
+      ],
+      "RP": [
+        "P",
+        ";",
+        "/",
+        "<ABBR_R>"
+      ],
+      "thumb_left": [
+        "ㅗ",
+        "ㅡ",
+        "ㅜ/Enter"
+      ],
+      "thumb_right": [
+        "ㅏ/Space",
+        "ㅣ",
+        "ㅓ"
+      ]
+    }
+  },
+  "roles": {
+    "CHO_K": {
+      "label": "초ㅋ",
+      "jamo": "ㅋ",
+      "physical": "Q",
+      "hand": "L",
+      "finger": "LP",
+      "kind": "consonant",
+      "bit": 0,
+      "mask_hex": "0x0000000000000001"
+    },
+    "CHO_J": {
+      "label": "초ㅈ",
+      "jamo": "ㅈ",
+      "physical": "W",
+      "hand": "L",
+      "finger": "LR",
+      "kind": "consonant",
+      "bit": 1,
+      "mask_hex": "0x0000000000000002"
+    },
+    "CHO_N": {
+      "label": "초ㄴ",
+      "jamo": "ㄴ",
+      "physical": "E",
+      "hand": "L",
+      "finger": "LM",
+      "kind": "consonant",
+      "bit": 2,
+      "mask_hex": "0x0000000000000004"
+    },
+    "CHO_H": {
+      "label": "초ㅎ",
+      "jamo": "ㅎ",
+      "physical": "R",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "consonant",
+      "bit": 3,
+      "mask_hex": "0x0000000000000008"
+    },
+    "CHO_T": {
+      "label": "초ㅌ",
+      "jamo": "ㅌ",
+      "physical": "T",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "consonant",
+      "bit": 4,
+      "mask_hex": "0x0000000000000010"
+    },
+    "CHO_S": {
+      "label": "초ㅅ",
+      "jamo": "ㅅ",
+      "physical": "A",
+      "hand": "L",
+      "finger": "LP",
+      "kind": "consonant",
+      "bit": 5,
+      "mask_hex": "0x0000000000000020"
+    },
+    "CHO_G": {
+      "label": "초ㄱ",
+      "jamo": "ㄱ",
+      "physical": "S",
+      "hand": "L",
+      "finger": "LR",
+      "kind": "consonant",
+      "bit": 6,
+      "mask_hex": "0x0000000000000040"
+    },
+    "CHO_R": {
+      "label": "초ㄹ",
+      "jamo": "ㄹ",
+      "physical": "D",
+      "hand": "L",
+      "finger": "LM",
+      "kind": "consonant",
+      "bit": 7,
+      "mask_hex": "0x0000000000000080"
+    },
+    "CHO_O": {
+      "label": "초ㅇ",
+      "jamo": "ㅇ",
+      "physical": "F",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "consonant",
+      "bit": 8,
+      "mask_hex": "0x0000000000000100"
+    },
+    "CHO_DOUBLE": {
+      "label": "쌍초/WORD 반복",
+      "jamo": "쌍초",
+      "physical": "G",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "selector",
+      "bit": 9,
+      "mask_hex": "0x0000000000000200"
+    },
+    "CHO_CH": {
+      "label": "초ㅊ",
+      "jamo": "ㅊ",
+      "physical": "Z",
+      "hand": "L",
+      "finger": "LP",
+      "kind": "consonant",
+      "bit": 10,
+      "mask_hex": "0x0000000000000400"
+    },
+    "CHO_B": {
+      "label": "초ㅂ",
+      "jamo": "ㅂ",
+      "physical": "X",
+      "hand": "L",
+      "finger": "LR",
+      "kind": "consonant",
+      "bit": 11,
+      "mask_hex": "0x0000000000000800"
+    },
+    "CHO_D": {
+      "label": "초ㄷ",
+      "jamo": "ㄷ",
+      "physical": "C",
+      "hand": "L",
+      "finger": "LM",
+      "kind": "consonant",
+      "bit": 12,
+      "mask_hex": "0x0000000000001000"
+    },
+    "CHO_M": {
+      "label": "초ㅁ",
+      "jamo": "ㅁ",
+      "physical": "V",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "consonant",
+      "bit": 13,
+      "mask_hex": "0x0000000000002000"
+    },
+    "CHO_P": {
+      "label": "초ㅍ",
+      "jamo": "ㅍ",
+      "physical": "B",
+      "hand": "L",
+      "finger": "LI",
+      "kind": "consonant",
+      "bit": 14,
+      "mask_hex": "0x0000000000004000"
+    },
+    "JONG_T": {
+      "label": "종ㅌ",
+      "jamo": "ㅌ",
+      "physical": "Y",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "consonant",
+      "bit": 15,
+      "mask_hex": "0x0000000000008000"
+    },
+    "JONG_H": {
+      "label": "종ㅎ",
+      "jamo": "ㅎ",
+      "physical": "U",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "consonant",
+      "bit": 16,
+      "mask_hex": "0x0000000000010000"
+    },
+    "JONG_N": {
+      "label": "종ㄴ",
+      "jamo": "ㄴ",
+      "physical": "I",
+      "hand": "R",
+      "finger": "RM",
+      "kind": "consonant",
+      "bit": 17,
+      "mask_hex": "0x0000000000020000"
+    },
+    "JONG_J": {
+      "label": "종ㅈ",
+      "jamo": "ㅈ",
+      "physical": "O",
+      "hand": "R",
+      "finger": "RR",
+      "kind": "consonant",
+      "bit": 18,
+      "mask_hex": "0x0000000000040000"
+    },
+    "JONG_K": {
+      "label": "종ㅋ",
+      "jamo": "ㅋ",
+      "physical": "P",
+      "hand": "R",
+      "finger": "RP",
+      "kind": "consonant",
+      "bit": 19,
+      "mask_hex": "0x0000000000080000"
+    },
+    "JONG_DOUBLE": {
+      "label": "쌍종/TAIL 반복",
+      "jamo": "쌍종",
+      "physical": "H",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "selector",
+      "bit": 20,
+      "mask_hex": "0x0000000000100000"
+    },
+    "JONG_O": {
+      "label": "종ㅇ",
+      "jamo": "ㅇ",
+      "physical": "J",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "consonant",
+      "bit": 21,
+      "mask_hex": "0x0000000000200000"
+    },
+    "JONG_R": {
+      "label": "종ㄹ",
+      "jamo": "ㄹ",
+      "physical": "K",
+      "hand": "R",
+      "finger": "RM",
+      "kind": "consonant",
+      "bit": 22,
+      "mask_hex": "0x0000000000400000"
+    },
+    "JONG_G": {
+      "label": "종ㄱ",
+      "jamo": "ㄱ",
+      "physical": "L",
+      "hand": "R",
+      "finger": "RR",
+      "kind": "consonant",
+      "bit": 23,
+      "mask_hex": "0x0000000000800000"
+    },
+    "JONG_S": {
+      "label": "종ㅅ",
+      "jamo": "ㅅ",
+      "physical": ";",
+      "hand": "R",
+      "finger": "RP",
+      "kind": "consonant",
+      "bit": 24,
+      "mask_hex": "0x0000000001000000"
+    },
+    "JONG_P": {
+      "label": "종ㅍ",
+      "jamo": "ㅍ",
+      "physical": "N",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "consonant",
+      "bit": 25,
+      "mask_hex": "0x0000000002000000"
+    },
+    "JONG_M": {
+      "label": "종ㅁ",
+      "jamo": "ㅁ",
+      "physical": "M",
+      "hand": "R",
+      "finger": "RI",
+      "kind": "consonant",
+      "bit": 26,
+      "mask_hex": "0x0000000004000000"
+    },
+    "JONG_D": {
+      "label": "종ㄷ",
+      "jamo": "ㄷ",
+      "physical": ",",
+      "hand": "R",
+      "finger": "RM",
+      "kind": "consonant",
+      "bit": 27,
+      "mask_hex": "0x0000000008000000"
+    },
+    "JONG_B": {
+      "label": "종ㅂ",
+      "jamo": "ㅂ",
+      "physical": ".",
+      "hand": "R",
+      "finger": "RR",
+      "kind": "consonant",
+      "bit": 28,
+      "mask_hex": "0x0000000010000000"
+    },
+    "JONG_CH": {
+      "label": "종ㅊ",
+      "jamo": "ㅊ",
+      "physical": "/",
+      "hand": "R",
+      "finger": "RP",
+      "kind": "consonant",
+      "bit": 29,
+      "mask_hex": "0x0000000020000000"
+    },
+    "ABBR_L": {
+      "label": "약어L",
+      "jamo": null,
+      "physical": "<ABBR_L>",
+      "hand": "L",
+      "finger": "LP",
+      "kind": "selector",
+      "bit": 30,
+      "mask_hex": "0x0000000040000000"
+    },
+    "ABBR_R": {
+      "label": "약어R",
+      "jamo": null,
+      "physical": "<ABBR_R>",
+      "hand": "R",
+      "finger": "RP",
+      "kind": "selector",
+      "bit": 31,
+      "mask_hex": "0x0000000080000000"
+    },
+    "AB2": {
+      "label": "쌍모 약어선택자",
+      "jamo": null,
+      "physical": "<VEXT_OPPOSITE>",
+      "hand": "FLEX",
+      "finger": "LP|RP",
+      "kind": "selector",
+      "bit": 32,
+      "mask_hex": "0x0000000100000000"
+    },
+    "V_O": {
+      "label": "ㅗ",
+      "jamo": "ㅗ",
+      "physical": "<THUMB_L1>",
+      "hand": "L",
+      "finger": "LT",
+      "kind": "vowel",
+      "bit": 33,
+      "mask_hex": "0x0000000200000000"
+    },
+    "V_EU": {
+      "label": "ㅡ",
+      "jamo": "ㅡ",
+      "physical": "<THUMB_L2>",
+      "hand": "L",
+      "finger": "LT",
+      "kind": "vowel",
+      "bit": 34,
+      "mask_hex": "0x0000000400000000"
+    },
+    "V_U": {
+      "label": "ㅜ/Enter",
+      "jamo": "ㅜ",
+      "physical": "<THUMB_L3>",
+      "hand": "L",
+      "finger": "LT",
+      "kind": "vowel",
+      "bit": 35,
+      "mask_hex": "0x0000000800000000"
+    },
+    "V_A": {
+      "label": "ㅏ/Space",
+      "jamo": "ㅏ",
+      "physical": "<THUMB_R1>",
+      "hand": "R",
+      "finger": "RT",
+      "kind": "vowel",
+      "bit": 36,
+      "mask_hex": "0x0000001000000000"
+    },
+    "V_I": {
+      "label": "ㅣ",
+      "jamo": "ㅣ",
+      "physical": "<THUMB_R2>",
+      "hand": "R",
+      "finger": "RT",
+      "kind": "vowel",
+      "bit": 37,
+      "mask_hex": "0x0000002000000000"
+    },
+    "V_EO": {
+      "label": "ㅓ",
+      "jamo": "ㅓ",
+      "physical": "<THUMB_R3>",
+      "hand": "R",
+      "finger": "RT",
+      "kind": "vowel",
+      "bit": 38,
+      "mask_hex": "0x0000004000000000"
+    }
+  },
+  "runtime_rules": {
+    "exact_mask": {
+      "collect_until": "all chord keys released",
+      "subset_early_fire": false,
+      "unregistered_multikey_chord": "no_output",
+      "no_partial_jamo": true,
+      "no_nearest_match": true,
+      "cancel_selector_tap_on_multikey": true
+    },
+    "priority": [
+      "BASE mode bypass",
+      "F13/direct-correction mode",
+      "active Latin gate",
+      "ABBR + exactly one vowel => quick slot",
+      "ABBR + exactly one physical alphabet key => momentary Latin gate",
+      "normal STENO chord when any vowel is present",
+      "AB2 + consonant-only abbreviation lookup",
+      "consonant-only abbreviation lookup",
+      "registered standalone/double-stroke jamo behavior",
+      "otherwise no output"
+    ],
+    "mode_exit": {
+      "clear_pending_masks": true,
+      "clear_double_tap_state": true,
+      "clear_direct_mode": true,
+      "ignore_releases_of_keys_held_across_transition": true
+    },
+    "tap_hold_dependencies": {
+      "vowel_u_key": {
+        "tap": "Enter",
+        "chord": "ㅜ",
+        "double_tap": "standalone ㅜ"
+      },
+      "vowel_a_key": {
+        "tap": "Space",
+        "chord": "ㅏ",
+        "double_tap": "standalone ㅏ"
+      },
+      "recommended_command_tap_dance_ms": "190-200",
+      "recommended_standalone_repeat_ms": 230
+    },
+    "repeat_selectors": {
+      "CHO_DOUBLE": "접속어/왼손 WORD의 실제 쌍초 또는 반복 자음 표식",
+      "JONG_DOUBLE": "TAIL/일반 WORD의 실제 쌍종 또는 반복 자음 표식",
+      "AB2": "쌍모음키가 모음 없는 자음 약어에서 추가 사전 은행 또는 반복 예외 표식으로 작동"
+    }
+  },
+  "latin_gate": {
+    "trigger": "Hold ABBR_L or ABBR_R and finish with exactly one physical A-Z key.",
+    "key_interpretation": "physical QWERTY key, not Korean logical role",
+    "first_key_resolution": "Resolve on release or after chord disambiguation; if another chord key joins, cancel Latin output and perform abbreviation lookup.",
+    "hold_behavior": "After Latin gate is entered, further A-Z keys are emitted immediately until the owning abbreviation key is released.",
+    "release_behavior": "Return to Korean STENO input state.",
+    "forced_uppercase": {
+      "caps_off": "send Shift + letter",
+      "caps_on": "send plain letter",
+      "caps_unknown": "configurable fallback; default Shift + letter",
+      "note": "Do not blindly send Shift when Caps Lock is on, because standard hosts invert case."
+    },
+    "reserved_patterns": "ABBR_L/ABBR_R + one consonant only may not be assigned to a normal abbreviation.",
+    "multikey_unregistered": "no output; abbreviation-key tap action is also cancelled"
+  },
+  "quick_slots": [
+    {
+      "slot": 0,
+      "macro_id": "M0",
+      "roles": [
+        "ABBR_L",
+        "V_EU"
+      ],
+      "output": "",
+      "label": "약어L+ㅡ",
+      "mask_u64_hex": "0x0000000440000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_L2>"
+      ],
+      "logical_chord": "약어L + ㅡ"
+    },
+    {
+      "slot": 1,
+      "macro_id": "M1",
+      "roles": [
+        "ABBR_L",
+        "V_O"
+      ],
+      "output": "",
+      "label": "약어L+ㅗ",
+      "mask_u64_hex": "0x0000000240000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_L1>"
+      ],
+      "logical_chord": "약어L + ㅗ"
+    },
+    {
+      "slot": 2,
+      "macro_id": "M2",
+      "roles": [
+        "ABBR_L",
+        "V_U"
+      ],
+      "output": "",
+      "label": "약어L+ㅜ",
+      "mask_u64_hex": "0x0000000840000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_L3>"
+      ],
+      "logical_chord": "약어L + ㅜ/Enter"
+    },
+    {
+      "slot": 3,
+      "macro_id": "M3",
+      "roles": [
+        "ABBR_R",
+        "V_A"
+      ],
+      "output": "",
+      "label": "약어R+ㅏ",
+      "mask_u64_hex": "0x0000001080000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_R1>"
+      ],
+      "logical_chord": "약어R + ㅏ/Space"
+    },
+    {
+      "slot": 4,
+      "macro_id": "M4",
+      "roles": [
+        "ABBR_R",
+        "V_I"
+      ],
+      "output": "",
+      "label": "약어R+ㅣ",
+      "mask_u64_hex": "0x0000002080000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_R2>"
+      ],
+      "logical_chord": "약어R + ㅣ"
+    },
+    {
+      "slot": 5,
+      "macro_id": "M5",
+      "roles": [
+        "ABBR_R",
+        "V_EO"
+      ],
+      "output": "",
+      "label": "약어R+ㅓ",
+      "mask_u64_hex": "0x0000004080000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_R3>"
+      ],
+      "logical_chord": "약어R + ㅓ"
+    },
+    {
+      "slot": 6,
+      "macro_id": "M6",
+      "roles": [
+        "ABBR_L",
+        "V_A"
+      ],
+      "output": "",
+      "label": "약어L+ㅏ",
+      "mask_u64_hex": "0x0000001040000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_R1>"
+      ],
+      "logical_chord": "약어L + ㅏ/Space"
+    },
+    {
+      "slot": 7,
+      "macro_id": "M7",
+      "roles": [
+        "ABBR_L",
+        "V_EO"
+      ],
+      "output": "",
+      "label": "약어L+ㅓ",
+      "mask_u64_hex": "0x0000004040000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_R3>"
+      ],
+      "logical_chord": "약어L + ㅓ"
+    },
+    {
+      "slot": 8,
+      "macro_id": "M8",
+      "roles": [
+        "ABBR_L",
+        "V_I"
+      ],
+      "output": "",
+      "label": "약어L+ㅣ",
+      "mask_u64_hex": "0x0000002040000000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<THUMB_R2>"
+      ],
+      "logical_chord": "약어L + ㅣ"
+    },
+    {
+      "slot": 9,
+      "macro_id": "M9",
+      "roles": [
+        "ABBR_R",
+        "V_O"
+      ],
+      "output": "",
+      "label": "약어R+ㅗ",
+      "mask_u64_hex": "0x0000000280000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_L1>"
+      ],
+      "logical_chord": "약어R + ㅗ"
+    },
+    {
+      "slot": 10,
+      "macro_id": "M10",
+      "roles": [
+        "ABBR_R",
+        "V_U"
+      ],
+      "output": "",
+      "label": "약어R+ㅜ",
+      "mask_u64_hex": "0x0000000880000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_L3>"
+      ],
+      "logical_chord": "약어R + ㅜ/Enter"
+    },
+    {
+      "slot": 11,
+      "macro_id": "M11",
+      "roles": [
+        "ABBR_R",
+        "V_EU"
+      ],
+      "output": "",
+      "label": "약어R+ㅡ",
+      "mask_u64_hex": "0x0000000480000000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "<THUMB_L2>"
+      ],
+      "logical_chord": "약어R + ㅡ"
+    }
+  ],
+  "connective_inventory": [
+    "가령",
+    "거듭",
+    "게다가",
+    "그리고",
+    "그리하여",
+    "그러니",
+    "그러나",
+    "그러므로",
+    "그러자",
+    "그러기",
+    "위해서",
+    "그렇다면",
+    "그렇지",
+    "않으면",
+    "하더라도",
+    "그제야",
+    "다만",
+    "더구나",
+    "더불어",
+    "동시에",
+    "돌이켜",
+    "보면",
+    "드디어",
+    "따라서",
+    "또는",
+    "또한",
+    "마침내",
+    "마침",
+    "만약에",
+    "말하면",
+    "반면에",
+    "뿐만",
+    "아니라",
+    "할지라도",
+    "아울러",
+    "아무리",
+    "아무튼",
+    "아니면",
+    "어쨌든",
+    "여하튼",
+    "왜냐하면",
+    "요컨대",
+    "함께",
+    "이윽고",
+    "이어서",
+    "이른바",
+    "이를테면",
+    "위해",
+    "인해서",
+    "자칫하면",
+    "정녕",
+    "한편",
+    "하물며",
+    "하지만",
+    "혹은"
+  ],
+  "entries": [
+    {
+      "id": "BASIC_JEOMJEOM",
+      "category": "basic_word",
+      "output": "점점",
+      "roles": [
+        "CHO_J",
+        "JONG_J"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "일반 WORD: 초ㅈ+종ㅈ",
+      "collision_group": null,
+      "dubeolsik_keys": "wjawja",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000040002",
+      "physical_keys": [
+        "W",
+        "O"
+      ],
+      "logical_chord": "초ㅈ + 종ㅈ",
+      "physical_chord": "W + O",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JINJJA",
+      "category": "basic_word",
+      "output": "진짜",
+      "roles": [
+        "CHO_J",
+        "JONG_J",
+        "JONG_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "두 번째 ㅈ이 ㅉ임을 쌍종으로 표시",
+      "collision_group": null,
+      "dubeolsik_keys": "wlsWk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000140002",
+      "physical_keys": [
+        "W",
+        "O",
+        "H"
+      ],
+      "logical_chord": "초ㅈ + 종ㅈ + 쌍종/TAIL 반복",
+      "physical_chord": "W + O + H",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GYEOLGUK",
+      "category": "basic_word",
+      "output": "결국",
+      "roles": [
+        "CHO_G",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rufrnr",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000800040",
+      "physical_keys": [
+        "S",
+        "L"
+      ],
+      "logical_chord": "초ㄱ + 종ㄱ",
+      "physical_chord": "S + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUREOKE",
+      "category": "basic_word",
+      "output": "그렇게",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmfjgrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000008000C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "L"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 종ㄱ",
+      "physical_chord": "S + D + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUREOTGUN",
+      "category": "basic_word",
+      "output": "그렇군",
+      "roles": [
+        "CHO_G",
+        "JONG_R",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmfjgrns",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000C00040",
+      "physical_keys": [
+        "S",
+        "K",
+        "L"
+      ],
+      "logical_chord": "초ㄱ + 종ㄹ + 종ㄱ",
+      "physical_chord": "S + K + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_GEUREON",
+      "category": "basic_word",
+      "output": "그런",
+      "roles": [
+        "CHO_G",
+        "JONG_R"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GR",
+      "dubeolsik_keys": "rmfjs",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000400040",
+      "physical_keys": [
+        "S",
+        "K"
+      ],
+      "logical_chord": "초ㄱ + 종ㄹ",
+      "physical_chord": "S + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUREOM",
+      "category": "basic_word",
+      "output": "그럼",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "JONG_R"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GR",
+      "dubeolsik_keys": "rmfja",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000040400040",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "K"
+      ],
+      "logical_chord": "약어L + 초ㄱ + 종ㄹ",
+      "physical_chord": "<ABBR_L> + S + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEURAEDO",
+      "category": "basic_word",
+      "output": "그래도",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GRD",
+      "dubeolsik_keys": "rmfoeh",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000080000C0",
+      "physical_keys": [
+        "S",
+        "D",
+        ","
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 종ㄷ",
+      "physical_chord": "S + D + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUREONDE",
+      "category": "basic_word",
+      "output": "그런데",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "CHO_R",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GRD",
+      "dubeolsik_keys": "rmfjsep",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000480000C0",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "D",
+        ","
+      ],
+      "logical_chord": "약어L + 초ㄱ + 초ㄹ + 종ㄷ",
+      "physical_chord": "<ABBR_L> + S + D + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUREOMEDO",
+      "category": "basic_word",
+      "output": "그럼에도",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "CHO_O",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmfjadpeh",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000080001C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "F",
+        ","
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 초ㅇ + 종ㄷ",
+      "physical_chord": "S + D + F + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUDERO",
+      "category": "basic_word",
+      "output": "그대로",
+      "roles": [
+        "CHO_G",
+        "CHO_D",
+        "JONG_R"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmeofh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000401040",
+      "physical_keys": [
+        "S",
+        "C",
+        "K"
+      ],
+      "logical_chord": "초ㄱ + 초ㄷ + 종ㄹ",
+      "physical_chord": "S + C + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GAPJAGI",
+      "category": "basic_word",
+      "output": "갑자기",
+      "roles": [
+        "CHO_G",
+        "JONG_J",
+        "CHO_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "마지막 반복 ㄱ을 쌍초/반복 표식으로 표시",
+      "collision_group": null,
+      "dubeolsik_keys": "rkqwkrl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000040240",
+      "physical_keys": [
+        "S",
+        "O",
+        "G"
+      ],
+      "logical_chord": "초ㄱ + 종ㅈ + 쌍초/WORD 반복",
+      "physical_chord": "S + O + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_WANJEONHI",
+      "category": "basic_word",
+      "output": "완전히",
+      "roles": [
+        "CHO_O",
+        "CHO_J",
+        "JONG_H"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dhkswjsgl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000010102",
+      "physical_keys": [
+        "F",
+        "W",
+        "U"
+      ],
+      "logical_chord": "초ㅇ + 초ㅈ + 종ㅎ",
+      "physical_chord": "F + W + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JOYONGHI",
+      "category": "basic_word",
+      "output": "조용히",
+      "roles": [
+        "CHO_O",
+        "JONG_J",
+        "JONG_H"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "현재 배열에서 초ㅈ+종ㅇ+종ㅎ은 오른손 검지 충돌. 초ㅇ+종ㅈ+종ㅎ으로 배치.",
+      "collision_group": null,
+      "dubeolsik_keys": "whdydgl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000050100",
+      "physical_keys": [
+        "F",
+        "O",
+        "U"
+      ],
+      "logical_chord": "초ㅇ + 종ㅈ + 종ㅎ",
+      "physical_chord": "F + O + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_DOEEOT",
+      "category": "basic_word",
+      "output": "되었",
+      "roles": [
+        "CHO_D",
+        "CHO_O"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "TAIL 조립용 일반 WORD 조각",
+      "collision_group": null,
+      "dubeolsik_keys": "ehldjT",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001100",
+      "physical_keys": [
+        "C",
+        "F"
+      ],
+      "logical_chord": "초ㄷ + 초ㅇ",
+      "physical_chord": "C + F",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_GEUNDE",
+      "category": "basic_word",
+      "output": "근데",
+      "roles": [
+        "CHO_G",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmsep",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008000040",
+      "physical_keys": [
+        "S",
+        ","
+      ],
+      "logical_chord": "초ㄱ + 종ㄷ",
+      "physical_chord": "S + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GEUTTAE",
+      "category": "basic_word",
+      "output": "그때",
+      "roles": [
+        "CHO_G",
+        "JONG_D",
+        "JONG_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "일반 WORD: 두 번째 ㄷ이 ㄸ임을 쌍종으로 표시",
+      "collision_group": null,
+      "dubeolsik_keys": "rmEo",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008100040",
+      "physical_keys": [
+        "S",
+        ",",
+        "H"
+      ],
+      "logical_chord": "초ㄱ + 종ㄷ + 쌍종/TAIL 반복",
+      "physical_chord": "S + , + H",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_DAREUN",
+      "category": "basic_word",
+      "output": "다른",
+      "roles": [
+        "CHO_D",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ekfms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000401000",
+      "physical_keys": [
+        "C",
+        "K"
+      ],
+      "logical_chord": "초ㄷ + 종ㄹ",
+      "physical_chord": "C + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GATEUN",
+      "category": "basic_word",
+      "output": "같은",
+      "roles": [
+        "CHO_G",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rkxdms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000200040",
+      "physical_keys": [
+        "S",
+        "J"
+      ],
+      "logical_chord": "초ㄱ + 종ㅇ",
+      "physical_chord": "S + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_DASI",
+      "category": "basic_word",
+      "output": "다시",
+      "roles": [
+        "CHO_D",
+        "CHO_S"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ektl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001020",
+      "physical_keys": [
+        "C",
+        "A"
+      ],
+      "logical_chord": "초ㄷ + 초ㅅ",
+      "physical_chord": "C + A",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_JOGEUM",
+      "category": "basic_word",
+      "output": "조금",
+      "roles": [
+        "CHO_J",
+        "JONG_G"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "whrma",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000800002",
+      "physical_keys": [
+        "W",
+        "L"
+      ],
+      "logical_chord": "초ㅈ + 종ㄱ",
+      "physical_chord": "W + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_IREON",
+      "category": "basic_word",
+      "output": "이런",
+      "roles": [
+        "CHO_O",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dlfjs",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000400100",
+      "physical_keys": [
+        "F",
+        "K"
+      ],
+      "logical_chord": "초ㅇ + 종ㄹ",
+      "physical_chord": "F + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_IREOKE",
+      "category": "basic_word",
+      "output": "이렇게",
+      "roles": [
+        "CHO_O",
+        "CHO_R",
+        "JONG_G"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dlfjgrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000800180",
+      "physical_keys": [
+        "F",
+        "D",
+        "L"
+      ],
+      "logical_chord": "초ㅇ + 초ㄹ + 종ㄱ",
+      "physical_chord": "F + D + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_IMI",
+      "category": "basic_word",
+      "output": "이미",
+      "roles": [
+        "CHO_O",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dlal",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004000100",
+      "physical_keys": [
+        "F",
+        "M"
+      ],
+      "logical_chord": "초ㅇ + 종ㅁ",
+      "physical_chord": "F + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JEONBU",
+      "category": "basic_word",
+      "output": "전부",
+      "roles": [
+        "CHO_J",
+        "JONG_B"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wjsqn",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000010000002",
+      "physical_keys": [
+        "W",
+        "."
+      ],
+      "logical_chord": "초ㅈ + 종ㅂ",
+      "physical_chord": "W + .",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_NEOMU",
+      "category": "basic_word",
+      "output": "너무",
+      "roles": [
+        "CHO_N",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "sjan",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004000004",
+      "physical_keys": [
+        "E",
+        "M"
+      ],
+      "logical_chord": "초ㄴ + 종ㅁ",
+      "physical_chord": "E + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_BARO",
+      "category": "basic_word",
+      "output": "바로",
+      "roles": [
+        "CHO_B",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "qkfh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000400800",
+      "physical_keys": [
+        "X",
+        "K"
+      ],
+      "logical_chord": "초ㅂ + 종ㄹ",
+      "physical_chord": "X + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JAMSI",
+      "category": "basic_word",
+      "output": "잠시",
+      "roles": [
+        "CHO_J",
+        "JONG_S"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wkatl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000001000002",
+      "physical_keys": [
+        "W",
+        ";"
+      ],
+      "logical_chord": "초ㅈ + 종ㅅ",
+      "physical_chord": "W + ;",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JEONGMAL",
+      "category": "basic_word",
+      "output": "정말",
+      "roles": [
+        "CHO_J",
+        "CHO_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wjdakf",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000002002",
+      "physical_keys": [
+        "W",
+        "V"
+      ],
+      "logical_chord": "초ㅈ + 초ㅁ",
+      "physical_chord": "W + V",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_JEONGMALRO",
+      "category": "basic_word",
+      "output": "정말로",
+      "roles": [
+        "CHO_J",
+        "CHO_M",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wjdakffh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000402002",
+      "physical_keys": [
+        "W",
+        "V",
+        "K"
+      ],
+      "logical_chord": "초ㅈ + 초ㅁ + 종ㄹ",
+      "physical_chord": "W + V + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GYESOKHAESEO",
+      "category": "basic_word",
+      "output": "계속해서",
+      "roles": [
+        "CHO_G",
+        "CHO_S",
+        "JONG_H",
+        "JONG_S"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rPthrgotj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000001010060",
+      "physical_keys": [
+        "S",
+        "A",
+        "U",
+        ";"
+      ],
+      "logical_chord": "초ㄱ + 초ㅅ + 종ㅎ + 종ㅅ",
+      "physical_chord": "S + A + U + ;",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_PPAREUGE",
+      "category": "basic_word",
+      "output": "빠르게",
+      "roles": [
+        "CHO_DOUBLE",
+        "CHO_B",
+        "JONG_R",
+        "JONG_G"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "Qkfmrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000C00A00",
+      "physical_keys": [
+        "G",
+        "X",
+        "K",
+        "L"
+      ],
+      "logical_chord": "쌍초/WORD 반복 + 초ㅂ + 종ㄹ + 종ㄱ",
+      "physical_chord": "G + X + K + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_CHEONCHEONHI",
+      "category": "basic_word",
+      "output": "천천히",
+      "roles": [
+        "CHO_CH",
+        "JONG_CH",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "cjscjsgl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000020010400",
+      "physical_keys": [
+        "Z",
+        "/",
+        "U"
+      ],
+      "logical_chord": "초ㅊ + 종ㅊ + 종ㅎ",
+      "physical_chord": "Z + / + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_GAMANHI",
+      "category": "basic_word",
+      "output": "가만히",
+      "roles": [
+        "CHO_G",
+        "CHO_M",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rkaksgl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000012040",
+      "physical_keys": [
+        "S",
+        "V",
+        "U"
+      ],
+      "logical_chord": "초ㄱ + 초ㅁ + 종ㅎ",
+      "physical_chord": "S + V + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_GOTBARO",
+      "category": "basic_word",
+      "output": "곧바로",
+      "roles": [
+        "CHO_G",
+        "JONG_B",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rheqkfh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000010400040",
+      "physical_keys": [
+        "S",
+        ".",
+        "K"
+      ],
+      "logical_chord": "초ㄱ + 종ㅂ + 종ㄹ",
+      "physical_chord": "S + . + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_SEOSEOHI",
+      "category": "basic_word",
+      "output": "서서히",
+      "roles": [
+        "CHO_S",
+        "JONG_S",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "tjtjgl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000001010020",
+      "physical_keys": [
+        "A",
+        ";",
+        "U"
+      ],
+      "logical_chord": "초ㅅ + 종ㅅ + 종ㅎ",
+      "physical_chord": "A + ; + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_SUNSIKGANE",
+      "category": "basic_word",
+      "output": "순식간에",
+      "roles": [
+        "CHO_S",
+        "JONG_S",
+        "CHO_G",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "tnstlrrksdp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000001200060",
+      "physical_keys": [
+        "A",
+        ";",
+        "S",
+        "J"
+      ],
+      "logical_chord": "초ㅅ + 종ㅅ + 초ㄱ + 종ㅇ",
+      "physical_chord": "A + ; + S + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 2
+    },
+    {
+      "id": "BASIC_JEDAERO",
+      "category": "basic_word",
+      "output": "제대로",
+      "roles": [
+        "CHO_J",
+        "CHO_D",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wpeofh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000401002",
+      "physical_keys": [
+        "W",
+        "C",
+        "K"
+      ],
+      "logical_chord": "초ㅈ + 초ㄷ + 종ㄹ",
+      "physical_chord": "W + C + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_MEONJEO",
+      "category": "basic_word",
+      "output": "먼저",
+      "roles": [
+        "ABBR_L",
+        "CHO_M",
+        "CHO_J"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "동일 마스크 충돌을 반대편/약어 선택자로 분리.",
+      "collision_group": null,
+      "dubeolsik_keys": "ajswj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000040002002",
+      "physical_keys": [
+        "<ABBR_L>",
+        "V",
+        "W"
+      ],
+      "logical_chord": "약어L + 초ㅁ + 초ㅈ",
+      "physical_chord": "<ABBR_L> + V + W",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_GADEUK",
+      "category": "basic_word",
+      "output": "가득",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "CHO_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": "GD",
+      "dubeolsik_keys": "rkemr",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000040001040",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "C"
+      ],
+      "logical_chord": "약어L + 초ㄱ + 초ㄷ",
+      "physical_chord": "<ABBR_L> + S + C",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_GAJANG",
+      "category": "basic_word",
+      "output": "가장",
+      "roles": [
+        "CHO_G",
+        "JONG_J"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rkwkd",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000040040",
+      "physical_keys": [
+        "S",
+        "O"
+      ],
+      "logical_chord": "초ㄱ + 종ㅈ",
+      "physical_chord": "S + O",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_JEONHYEO",
+      "category": "basic_word",
+      "output": "전혀",
+      "roles": [
+        "CHO_J",
+        "CHO_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wjsgu",
+      "source": "conversation",
+      "mask_u64_hex": "0x000000000000000A",
+      "physical_keys": [
+        "W",
+        "R"
+      ],
+      "logical_chord": "초ㅈ + 초ㅎ",
+      "physical_chord": "W + R",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_HOKSI",
+      "category": "basic_word",
+      "output": "혹시",
+      "roles": [
+        "CHO_H",
+        "CHO_S"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ghrtl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000000028",
+      "physical_keys": [
+        "R",
+        "A"
+      ],
+      "logical_chord": "초ㅎ + 초ㅅ",
+      "physical_chord": "R + A",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_YEOLSIMHI",
+      "category": "basic_word",
+      "output": "열심히",
+      "roles": [
+        "AB2",
+        "CHO_O",
+        "CHO_S",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "위해서/인해서와 동일 자음 마스크 충돌을 AB2 일반 WORD 은행으로 분리.",
+      "collision_group": null,
+      "dubeolsik_keys": "duftlagl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100010120",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "F",
+        "A",
+        "U"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅇ + 초ㅅ + 종ㅎ",
+      "physical_chord": "<VEXT_OPPOSITE> + F + A + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "BASIC_SEOLMA",
+      "category": "basic_word",
+      "output": "설마",
+      "roles": [
+        "CHO_S",
+        "CHO_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "tjfak",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000002020",
+      "physical_keys": [
+        "A",
+        "V"
+      ],
+      "logical_chord": "초ㅅ + 초ㅁ",
+      "physical_chord": "A + V",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_BUNMYEONG",
+      "category": "basic_word",
+      "output": "분명",
+      "roles": [
+        "ABBR_L",
+        "CHO_B",
+        "CHO_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "동일 마스크 충돌을 반대편/약어 선택자로 분리.",
+      "collision_group": null,
+      "dubeolsik_keys": "qnsaud",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000040002800",
+      "physical_keys": [
+        "<ABBR_L>",
+        "X",
+        "V"
+      ],
+      "logical_chord": "약어L + 초ㅂ + 초ㅁ",
+      "physical_chord": "<ABBR_L> + X + V",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_EONJENA",
+      "category": "basic_word",
+      "output": "언제나",
+      "roles": [
+        "CHO_O",
+        "CHO_J",
+        "CHO_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "djswpsk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000000106",
+      "physical_keys": [
+        "F",
+        "W",
+        "E"
+      ],
+      "logical_chord": "초ㅇ + 초ㅈ + 초ㄴ",
+      "physical_chord": "F + W + E",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "BASIC_MUCHEOK",
+      "category": "basic_word",
+      "output": "무척",
+      "roles": [
+        "ABBR_R",
+        "CHO_M",
+        "CHO_CH"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "동일 마스크 충돌을 반대편/약어 선택자로 분리.",
+      "collision_group": null,
+      "dubeolsik_keys": "ancjr",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000080002400",
+      "physical_keys": [
+        "<ABBR_R>",
+        "V",
+        "Z"
+      ],
+      "logical_chord": "약어R + 초ㅁ + 초ㅊ",
+      "physical_chord": "<ABBR_R> + V + Z",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_GARYEONG",
+      "category": "connective",
+      "output": "가령",
+      "roles": [
+        "CHO_G",
+        "CHO_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rkfud",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000000000C0",
+      "physical_keys": [
+        "S",
+        "D"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ",
+      "physical_chord": "S + D",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_GEODEUP",
+      "category": "connective",
+      "output": "거듭",
+      "roles": [
+        "CHO_G",
+        "CHO_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rjemq",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001040",
+      "physical_keys": [
+        "S",
+        "C"
+      ],
+      "logical_chord": "초ㄱ + 초ㄷ",
+      "physical_chord": "S + C",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_GEDAGA",
+      "category": "connective",
+      "output": "게다가",
+      "roles": [
+        "CHO_G",
+        "CHO_D",
+        "CHO_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GD_REPEAT",
+      "dubeolsik_keys": "rpekrk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001240",
+      "physical_keys": [
+        "S",
+        "C",
+        "G"
+      ],
+      "logical_chord": "초ㄱ + 초ㄷ + 쌍초/WORD 반복",
+      "physical_chord": "S + C + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_GEULIGO",
+      "category": "connective",
+      "output": "그리고",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "CHO_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GR_REPEAT",
+      "dubeolsik_keys": "rmflrh",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000000002C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "G"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 쌍초/WORD 반복",
+      "physical_chord": "S + D + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_GEURIHAYEO",
+      "category": "connective",
+      "output": "그리하여",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "CHO_H",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmflgkdu",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000002000C8",
+      "physical_keys": [
+        "S",
+        "D",
+        "R",
+        "J"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 초ㅎ + 종ㅇ",
+      "physical_chord": "S + D + R + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREONI",
+      "category": "connective",
+      "output": "그러니",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "JONG_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": "GRN",
+      "dubeolsik_keys": "rmfjsl",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000000200C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "I"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 종ㄴ",
+      "physical_chord": "S + D + I",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREONA",
+      "category": "connective",
+      "output": "그러나",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "CHO_R",
+        "JONG_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": "GRN",
+      "dubeolsik_keys": "rmfjsk",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000400200C0",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "D",
+        "I"
+      ],
+      "logical_chord": "약어L + 초ㄱ + 초ㄹ + 종ㄴ",
+      "physical_chord": "<ABBR_L> + S + D + I",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREOMEURO",
+      "category": "connective",
+      "output": "그러므로",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "JONG_M",
+        "CHO_DOUBLE"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmfjamfh",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000040002C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "M",
+        "G"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 종ㅁ + 쌍초/WORD 반복",
+      "physical_chord": "S + D + M + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREOJA",
+      "category": "connective",
+      "output": "그러자",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "JONG_J"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GRJ",
+      "dubeolsik_keys": "rmfjwk",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000000400C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "O"
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 종ㅈ",
+      "physical_chord": "S + D + O",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREOGI",
+      "category": "connective",
+      "output": "그러기",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "CHO_R",
+        "CHO_DOUBLE"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GR_REPEAT",
+      "dubeolsik_keys": "rmfjrl",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000400002C0",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "D",
+        "G"
+      ],
+      "logical_chord": "약어L + 초ㄱ + 초ㄹ + 쌍초/WORD 반복",
+      "physical_chord": "<ABBR_L> + S + D + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_WIHAESEO",
+      "category": "connective",
+      "output": "위해서",
+      "roles": [
+        "CHO_O",
+        "CHO_S",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": "OHS",
+      "dubeolsik_keys": "dnlgotj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000010120",
+      "physical_keys": [
+        "F",
+        "A",
+        "U"
+      ],
+      "logical_chord": "초ㅇ + 초ㅅ + 종ㅎ",
+      "physical_chord": "F + A + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREOTDAMYEON",
+      "category": "connective",
+      "output": "그렇다면",
+      "roles": [
+        "CHO_G",
+        "CHO_R",
+        "CHO_M",
+        "JONG_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmfjgekaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000080020C0",
+      "physical_keys": [
+        "S",
+        "D",
+        "V",
+        ","
+      ],
+      "logical_chord": "초ㄱ + 초ㄹ + 초ㅁ + 종ㄷ",
+      "physical_chord": "S + D + V + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_GEUREOTJI",
+      "category": "connective",
+      "output": "그렇지",
+      "roles": [
+        "ABBR_L",
+        "CHO_G",
+        "CHO_R",
+        "JONG_J"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "GRJ",
+      "dubeolsik_keys": "rmfjgwl",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000400400C0",
+      "physical_keys": [
+        "<ABBR_L>",
+        "S",
+        "D",
+        "O"
+      ],
+      "logical_chord": "약어L + 초ㄱ + 초ㄹ + 종ㅈ",
+      "physical_chord": "<ABBR_L> + S + D + O",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_ANEUMYEON",
+      "category": "connective",
+      "output": "않으면",
+      "roles": [
+        "AB2",
+        "CHO_O",
+        "JONG_M"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅇ-ㅇ-ㅁ 전부 보존이 물리적으로 불가능하여 AB2 반복 예외 표식 사용",
+      "collision_group": null,
+      "dubeolsik_keys": "dksgdmaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000104000100",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "F",
+        "M"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅇ + 종ㅁ",
+      "physical_chord": "<VEXT_OPPOSITE> + F + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_HADEORADO",
+      "category": "connective",
+      "output": "하더라도",
+      "roles": [
+        "JONG_H",
+        "CHO_R",
+        "JONG_D",
+        "CHO_DOUBLE"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅎ-ㄷ-ㄹ-ㄷ 반복/세로충돌 예외안; 최종 손배치 검토 필요",
+      "collision_group": null,
+      "dubeolsik_keys": "gkejfkeh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008010280",
+      "physical_keys": [
+        "U",
+        "D",
+        ",",
+        "G"
+      ],
+      "logical_chord": "종ㅎ + 초ㄹ + 종ㄷ + 쌍초/WORD 반복",
+      "physical_chord": "U + D + , + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "CONN_GEJEYA",
+      "category": "connective",
+      "output": "그제야",
+      "roles": [
+        "CHO_G",
+        "CHO_O",
+        "JONG_J"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rmwpdi",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000040140",
+      "physical_keys": [
+        "S",
+        "F",
+        "O"
+      ],
+      "logical_chord": "초ㄱ + 초ㅇ + 종ㅈ",
+      "physical_chord": "S + F + O",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_DAMAN",
+      "category": "connective",
+      "output": "다만",
+      "roles": [
+        "CHO_D",
+        "CHO_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ekaks",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000003000",
+      "physical_keys": [
+        "C",
+        "V"
+      ],
+      "logical_chord": "초ㄷ + 초ㅁ",
+      "physical_chord": "C + V",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_DEOGUNA",
+      "category": "connective",
+      "output": "더구나",
+      "roles": [
+        "CHO_D",
+        "CHO_G",
+        "JONG_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ejrnsk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000021040",
+      "physical_keys": [
+        "C",
+        "S",
+        "I"
+      ],
+      "logical_chord": "초ㄷ + 초ㄱ + 종ㄴ",
+      "physical_chord": "C + S + I",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_DEOBUREO",
+      "category": "connective",
+      "output": "더불어",
+      "roles": [
+        "CHO_D",
+        "CHO_B",
+        "CHO_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ejqnfdj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001900",
+      "physical_keys": [
+        "C",
+        "X",
+        "F"
+      ],
+      "logical_chord": "초ㄷ + 초ㅂ + 초ㅇ",
+      "physical_chord": "C + X + F",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_DONGSIE",
+      "category": "connective",
+      "output": "동시에",
+      "roles": [
+        "CHO_D",
+        "CHO_S",
+        "CHO_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ehdtldp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001120",
+      "physical_keys": [
+        "C",
+        "A",
+        "F"
+      ],
+      "logical_chord": "초ㄷ + 초ㅅ + 초ㅇ",
+      "physical_chord": "C + A + F",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_DORIKYEO",
+      "category": "connective",
+      "output": "돌이켜",
+      "roles": [
+        "CHO_D",
+        "CHO_O",
+        "CHO_K"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ehfdlzu",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000001101",
+      "physical_keys": [
+        "C",
+        "F",
+        "Q"
+      ],
+      "logical_chord": "초ㄷ + 초ㅇ + 초ㅋ",
+      "physical_chord": "C + F + Q",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_BOMYEON",
+      "category": "connective",
+      "output": "보면",
+      "roles": [
+        "CHO_B",
+        "CHO_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "qhaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000002800",
+      "physical_keys": [
+        "X",
+        "V"
+      ],
+      "logical_chord": "초ㅂ + 초ㅁ",
+      "physical_chord": "X + V",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_DEUDIEO",
+      "category": "connective",
+      "output": "드디어",
+      "roles": [
+        "CHO_D",
+        "CHO_O",
+        "JONG_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "emeldj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008001100",
+      "physical_keys": [
+        "C",
+        "F",
+        ","
+      ],
+      "logical_chord": "초ㄷ + 초ㅇ + 종ㄷ",
+      "physical_chord": "C + F + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_TTARASEO",
+      "category": "connective",
+      "output": "따라서",
+      "roles": [
+        "CHO_D",
+        "CHO_S",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "Ekfktj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000401020",
+      "physical_keys": [
+        "C",
+        "A",
+        "K"
+      ],
+      "logical_chord": "초ㄷ + 초ㅅ + 종ㄹ",
+      "physical_chord": "C + A + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_TTONEUN",
+      "category": "connective",
+      "output": "또는",
+      "roles": [
+        "CHO_D",
+        "CHO_DOUBLE",
+        "JONG_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "Ehsms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000021200",
+      "physical_keys": [
+        "C",
+        "G",
+        "I"
+      ],
+      "logical_chord": "초ㄷ + 쌍초/WORD 반복 + 종ㄴ",
+      "physical_chord": "C + G + I",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_TTOHAN",
+      "category": "connective",
+      "output": "또한",
+      "roles": [
+        "CHO_D",
+        "CHO_DOUBLE",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "Ehgks",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000011200",
+      "physical_keys": [
+        "C",
+        "G",
+        "U"
+      ],
+      "logical_chord": "초ㄷ + 쌍초/WORD 반복 + 종ㅎ",
+      "physical_chord": "C + G + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_MACHIMNAE",
+      "category": "connective",
+      "output": "마침내",
+      "roles": [
+        "CHO_M",
+        "CHO_CH",
+        "CHO_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "akclaso",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000002404",
+      "physical_keys": [
+        "V",
+        "Z",
+        "E"
+      ],
+      "logical_chord": "초ㅁ + 초ㅊ + 초ㄴ",
+      "physical_chord": "V + Z + E",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_MACHIM",
+      "category": "connective",
+      "output": "마침",
+      "roles": [
+        "CHO_M",
+        "CHO_CH"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "akcla",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000002400",
+      "physical_keys": [
+        "V",
+        "Z"
+      ],
+      "logical_chord": "초ㅁ + 초ㅊ",
+      "physical_chord": "V + Z",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_MANYAGE",
+      "category": "connective",
+      "output": "만약에",
+      "roles": [
+        "AB2",
+        "CHO_M",
+        "JONG_O"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅁ-ㅇ-ㅇ 반복 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "aksdirdp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100202000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "V",
+        "J"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅁ + 종ㅇ",
+      "physical_chord": "<VEXT_OPPOSITE> + V + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_MALHAMYEON",
+      "category": "connective",
+      "output": "말하면",
+      "roles": [
+        "AB2",
+        "CHO_M",
+        "JONG_H"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅁ-ㅎ-ㅁ 반복 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "akfgkaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100012000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "V",
+        "U"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅁ + 종ㅎ",
+      "physical_chord": "<VEXT_OPPOSITE> + V + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_BANMYEONE",
+      "category": "connective",
+      "output": "반면에",
+      "roles": [
+        "CHO_B",
+        "CHO_M",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "qksausdp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000202800",
+      "physical_keys": [
+        "X",
+        "V",
+        "J"
+      ],
+      "logical_chord": "초ㅂ + 초ㅁ + 종ㅇ",
+      "physical_chord": "X + V + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_PPUNMAN",
+      "category": "connective",
+      "output": "뿐만",
+      "roles": [
+        "CHO_B",
+        "CHO_DOUBLE",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "Qnsaks",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004000A00",
+      "physical_keys": [
+        "X",
+        "G",
+        "M"
+      ],
+      "logical_chord": "초ㅂ + 쌍초/WORD 반복 + 종ㅁ",
+      "physical_chord": "X + G + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_ANIRA",
+      "category": "connective",
+      "output": "아니라",
+      "roles": [
+        "CHO_O",
+        "CHO_N",
+        "JONG_R"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dkslfk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000400104",
+      "physical_keys": [
+        "F",
+        "E",
+        "K"
+      ],
+      "logical_chord": "초ㅇ + 초ㄴ + 종ㄹ",
+      "physical_chord": "F + E + K",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_HALJIRADO",
+      "category": "connective",
+      "output": "할지라도",
+      "roles": [
+        "CHO_H",
+        "CHO_J",
+        "CHO_R",
+        "JONG_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "gkfwlfkeh",
+      "source": "conversation",
+      "mask_u64_hex": "0x000000000800008A",
+      "physical_keys": [
+        "R",
+        "W",
+        "D",
+        ","
+      ],
+      "logical_chord": "초ㅎ + 초ㅈ + 초ㄹ + 종ㄷ",
+      "physical_chord": "R + W + D + ,",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_AULLEO",
+      "category": "connective",
+      "output": "아울러",
+      "roles": [
+        "CHO_O",
+        "CHO_R",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dkdnffj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000200180",
+      "physical_keys": [
+        "F",
+        "D",
+        "J"
+      ],
+      "logical_chord": "초ㅇ + 초ㄹ + 종ㅇ",
+      "physical_chord": "F + D + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_AMURI",
+      "category": "connective",
+      "output": "아무리",
+      "roles": [
+        "CHO_O",
+        "CHO_R",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dkanfl",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004000180",
+      "physical_keys": [
+        "F",
+        "D",
+        "M"
+      ],
+      "logical_chord": "초ㅇ + 초ㄹ + 종ㅁ",
+      "physical_chord": "F + D + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_AMUTEUN",
+      "category": "connective",
+      "output": "아무튼",
+      "roles": [
+        "ABBR_L",
+        "AB2",
+        "CHO_O",
+        "JONG_M"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅇ-ㅁ-ㅌ 전부 보존 불가; AB2/약L 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "dkanxms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000144000100",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<VEXT_OPPOSITE>",
+        "F",
+        "M"
+      ],
+      "logical_chord": "약어L + 쌍모 약어선택자 + 초ㅇ + 종ㅁ",
+      "physical_chord": "<ABBR_L> + <VEXT_OPPOSITE> + F + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_ANIMYEON",
+      "category": "connective",
+      "output": "아니면",
+      "roles": [
+        "CHO_O",
+        "CHO_N",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dkslaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004000104",
+      "physical_keys": [
+        "F",
+        "E",
+        "M"
+      ],
+      "logical_chord": "초ㅇ + 초ㄴ + 종ㅁ",
+      "physical_chord": "F + E + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_EOJJAETDEUN",
+      "category": "connective",
+      "output": "어쨌든",
+      "roles": [
+        "CHO_J",
+        "CHO_DOUBLE",
+        "CHO_D",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "djWoTems",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000201202",
+      "physical_keys": [
+        "W",
+        "G",
+        "C",
+        "J"
+      ],
+      "logical_chord": "초ㅈ + 쌍초/WORD 반복 + 초ㄷ + 종ㅇ",
+      "physical_chord": "W + G + C + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_YEOHATEUN",
+      "category": "connective",
+      "output": "여하튼",
+      "roles": [
+        "ABBR_L",
+        "AB2",
+        "CHO_O",
+        "JONG_H"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅇ-ㅎ-ㅌ 전부 보존 불가; 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "dugkxms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000140010100",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<VEXT_OPPOSITE>",
+        "F",
+        "U"
+      ],
+      "logical_chord": "약어L + 쌍모 약어선택자 + 초ㅇ + 종ㅎ",
+      "physical_chord": "<ABBR_L> + <VEXT_OPPOSITE> + F + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_WAENYAHAMYEON",
+      "category": "connective",
+      "output": "왜냐하면",
+      "roles": [
+        "AB2",
+        "CHO_O",
+        "CHO_N",
+        "JONG_H"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅇ-ㄴ-ㅎ-ㅁ 전부 보존 불가; AB2가 생략된 ㅁ을 표시하는 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "dhosigkaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100010104",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "F",
+        "E",
+        "U"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅇ + 초ㄴ + 종ㅎ",
+      "physical_chord": "<VEXT_OPPOSITE> + F + E + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_YOKKEONDAE",
+      "category": "connective",
+      "output": "요컨대",
+      "roles": [
+        "ABBR_R",
+        "CHO_O",
+        "CHO_K",
+        "CHO_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "동일 마스크 충돌을 반대편/약어 선택자로 분리.",
+      "collision_group": null,
+      "dubeolsik_keys": "dyzjseo",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000080001101",
+      "physical_keys": [
+        "<ABBR_R>",
+        "F",
+        "Q",
+        "C"
+      ],
+      "logical_chord": "약어R + 초ㅇ + 초ㅋ + 초ㄷ",
+      "physical_chord": "<ABBR_R> + F + Q + C",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_HAMKKE",
+      "category": "connective",
+      "output": "함께",
+      "roles": [
+        "JONG_H",
+        "CHO_G",
+        "CHO_DOUBLE"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "gkaRp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000010240",
+      "physical_keys": [
+        "U",
+        "S",
+        "G"
+      ],
+      "logical_chord": "종ㅎ + 초ㄱ + 쌍초/WORD 반복",
+      "physical_chord": "U + S + G",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_IWUKGO",
+      "category": "connective",
+      "output": "이윽고",
+      "roles": [
+        "CHO_O",
+        "JONG_O",
+        "JONG_G"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dldmrrh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000A00100",
+      "physical_keys": [
+        "F",
+        "J",
+        "L"
+      ],
+      "logical_chord": "초ㅇ + 종ㅇ + 종ㄱ",
+      "physical_chord": "F + J + L",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "CONN_IEOSEO",
+      "category": "connective",
+      "output": "이어서",
+      "roles": [
+        "CHO_O",
+        "JONG_O",
+        "JONG_S"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dldjtj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000001200100",
+      "physical_keys": [
+        "F",
+        "J",
+        ";"
+      ],
+      "logical_chord": "초ㅇ + 종ㅇ + 종ㅅ",
+      "physical_chord": "F + J + ;",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 2
+    },
+    {
+      "id": "CONN_IREUNBA",
+      "category": "connective",
+      "output": "이른바",
+      "roles": [
+        "CHO_O",
+        "CHO_R",
+        "CHO_B"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dlfmsqk",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000000980",
+      "physical_keys": [
+        "F",
+        "D",
+        "X"
+      ],
+      "logical_chord": "초ㅇ + 초ㄹ + 초ㅂ",
+      "physical_chord": "F + D + X",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_IREULTEMYEON",
+      "category": "connective",
+      "output": "이를테면",
+      "roles": [
+        "AB2",
+        "CHO_O",
+        "CHO_R",
+        "JONG_T"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅇ-ㄹ-ㅌ-ㅁ 전부 보존 불가; AB2 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "dlfmfxpaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100008180",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "F",
+        "D",
+        "Y"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅇ + 초ㄹ + 종ㅌ",
+      "physical_chord": "<VEXT_OPPOSITE> + F + D + Y",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_WIHAE",
+      "category": "connective",
+      "output": "위해",
+      "roles": [
+        "CHO_O",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "dnlgo",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000010100",
+      "physical_keys": [
+        "F",
+        "U"
+      ],
+      "logical_chord": "초ㅇ + 종ㅎ",
+      "physical_chord": "F + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_INHAESEO",
+      "category": "connective",
+      "output": "인해서",
+      "roles": [
+        "ABBR_R",
+        "CHO_O",
+        "CHO_S",
+        "JONG_H"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "약L은 초ㅅ과 같은 왼손 소지라 약R 사용",
+      "collision_group": "OHS",
+      "dubeolsik_keys": "dlsgotj",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000080010120",
+      "physical_keys": [
+        "<ABBR_R>",
+        "F",
+        "A",
+        "U"
+      ],
+      "logical_chord": "약어R + 초ㅇ + 초ㅅ + 종ㅎ",
+      "physical_chord": "<ABBR_R> + F + A + U",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_JACHITHAMYEON",
+      "category": "connective",
+      "output": "자칫하면",
+      "roles": [
+        "CHO_J",
+        "CHO_CH",
+        "CHO_H",
+        "JONG_M"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wkcltgkaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x000000000400040A",
+      "physical_keys": [
+        "W",
+        "Z",
+        "R",
+        "M"
+      ],
+      "logical_chord": "초ㅈ + 초ㅊ + 초ㅎ + 종ㅁ",
+      "physical_chord": "W + Z + R + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 3,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_JEONGNYEONG",
+      "category": "connective",
+      "output": "정녕",
+      "roles": [
+        "CHO_J",
+        "CHO_N"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wjdsud",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000000006",
+      "physical_keys": [
+        "W",
+        "E"
+      ],
+      "logical_chord": "초ㅈ + 초ㄴ",
+      "physical_chord": "W + E",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 0
+    },
+    {
+      "id": "CONN_HANPYEON",
+      "category": "connective",
+      "output": "한편",
+      "roles": [
+        "CHO_H",
+        "JONG_P"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "gksvus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000002000008",
+      "physical_keys": [
+        "R",
+        "N"
+      ],
+      "logical_chord": "초ㅎ + 종ㅍ",
+      "physical_chord": "R + N",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_HAMULMYEO",
+      "category": "connective",
+      "output": "하물며",
+      "roles": [
+        "AB2",
+        "CHO_H",
+        "JONG_M"
+      ],
+      "status": "needs_review",
+      "enabled_by_default": false,
+      "notes": "ㅎ-ㅁ-ㅁ 반복 예외안",
+      "collision_group": null,
+      "dubeolsik_keys": "gkanfau",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000104000008",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "R",
+        "M"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 초ㅎ + 종ㅁ",
+      "physical_chord": "<VEXT_OPPOSITE> + R + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_HAJIMAN",
+      "category": "connective",
+      "output": "하지만",
+      "roles": [
+        "CHO_H",
+        "CHO_J",
+        "JONG_M"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "gkwlaks",
+      "source": "conversation",
+      "mask_u64_hex": "0x000000000400000A",
+      "physical_keys": [
+        "R",
+        "W",
+        "M"
+      ],
+      "logical_chord": "초ㅎ + 초ㅈ + 종ㅁ",
+      "physical_chord": "R + W + M",
+      "output_spacing": "no_auto_space",
+      "onset_count": 2,
+      "coda_count": 1
+    },
+    {
+      "id": "CONN_HOGEUN",
+      "category": "connective",
+      "output": "혹은",
+      "roles": [
+        "CHO_H",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "ghrdms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000200008",
+      "physical_keys": [
+        "R",
+        "J"
+      ],
+      "logical_chord": "초ㅎ + 종ㅇ",
+      "physical_chord": "R + J",
+      "output_spacing": "no_auto_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "TAIL_YEOTDA",
+      "category": "tail",
+      "output": "였다",
+      "roles": [
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "ㅇㄷ군 최우선, 오른손-only",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "duTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008200000",
+      "physical_keys": [
+        "J",
+        ","
+      ],
+      "logical_chord": "종ㅇ + 종ㄷ",
+      "physical_chord": "J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_EOPDA",
+      "category": "tail",
+      "output": "없다",
+      "roles": [
+        "ABBR_R",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "ㅇㄷ군 2순위, 오른손 중심",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "djqtek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000088200000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "J",
+        ","
+      ],
+      "logical_chord": "약어R + 종ㅇ + 종ㄷ",
+      "physical_chord": "<ABBR_R> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_EOTDA",
+      "category": "tail",
+      "output": "었다",
+      "roles": [
+        "ABBR_L",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "djTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000048200000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "J",
+        ","
+      ],
+      "logical_chord": "약어L + 종ㅇ + 종ㄷ",
+      "physical_chord": "<ABBR_L> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_ATDA",
+      "category": "tail",
+      "output": "았다",
+      "roles": [
+        "ABBR_L",
+        "ABBR_R",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "dkTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x00000000C8200000",
+      "physical_keys": [
+        "<ABBR_L>",
+        "<ABBR_R>",
+        "J",
+        ","
+      ],
+      "logical_chord": "약어L + 약어R + 종ㅇ + 종ㄷ",
+      "physical_chord": "<ABBR_L> + <ABBR_R> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_IEOTDA",
+      "category": "tail",
+      "output": "이었다",
+      "roles": [
+        "AB2",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "쌍종 H와 종ㅇ J의 같은 검지 충돌을 AB2 은행으로 회피",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "dldjTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000108200000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "J",
+        ","
+      ],
+      "logical_chord": "쌍모 약어선택자 + 종ㅇ + 종ㄷ",
+      "physical_chord": "<VEXT_OPPOSITE> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_EOSSEOTDA",
+      "category": "tail",
+      "output": "었었다",
+      "roles": [
+        "AB2",
+        "ABBR_R",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "djTdjTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000188200000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "<ABBR_R>",
+        "J",
+        ","
+      ],
+      "logical_chord": "쌍모 약어선택자 + 약어R + 종ㅇ + 종ㄷ",
+      "physical_chord": "<VEXT_OPPOSITE> + <ABBR_R> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_ITDA",
+      "category": "tail",
+      "output": "있다",
+      "roles": [
+        "AB2",
+        "ABBR_L",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "dlTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000148200000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "<ABBR_L>",
+        "J",
+        ","
+      ],
+      "logical_chord": "쌍모 약어선택자 + 약어L + 종ㅇ + 종ㄷ",
+      "physical_chord": "<VEXT_OPPOSITE> + <ABBR_L> + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_EDA",
+      "category": "tail",
+      "output": "에다",
+      "roles": [
+        "ABBR_R",
+        "CHO_O",
+        "JONG_D"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "오른손 ㅇㄷ의 7개 무충돌 슬롯을 다 쓴 뒤 사용하는 혼합 예외; 사용자 제안 'ㅇ초성+ㄷ종성+약어'.",
+      "collision_group": "TAIL_OD",
+      "dubeolsik_keys": "dpek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000088000100",
+      "physical_keys": [
+        "<ABBR_R>",
+        "F",
+        ","
+      ],
+      "logical_chord": "약어R + 초ㅇ + 종ㄷ",
+      "physical_chord": "<ABBR_R> + F + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 1,
+      "coda_count": 1
+    },
+    {
+      "id": "TAIL_HAETDA",
+      "category": "tail",
+      "output": "했다",
+      "roles": [
+        "JONG_H",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "goTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008010000",
+      "physical_keys": [
+        "U",
+        ","
+      ],
+      "logical_chord": "종ㅎ + 종ㄷ",
+      "physical_chord": "U + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_DWAETDA",
+      "category": "tail",
+      "output": "됐다",
+      "roles": [
+        "JONG_DOUBLE",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "쌍종=반복 ㄷ",
+      "collision_group": null,
+      "dubeolsik_keys": "ehoTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008100000",
+      "physical_keys": [
+        "H",
+        ","
+      ],
+      "logical_chord": "쌍종/TAIL 반복 + 종ㄷ",
+      "physical_chord": "H + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 1
+    },
+    {
+      "id": "TAIL_NEUNDE",
+      "category": "tail",
+      "output": "는데",
+      "roles": [
+        "AB2",
+        "JONG_N"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "종ㄴ+종ㄷ이 같은 오른손 중지라 AB2 단일 코어 사용",
+      "collision_group": null,
+      "dubeolsik_keys": "smsep",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000100020000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "I"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 종ㄴ",
+      "physical_chord": "<VEXT_OPPOSITE> + I",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 1
+    },
+    {
+      "id": "TAIL_EULJIDO",
+      "category": "tail",
+      "output": "을지도",
+      "roles": [
+        "JONG_O",
+        "JONG_J",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OJD",
+      "dubeolsik_keys": "dmfwleh",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008240000",
+      "physical_keys": [
+        "J",
+        "O",
+        ","
+      ],
+      "logical_chord": "종ㅇ + 종ㅈ + 종ㄷ",
+      "physical_chord": "J + O + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_EOJYEOTDA",
+      "category": "tail",
+      "output": "어졌다",
+      "roles": [
+        "ABBR_R",
+        "JONG_O",
+        "JONG_J",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_OJD",
+      "dubeolsik_keys": "djwuTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000088240000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "J",
+        "O",
+        ","
+      ],
+      "logical_chord": "약어R + 종ㅇ + 종ㅈ + 종ㄷ",
+      "physical_chord": "<ABBR_R> + J + O + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_JIMAN",
+      "category": "tail",
+      "output": "지만",
+      "roles": [
+        "JONG_J",
+        "JONG_M"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "wlaks",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000004040000",
+      "physical_keys": [
+        "O",
+        "M"
+      ],
+      "logical_chord": "종ㅈ + 종ㅁ",
+      "physical_chord": "O + M",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_SEUMNIDA",
+      "category": "tail",
+      "output": "습니다",
+      "roles": [
+        "AB2",
+        "JONG_S",
+        "JONG_D"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "겠/했/였/있/없/않/되었 + 습니다 조립",
+      "collision_group": null,
+      "dubeolsik_keys": "tmqslek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000109000000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        ";",
+        ","
+      ],
+      "logical_chord": "쌍모 약어선택자 + 종ㅅ + 종ㄷ",
+      "physical_chord": "<VEXT_OPPOSITE> + ; + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_EOSSEUMYEON",
+      "category": "tail",
+      "output": "었으면",
+      "roles": [
+        "AB2",
+        "ABBR_R",
+        "JONG_M"
+      ],
+      "status": "current",
+      "enabled_by_default": true,
+      "notes": "되+었으면 등 조립",
+      "collision_group": null,
+      "dubeolsik_keys": "djTdmaus",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000184000000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "<ABBR_R>",
+        "M"
+      ],
+      "logical_chord": "쌍모 약어선택자 + 약어R + 종ㅁ",
+      "physical_chord": "<VEXT_OPPOSITE> + <ABBR_R> + M",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 1
+    },
+    {
+      "id": "TAIL_HANEUNGE",
+      "category": "tail",
+      "output": "하는게",
+      "roles": [
+        "JONG_H",
+        "JONG_N",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "gksmsrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000830000",
+      "physical_keys": [
+        "U",
+        "I",
+        "L"
+      ],
+      "logical_chord": "종ㅎ + 종ㄴ + 종ㄱ",
+      "physical_chord": "U + I + L",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_ONEUNGE",
+      "category": "tail",
+      "output": "오는게",
+      "roles": [
+        "JONG_O",
+        "JONG_N",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "",
+      "collision_group": "TAIL_ONG",
+      "dubeolsik_keys": "dhsmsrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000A20000",
+      "physical_keys": [
+        "J",
+        "I",
+        "L"
+      ],
+      "logical_chord": "종ㅇ + 종ㄴ + 종ㄱ",
+      "physical_chord": "J + I + L",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_GANEUNGE",
+      "category": "tail",
+      "output": "가는게",
+      "roles": [
+        "JONG_DOUBLE",
+        "JONG_N",
+        "JONG_G"
+      ],
+      "status": "confirmed",
+      "enabled_by_default": true,
+      "notes": "쌍종=반복 ㄱ",
+      "collision_group": null,
+      "dubeolsik_keys": "rksmsrp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000920000",
+      "physical_keys": [
+        "H",
+        "I",
+        "L"
+      ],
+      "logical_chord": "쌍종/TAIL 반복 + 종ㄴ + 종ㄱ",
+      "physical_chord": "H + I + L",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 2
+    },
+    {
+      "id": "TAIL_GOITNEUN",
+      "category": "tail",
+      "output": "고있는",
+      "roles": [
+        "ABBR_R",
+        "JONG_O",
+        "JONG_N",
+        "JONG_G"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": "TAIL_ONG",
+      "dubeolsik_keys": "rhdlTsms",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000080A20000",
+      "physical_keys": [
+        "<ABBR_R>",
+        "J",
+        "I",
+        "L"
+      ],
+      "logical_chord": "약어R + 종ㅇ + 종ㄴ + 종ㄱ",
+      "physical_chord": "<ABBR_R> + J + I + L",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_GOISSEOTDA",
+      "category": "tail",
+      "output": "고있었다",
+      "roles": [
+        "AB2",
+        "JONG_G",
+        "JONG_O",
+        "JONG_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "",
+      "collision_group": null,
+      "dubeolsik_keys": "rhdlTdjTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000108A00000",
+      "physical_keys": [
+        "<VEXT_OPPOSITE>",
+        "L",
+        "J",
+        ","
+      ],
+      "logical_chord": "쌍모 약어선택자 + 종ㄱ + 종ㅇ + 종ㄷ",
+      "physical_chord": "<VEXT_OPPOSITE> + L + J + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 0,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_GISIJAKHAETDA",
+      "category": "tail",
+      "output": "기시작했다",
+      "roles": [
+        "CHO_G",
+        "CHO_S",
+        "JONG_J",
+        "JONG_H",
+        "JONG_D"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "오른손-only 불가, 2초성+3종성 혼합 TAIL",
+      "collision_group": null,
+      "dubeolsik_keys": "rltlwkrgoTek",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000008050060",
+      "physical_keys": [
+        "S",
+        "A",
+        "O",
+        "U",
+        ","
+      ],
+      "logical_chord": "초ㄱ + 초ㅅ + 종ㅈ + 종ㅎ + 종ㄷ",
+      "physical_chord": "S + A + O + U + ,",
+      "output_spacing": "append_no_space",
+      "onset_count": 2,
+      "coda_count": 3
+    },
+    {
+      "id": "TAIL_SUBAKKE",
+      "category": "tail",
+      "output": "수밖에",
+      "roles": [
+        "CHO_S",
+        "CHO_B",
+        "JONG_O"
+      ],
+      "status": "proposed",
+      "enabled_by_default": false,
+      "notes": "긴 표현 조립용 조각",
+      "collision_group": null,
+      "dubeolsik_keys": "tnqkRdp",
+      "source": "conversation",
+      "mask_u64_hex": "0x0000000000200820",
+      "physical_keys": [
+        "A",
+        "X",
+        "J"
+      ],
+      "logical_chord": "초ㅅ + 초ㅂ + 종ㅇ",
+      "physical_chord": "A + X + J",
+      "output_spacing": "append_no_space",
+      "onset_count": 2,
+      "coda_count": 1
+    }
+  ],
+  "composition_recipes": [
+    {
+      "output": "있었다",
+      "parts": [
+        "있",
+        "TAIL_EOTDA"
+      ],
+      "note": "있은 직접 입력, 었다 TAIL"
+    },
+    {
+      "output": "없었다",
+      "parts": [
+        "없",
+        "TAIL_EOTDA"
+      ],
+      "note": "없은 직접 입력, 었다 TAIL"
+    },
+    {
+      "output": "않았다",
+      "parts": [
+        "않",
+        "TAIL_ATDA"
+      ],
+      "note": "않은 직접 입력, 았다 TAIL"
+    },
+    {
+      "output": "되는데",
+      "parts": [
+        "되",
+        "TAIL_NEUNDE"
+      ]
+    },
+    {
+      "output": "됐는데",
+      "parts": [
+        "됐",
+        "TAIL_NEUNDE"
+      ]
+    },
+    {
+      "output": "되었으면",
+      "parts": [
+        "되",
+        "TAIL_EOSSEUMYEON"
+      ]
+    },
+    {
+      "output": "되었지만",
+      "parts": [
+        "BASIC_DOEEOT",
+        "TAIL_JIMAN"
+      ]
+    },
+    {
+      "output": "이었을지도",
+      "parts": [
+        "이었",
+        "TAIL_EULJIDO"
+      ]
+    },
+    {
+      "output": "되었을지도",
+      "parts": [
+        "BASIC_DOEEOT",
+        "TAIL_EULJIDO"
+      ]
+    },
+    {
+      "output": "겠습니다",
+      "parts": [
+        "겠",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "했습니다",
+      "parts": [
+        "했",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "였습니다",
+      "parts": [
+        "였",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "있습니다",
+      "parts": [
+        "있",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "없습니다",
+      "parts": [
+        "없",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "않습니다",
+      "parts": [
+        "않",
+        "TAIL_SEUMNIDA"
+      ]
+    },
+    {
+      "output": "되었습니다",
+      "parts": [
+        "BASIC_DOEEOT",
+        "TAIL_SEUMNIDA"
+      ]
+    }
+  ],
+  "reserved_physical_chords": {
+    "numbers": {
+      "1": [
+        "Q",
+        "A"
+      ],
+      "2": [
+        "W",
+        "S"
+      ],
+      "3": [
+        "E",
+        "D"
+      ],
+      "4": [
+        "R",
+        "F"
+      ],
+      "5": [
+        "T",
+        "G"
+      ],
+      "6": [
+        "Y",
+        "H"
+      ],
+      "7": [
+        "U",
+        "J"
+      ],
+      "8": [
+        "I",
+        "K"
+      ],
+      "9": [
+        "O",
+        "L"
+      ],
+      "0": [
+        "P",
+        ";"
+      ]
+    },
+    "note": "Number and other reserved chords must be exact-mask checked before normal abbreviation fallback."
+  },
+  "implementation": {
+    "QMK_Vial": {
+      "recommended": "Use a custom STENO exact-mask state machine for the fixed dictionaries. Map the 12 quick masks to dynamic macro IDs M0-M11.",
+      "quick_macro_hook": "dynamic_keymap_macro_send(slot)",
+      "configuration": "Set DYNAMIC_KEYMAP_MACRO_COUNT (or the corresponding Vial setting in the fork) to at least 12.",
+      "editor": "Use the existing Vial Macro page to edit only M0-M11; no custom abbreviation settings page is required for quick slots.",
+      "combo_only": "QMK Combo + Macro can reproduce simple/medium fixed chords and the 2-key quick slots. It is not a clean replacement for the full engine because of exact-mask no-output, dual-role vowels, mode exit, direct correction, and Latin-gate arbitration.",
+      "combo_release_note": "COMBO_NO_TIMER can activate combos on the first key release, but this does not by itself implement the complete state machine."
+    },
+    "ZMK": {
+      "recommended": "Use a custom behavior/module for the full engine, or ZMK combos that invoke macro behaviors for a smaller fixed subset.",
+      "quick_slots": "Define quick_0 through quick_11 macro behaviors and trigger them from the 12 quick combos.",
+      "editing": "Macro bodies can be edited in source/keymap tools and rebuilt. Do not assume that every ZMK Studio setup can edit arbitrary macro bodies at runtime; verify the exact Studio/module capabilities.",
+      "combo_macro": "ZMK combos can invoke macro behaviors, so a fixed similar-STENO subset is possible without a separate custom editor."
+    },
+    "generic_firmware": {
+      "mask_type": "uint64_t",
+      "canonical_lookup_key": "mask_u64_hex",
+      "recommended_result": "output Korean text by the stored dubeolsik_keys while the host IME is Korean",
+      "spacing": "No entry inserts a leading or trailing space unless its output text explicitly contains one."
+    }
+  },
+  "source_basis": {
+    "conversation": "User-confirmed design rules and mappings from the KLOR/Cornix STENO design conversation.",
+    "novels": [
+      "TS스톤외전(2).txt",
+      "귀족여왕(2).txt",
+      "리처드 타나토스 (2).txt",
+      "코인인생역전(2).txt",
+      "실패한 실험체가 되었다 데이터용(1).txt"
+    ],
+    "note": "Frequency-oriented candidate entries are marked proposed and disabled by default unless explicitly confirmed."
+  }
+}

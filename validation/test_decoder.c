@@ -19,9 +19,9 @@ static void expect_keys(const char *name, uint64_t roles, uint64_t positions,
                 name,err,d.kind,d.key_count,count); failures++;
     }
 }
-static void expect_dictionary(const char *name, uint8_t bank, uint64_t mask,
+static void expect_dictionary(const char *name, uint64_t mask,
                               const uint32_t *prefix, size_t prefix_count) {
-    const struct cornix_steno_dictionary_entry *e=cornix_steno_dictionary_lookup(bank,mask);
+    const struct cornix_steno_dictionary_entry *e=cornix_steno_dictionary_lookup(mask);
     if (!e || e->key_count < prefix_count || memcmp(e->keys,prefix,prefix_count*sizeof(prefix[0]))) {
         fprintf(stderr,"FAIL dictionary %s\n",name); failures++;
     }
@@ -88,11 +88,35 @@ int main(void) {
     const uint32_t n1[]={N1};
     expect_keys("number one",RBIT(CST_R_I_KH)|RBIT(CST_R_I_S),CST_POSITION_BIT(1)|CST_POSITION_BIT(13),n1,1);
 
-    if (cornix_steno_dictionary_count()!=61) { fprintf(stderr,"FAIL dictionary count\n"); failures++; }
-    const uint64_t grg=RBIT(CST_R_I_G)|RBIT(CST_R_F_R)|RBIT(CST_R_F_G);
+    if (cornix_steno_dictionary_count()!=42) { fprintf(stderr,"FAIL dictionary count\n"); failures++; }
+
+    /* Completed canonical exact-mask dictionary: direct masks and selectors. */
     const uint32_t geu[]={R,M};
-    expect_dictionary("그리고",CST_DICT_ABBR,grg,geu,2);
-    expect_dictionary("그렇게",CST_DICT_VEXT,grg,geu,2);
+    expect_dictionary("그런 direct",
+        RBIT(CST_R_I_G)|RBIT(CST_R_F_R),geu,2);
+    expect_dictionary("그리고 direct",
+        RBIT(CST_R_I_G)|RBIT(CST_R_I_R)|RBIT(CST_R_I_DOUBLE),geu,2);
+    expect_dictionary("그럼 ABBR_L",
+        RBIT(CST_R_ABBR_L)|RBIT(CST_R_I_G)|RBIT(CST_R_F_R),geu,2);
+    if (cornix_steno_dictionary_lookup(
+            RBIT(CST_R_ABBR_R)|RBIT(CST_R_I_G)|RBIT(CST_R_F_R))) {
+        fprintf(stderr,"FAIL ABBR_L/R were incorrectly mirrored\n"); failures++;
+    }
+
+    const uint32_t yeotda[]={D,U,LS(T),E,K};
+    expect_dictionary("였다 direct",
+        RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),yeotda,5);
+    const uint32_t eopda[]={D,J,Q,T,E,K};
+    expect_dictionary("없다 ABBR_R",
+        RBIT(CST_R_ABBR_R)|RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),eopda,6);
+    const uint32_t eotda[]={D,J,LS(T),E,K};
+    expect_dictionary("었다 ABBR_L",
+        RBIT(CST_R_ABBR_L)|RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),eotda,5);
+
+    const uint32_t ieotda[]={D,L,D,J,LS(T),E,K};
+    const uint64_t ab2_tail=RBIT(CST_R_F_NG)|RBIT(CST_R_F_D);
+    expect_dictionary("이었다 AB2 left",RBIT(CST_R_VEXT_L)|ab2_tail,ieotda,7);
+    expect_dictionary("이었다 AB2 right",RBIT(CST_R_VEXT_R)|ab2_tail,ieotda,7);
     if (cornix_steno_quick_count()!=12) { fprintf(stderr,"FAIL quick count\n"); failures++; }
     const struct cornix_steno_quick_entry *quick=cornix_steno_quick_lookup(
         RBIT(CST_R_ABBR_L)|RBIT(CST_R_V_EU));
@@ -105,6 +129,6 @@ int main(void) {
     }
 
     if (failures) return EXIT_FAILURE;
-    puts("Cornix STENO decoder/dictionary tests: PASS (61 + 12 GUI quick macros)");
+    puts("Cornix STENO decoder/dictionary tests: PASS (42 canonical exact masks + 12 GUI quick macros)");
     return EXIT_SUCCESS;
 }

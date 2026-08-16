@@ -418,8 +418,8 @@
 
 
         /*
-         * Cornix STENO final mirrored consonant layout + 61 exact-mask
-         * abbreviations. Physical convenience keys are outside the logical
+         * Cornix STENO final mirrored consonant layout + 42 canonical exact-mask
+         * abbreviations and 12 GUI-editable quick macros. Physical convenience keys are outside the logical
          * abbreviation role mask.
          */
         steno_layer {

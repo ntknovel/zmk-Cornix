@@ -1,0 +1,48 @@
+Cornix ZMK STENO v1.7.0 canonical exact-mask dictionary 검증 보고서
+==================================================================
+
+수정 원인
+---------
+퀵 약어는 정상인데 기본·접속·어미 약어가 무출력되던 이유는 이전 펌웨어가 완성 사전이
+아닌 1차/2차 bank 시제품 61개를 사용했기 때문입니다. 완성 사전의 direct exact mask와
+ABBR_L/R 구분이 사라져 있었습니다.
+
+v1.7.0 수정
+-----------
+- 완성 약어사전파일_v0.1 기본 활성 42개 적용
+- direct consonant exact mask lookup
+- ABBR_L과 ABBR_R 서로 구분
+- AB2만 VEXT_L/R 좌우 정규화
+- direct exact dictionary mask의 key-up 축약 방지
+- quick_0~quick_11 ZMK Macro 유지
+- 일반 50ms 오타 복구 유지
+
+검증
+----
+Cornix ZMK BASE+STENO package validation: PASS
+- YAML 12개
+- 8레이어 x 50 bindings
+- 최종 대칭 자음 배열
+- canonical exact mask 42개 + quick 12개
+- Host decoder/dictionary PASS
+- Engine state PASS
+- Vowel dual / one-shot Tab PASS
+- BASE indicator / STENO LED PASS
+- peripheral compile shape PASS
+
+실사용형 회귀 시험
+------------------
+- 초ㄱ+종ㄹ → 그런
+- 초ㄱ+초ㄹ+쌍초 → 그리고; key-up 축약 없음
+- 약어L+초ㄱ+종ㄹ → 그럼
+- 약어R+같은 자음 → 그럼으로 오인하지 않음
+- 종ㅇ+종ㄷ → 였다
+- 약어L+종ㅇ+종ㄷ → 었다
+- 약어R+종ㅇ+종ㄷ → 없다
+- VEXT_L/R+종ㅇ+종ㄷ → 이었다
+- 약어L+ㅡ → quick_0
+
+제한
+----
+이 환경에서는 전체 Zephyr/ZMK cross build와 실제 Cornix BLE 실기 검증을 실행하지 못했습니다.
+GitHub Actions에서 좌우 firmware build를 확인해야 합니다.
