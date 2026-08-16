@@ -81,6 +81,12 @@
             cancel-stroke;
             display-name = "ST RAlt";
         };
+        st_lang_return: st_lang_return {
+            compatible = "zmk,behavior-cornix-steno-language-return";
+            #binding-cells = <0>;
+            layer = <STENO>;
+            display-name = "ST English / Korean Return";
+        };
         st_arrow: st_arrow {
             compatible = "zmk,behavior-cornix-steno-arrow";
             #binding-cells = <1>;

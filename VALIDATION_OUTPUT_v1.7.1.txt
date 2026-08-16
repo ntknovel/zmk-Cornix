@@ -1,0 +1,17 @@
+Cornix ZMK BASE+STENO package validation: PASS
+- YAML files: 12
+- Layers: 8 x 50 bindings
+- Final convenience keys + Shift/JLKI select layer: PASS
+- Final mirrored consonant layout: PASS
+- Kconfig assignments checked: 13
+- Canonical exact-mask dictionary entries: 43 + 12 GUI-editable quick macros
+- Host decoder: Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+- ZMK/Zephyr API-shaped syntax: PASS (18 C sources)
+- Engine state: Cornix STENO v1.7.1 tail remap engine tests: PASS
+- Vowel dual / one-shot Tab: Cornix STENO vowel-dual/one-shot-Tab tests: PASS
+- BASE indicator + sequential STENO LED logic: Cornix STENO sequential LED-state tests: PASS
+- Right/peripheral compile shape: PASS (peripheral LED receiver)
+- cornix.keymap SHA-256: 78f7527fce6474911b57a72554ee6b5efa29f979c2be038d93ee5f95910fe820
+Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+Cornix STENO sequential LED-state tests: PASS
+Cornix STENO v1.7.1 tail remap engine tests: PASS

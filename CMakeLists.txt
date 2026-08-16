@@ -15,9 +15,11 @@ if(CONFIG_CORNIX_STENO)
       src/behaviors/behavior_steno_dual.c
       src/behaviors/behavior_steno_tab.c
       src/behaviors/behavior_steno_mode.c
+      src/behaviors/behavior_steno_language_return.c
       src/behaviors/behavior_steno_pulse.c
       src/behaviors/behavior_steno_arrow.c
       src/steno/steno_engine.c
+      src/steno/steno_english_return.c
       src/steno/steno_decoder.c
       src/steno/steno_output.c
       src/steno/steno_dual.c

@@ -1,0 +1,3 @@
+Cornix ZMK STENO v1.8.0 FULL PARITY
+Canonical exact-mask 43 + GUI Quick Macro 12
+ABBR/SYMBOL repeat navigation + continuous correction + English-return + LED categories + phantom invariant audit

@@ -356,7 +356,7 @@
             bindings = <
                 &kp TAB  &kp Q  &kp W  &kp E  &kp R  &kp T  &kp Y  &kp U  &kp I  &kp O  &kp P  &kp LC(A)
                 &kp CAPSLOCK  &kp A  &kp S  &kp D  &kp F  &kp G  &kp H  &kp J  &kp K  &kp L  &kp SEMI  &ht300 SQT DQT
-                &kp LSHIFT  &kp Z  &kp X  &kp C  &kp V  &kp B  &st_mode  &kp LC(F)  &kp N  &kp M  &kp COMMA  &kp DOT  &ht200 FSLH QUESTION  &kp RSHIFT
+                &kp LSHIFT  &kp Z  &kp X  &kp C  &kp V  &kp B  &st_mode  &st_lang_return  &kp N  &kp M  &kp COMMA  &kp DOT  &ht200 FSLH QUESTION  &kp RSHIFT
                 &kp LCTRL  &kp LALT  &ht200 LC(Y) LBKT  &lt250 NUM LGUI  &lt250 MOUSE MINUS  &kp ENTER  &kp SPACE  &lt250 NAV EQUAL  &lt250 FN K_APP  &ht200 RCTRL RBKT  &kp RALT  &kp BSPC
             >;
             sensor-bindings = <&inc_dec_kp UP DOWN  &inc_dec_kp RIGHT LEFT>;
@@ -418,8 +418,8 @@
 
 
         /*
-         * Cornix STENO final mirrored consonant layout + 61 exact-mask
-         * abbreviations. Physical convenience keys are outside the logical
+         * Cornix STENO v1.8.0 full-parity mirrored layout + 43 canonical exact-mask
+         * abbreviations and 12 GUI-editable quick macros. Physical convenience keys are outside the logical
          * abbreviation role mask.
          */
         steno_layer {
@@ -427,10 +427,10 @@
             bindings = <
                 &st_tab_once  &st_i_kh  &st_i_j  &st_i_n  &st_i_h  &st_i_t  &st_f_t  &st_f_h  &st_f_n  &st_f_j  &st_f_kh  &ht150 RCTRL RALT
                 &st_abbr_l  &st_i_s  &st_i_g  &st_i_r  &st_i_ng  &st_i_double  &st_f_double  &st_f_ng  &st_f_r  &st_f_g  &st_f_s  &st_abbr_r
-                &st_vext_l  &st_i_ch  &st_i_b  &st_i_d  &st_i_m  &st_i_p  &st_mode  &st_lang  &st_f_p  &st_f_m  &st_f_d  &st_f_b  &st_f_ch  &st_vext_r
+                &st_vext_l  &st_i_ch  &st_i_b  &st_i_d  &st_i_m  &st_i_p  &st_mode  &st_lang_return  &st_f_p  &st_f_m  &st_f_d  &st_f_b  &st_f_ch  &st_vext_r
                 &kp LCTRL  &kp LALT  &st_symbol_l  &st_v_o  &st_v_eu  &st_vu_enter  &st_va_space  &st_v_i  &st_v_eo  &st_symbol_r  &select_shift  &kp BSPC
             >;
-            sensor-bindings = <&st_enc UP DOWN  &st_enc LS(UP) LS(DOWN)>;
+            sensor-bindings = <&st_enc LS(UP) LS(DOWN)  &st_enc UP DOWN>;
         };
 
         /*

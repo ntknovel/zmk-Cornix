@@ -18,13 +18,13 @@ except ImportError:  # pragma: no cover
 
 LAYER_NAMES = ["base", "num", "mouse", "nav", "fn", "symbol", "steno", "select_nav"]
 EXPECTED_POSITION_BEHAVIORS = {
-    "base": {11: "kp", 30: "st_mode", 31: "kp", 40: "ht200", 47: "ht200"},
+    "base": {11: "kp", 30: "st_mode", 31: "st_lang_return", 40: "ht200", 47: "ht200"},
     "num": {30: "kp", 31: "kp"},
     "mouse": {30: "kp", 31: "kp"},
     "nav": {30: "none", 31: "none"},
     "fn": {30: "kp", 31: "kp"},
     "symbol": {30: "kp", 31: "kp"},
-    "steno": {11: "ht150", 30: "st_mode", 31: "st_lang", 47: "st_symbol_r", 48: "select_shift", 49: "kp"},
+    "steno": {11: "ht150", 30: "st_mode", 31: "st_lang_return", 47: "st_symbol_r", 48: "select_shift", 49: "kp"},
     "select_nav": {8: "kp", 19: "kp", 20: "kp", 21: "kp"},
 }
 EXPECTED_STENO_BEHAVIORS = {
@@ -33,7 +33,7 @@ EXPECTED_STENO_BEHAVIORS = {
     12:"st_abbr_l",13:"st_i_s",14:"st_i_g",15:"st_i_r",16:"st_i_ng",17:"st_i_double",
     18:"st_f_double",19:"st_f_ng",20:"st_f_r",21:"st_f_g",22:"st_f_s",23:"st_abbr_r",
     24:"st_vext_l",25:"st_i_ch",26:"st_i_b",27:"st_i_d",28:"st_i_m",29:"st_i_p",
-    30:"st_mode",31:"st_lang",32:"st_f_p",33:"st_f_m",34:"st_f_d",35:"st_f_b",36:"st_f_ch",37:"st_vext_r",
+    30:"st_mode",31:"st_lang_return",32:"st_f_p",33:"st_f_m",34:"st_f_d",35:"st_f_b",36:"st_f_ch",37:"st_vext_r",
     38:"kp",39:"kp",40:"st_symbol_l",41:"st_v_o",42:"st_v_eu",43:"st_vu_enter",
     44:"st_va_space",45:"st_v_i",46:"st_v_eo",47:"st_symbol_r",48:"select_shift",49:"kp",
 }
@@ -102,24 +102,31 @@ def validate_keymap(root: Path) -> dict[str, list[str]]:
     required=[
         "&kp P &kp LC(A)", "&kp LCTRL &kp LALT &ht200 LC(Y) LBKT",
         "&lt250 FN K_APP &ht200 RCTRL RBKT &kp RALT &kp BSPC",
-        "&st_mode &kp LC(F)", "&kp C_STOP &kp C_PLAY_PAUSE", "&kp F11 &kp F12",
-        "&st_f_kh &ht150 RCTRL RALT", "&st_mode &st_lang &st_f_p",
+        "&st_mode &st_lang_return", "&kp C_STOP &kp C_PLAY_PAUSE", "&kp F11 &kp F12",
+        "&st_f_kh &ht150 RCTRL RALT", "&st_mode &st_lang_return &st_f_p",
         "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_eo &st_symbol_r &select_shift &kp BSPC",
-        "sensor-bindings = <&st_enc UP DOWN &st_enc LS(UP) LS(DOWN)>",
+        "sensor-bindings = <&st_enc LS(UP) LS(DOWN) &st_enc UP DOWN>",
         "select_shift: select_shift", "&macro_press &mo SELECT_NAV &kp RSHIFT",
         "&kp LEFT &kp DOWN &kp RIGHT", "&rfm &st_led_toggle",
     ]
     for text in required:
         if text not in normalized: fail(f"required keymap sequence missing: {text}")
     if keymap.count("&st_mode")!=2: fail("&st_mode must appear twice")
-    if keymap.count("&st_lang")!=1: fail("&st_lang must appear once on the right encoder click")
+    if keymap.count("&st_lang_return")!=2:
+        fail("&st_lang_return must appear on BASE and STENO right encoder clicks")
+    if re.search(r"&st_lang(?:\s|$)", keymap):
+        fail("legacy one-shot &st_lang remains in the keymap")
     if keymap.count("&st_led_toggle")!=1: fail("&st_led_toggle must appear once")
     return layers
 
 
 def validate_kconfig(root: Path) -> int:
     kconfig = read(root / "Kconfig")
-    conf = read(root / "config/cornix.conf")
+    shared_conf = read(root / "config/cornix.conf")
+    steno_conf = read(root / "config/boards/shields/cornix_steno_led/cornix_steno_led.conf")
+    if re.search(r"^CONFIG_CORNIX_STENO", shared_conf, re.M):
+        fail("shared cornix.conf must not enable STENO; settings_reset would inherit it")
+    conf = shared_conf + "\n" + steno_conf
     assigned = sorted(set(re.findall(r"^CONFIG_(CORNIX_STENO(?:_[A-Z0-9_]+)?)=", conf, re.M)))
     for symbol in assigned:
         if symbol == "CORNIX_STENO":
@@ -128,8 +135,17 @@ def validate_kconfig(root: Path) -> int:
             pattern = rf"config\s+{symbol}\s*\n\s*(?:bool|int)\s+\""
         if not re.search(pattern, kconfig):
             fail(f"Kconfig symbol CONFIG_{symbol} is assigned but has no user-visible prompt")
-    if "CONFIG_CORNIX_STENO_MAX_POSITIONS=50" not in conf:
+    if "CONFIG_CORNIX_STENO_MAX_POSITIONS=50" not in steno_conf:
         fail("Cornix fixed 50-position build should use MAX_POSITIONS=50")
+    for token in ("CONFIG_CORNIX_STENO_KEYUP_CORRECTION_MS=50",
+                  "CONFIG_CORNIX_STENO_FINAL_ROLL_MS=90"):
+        if token not in steno_conf:
+            fail(f"STENO timing config missing: {token}")
+    for forbidden in ("CORNIX_STENO_CHORD_SETTLE_MS", "CORNIX_STENO_LATE_TAP_MAX_MS"):
+        if forbidden in kconfig or forbidden in steno_conf:
+            fail(f"legacy partial key-up timing remains: {forbidden}")
+    if not re.search(r"menuconfig\s+CORNIX_STENO.*?default\s+n", kconfig, re.S):
+        fail("CORNIX_STENO must default to n so settings_reset stays minimal")
     return len(assigned)
 
 
@@ -172,16 +188,48 @@ def validate_dictionary(root: Path) -> int:
         )
         if temp.read_bytes() != generated.read_bytes():
             fail("generated dictionary source is stale; regenerate it before packaging")
-    count = sum(1 for line in source.read_text(encoding="utf-8").splitlines()
-                if line.strip() and not line.lstrip().startswith("#"))
-    required_outputs = {"근데", "였다", "했다", "으면"}
-    outputs = {line.split("\t", 1)[0] for line in source.read_text(encoding="utf-8").splitlines()
-               if line.strip() and not line.lstrip().startswith("#")}
+    dictionary_rows = [line.split("\t") for line in source.read_text(encoding="utf-8").splitlines()
+                       if line.strip() and not line.lstrip().startswith("#")]
+    count = len(dictionary_rows)
+    required_outputs = {
+        "그런", "그럼", "그리고", "그렇게", "였다", "없다", "었다",
+        "이었다", "였었다", "했다", "는데", "습니다", "하는게",
+    }
+    outputs = {row[2] for row in dictionary_rows if len(row) >= 4}
     missing = sorted(required_outputs - outputs)
     if missing:
-        fail(f"required recent abbreviation entries are missing: {missing}")
-    if count != 61:
-        fail(f"expected 61 dictionary rows, found {count}")
+        fail(f"required canonical abbreviation entries are missing: {missing}")
+    if count != 43:
+        fail(f"expected 43 canonical dictionary rows, found {count}")
+
+    source_text = source.read_text(encoding="utf-8")
+    if re.search(r"(?m)^.*\t[12]\t(?:I_|F_)", source_text):
+        fail("legacy banked dictionary rows remain in the canonical source")
+    generated_text = generated.read_text(encoding="utf-8")
+    for token in [
+        "cornix_steno_dictionary_normalize_mask",
+        "cornix_steno_dictionary_lookup(uint64_t role_mask)",
+        "cornix_steno_dictionary_has_exact",
+        "cornix_steno_dictionary_has_prefix",
+        ".category = CST_ABBR_CATEGORY_",
+        "ABBR_L/R distinct",
+        "side-specific 였었다",
+    ]:
+        if token not in generated_text:
+            fail(f"canonical dictionary generator output missing: {token}")
+    if ".bank" in generated_text or "uint8_t bank" in generated_text:
+        fail("legacy dictionary bank field remains in generated C")
+
+    engine_text = read(root / "src/steno/steno_engine.c")
+    for token in (
+        "dictionary_anchor_active_locked", "cornix_steno_dictionary_has_prefix",
+        "CST_STREAM_NAV_LEFT", "CST_STREAM_SELECT_RIGHT", "CST_STREAM_CORRECTION",
+        "is_valid_final_roll_pair", "CONFIG_CORNIX_STENO_FINAL_ROLL_MS",
+        "cornix_steno_decode_correction_unit", "CST_NAV_VOWEL_POSITION",
+    ):
+        if token not in engine_text:
+            fail(f"v1.8.0 full-parity engine support missing: {token}")
+
 
     quick_gen = root / "tools/generate_steno_quick.py"
     quick_src = root / "config/steno_quick_abbreviations.tsv"
@@ -233,6 +281,7 @@ def validate_led_integration(root: Path) -> None:
         "CONFIG_CORNIX_STENO_LED=y",
         "CONFIG_CORNIX_STENO_LED_ENTRY_FLASH_MS=600",
         "CONFIG_CORNIX_STENO_LED_REASSERT_DELAY_MS=40",
+        "CONFIG_CORNIX_STENO_LED_CATEGORY_FLASH_MS=350",
         "CONFIG_RGBLED_WIDGET_SHOW_CAPSLOCK=n",
         "CONFIG_RGBLED_WIDGET_SHOW_LAYER_CHANGE=n",
         "CONFIG_RGBLED_WIDGET_SHOW_LAYER_COLORS=n",
@@ -266,6 +315,7 @@ def validate_led_integration(root: Path) -> None:
         "#include <cornix_steno/led.h>",
         "cornix_steno_led_mode_changed(active)",
         "cornix_steno_led_reset_keys()",
+        "cornix_steno_led_confirm_category",
     ]:
         if token not in engine:
             fail(f"STENO engine LED integration missing: {token}")
@@ -281,6 +331,8 @@ def validate_led_integration(root: Path) -> None:
                 fail(f"{rel} does not report physical held-key state: {token}")
 
     hardware = read(root / "src/steno/steno_led.c")
+    led_header = read(root / "include/cornix_steno/led.h")
+    led_integration = hardware + "\n" + led_header
     for token in [
         "#include <zmk_rgbled_widget/widget.h>",
         "ws2812_set_status_led",
@@ -291,9 +343,11 @@ def validate_led_integration(root: Path) -> None:
         "master_physical_down_mask",
         "CST_TOTAL_LED_COUNT",
         "CONFIG_CORNIX_STENO_LED_ENTRY_FLASH_MS",
+        "CONFIG_CORNIX_STENO_LED_CATEGORY_FLASH_MS",
+        "CST_ABBR_CATEGORY_CONNECTIVE",
         "zmk_behavior_invoke_binding",
     ]:
-        if token not in hardware:
+        if token not in led_integration:
             fail(f"STENO LED widget integration missing: {token}")
     for forbidden in ["led_strip_update_rgb", "GPIO_DT_SPEC_GET", "gpio_pin_set_dt"]:
         if forbidden in hardware:
@@ -311,6 +365,30 @@ def validate_led_integration(root: Path) -> None:
         fail("CORNIX_STENO_LED must depend on the production WS2812 widget")
 
 
+def validate_release_docs(root: Path) -> None:
+    version = read(root / "PACKAGE_VERSION.txt")
+    readme = read(root / "README_KO.md")
+    quick = read(root / "README_FIRST_KO.txt")
+    audit = read(root / "FULL_PARITY_v1.8.0_KO.md")
+    phantom = read(root / "CORNIX_STENO_PHANTOM_ROLE_AUDIT_v1.8.0_KO.md")
+    for token in ("v1.8.0", "FULL PARITY", "Canonical exact-mask 43", "GUI Quick Macro 12"):
+        if token not in version:
+            fail(f"release version metadata missing: {token}")
+    for token in (
+        "약어L 홀드 + 쌍초", "약어R 홀드 + 쌍종",
+        "기호L 홀드 + 쌍초", "기호R 홀드 + 쌍종",
+        "영문 복귀 상태", "12,383",
+    ):
+        if token not in readme and token not in quick:
+            fail(f"release documentation missing current behavior: {token}")
+    for token in ("v1.6.3 약어 앵커", "v1.7.1 tail remap", "팬텀 역할 감사"):
+        if token not in audit:
+            fail(f"patch audit missing: {token}")
+    for token in ("12,383", "종ㄷ+종ㅂ", "ZMK 표준 GPIO matrix driver"):
+        if token not in phantom:
+            fail(f"phantom audit missing: {token}")
+
+
 def validate_sources(root: Path) -> None:
     keymap = read(root / "config/cornix.keymap")
     for label in [f"quick_{i}" for i in range(12)]:
@@ -321,6 +399,14 @@ def validate_sources(root: Path) -> None:
         if f"DT_NODELABEL({label})" not in dispatch:
             fail(f"quick macro dispatch missing node label: {label}")
     decoder = read(root / "src/steno/steno_decoder.c")
+    for token in ("cornix_steno_decode_correction_unit", "consonant_identity_for_role"):
+        if token not in decoder:
+            fail(f"continuous correction decoder support missing: {token}")
+    english = read(root / "src/behaviors/behavior_steno_language_return.c")
+    for token in ("cornix_steno_english_return_take_pending", "RALT", "LC(F)",
+                  "zmk_keymap_layer_deactivate", "zmk_keymap_layer_activate"):
+        if token not in english:
+            fail(f"English-return behavior missing: {token}")
     if re.search(r"^#define\s+V\s*\(", decoder, re.M):
         fail("decoder defines V(...), which collides with ZMK's V keycode macro")
     workflow = read(root / ".github/workflows/build.yml")
@@ -330,8 +416,8 @@ def validate_sources(root: Path) -> None:
     cmake = read(root / "CMakeLists.txt")
     for source in [
         "behavior_steno_role.c", "behavior_steno_dual.c", "behavior_steno_tab.c",
-        "behavior_steno_mode.c", "behavior_steno_pulse.c", "behavior_steno_arrow.c",
-        "steno_engine.c", "steno_decoder.c", "steno_output.c", "steno_dual.c",
+        "behavior_steno_mode.c", "behavior_steno_language_return.c", "behavior_steno_pulse.c", "behavior_steno_arrow.c",
+        "steno_engine.c", "steno_english_return.c", "steno_decoder.c", "steno_output.c", "steno_dual.c",
         "steno_tab.c", "behavior_steno_led.c", "behavior_steno_led_toggle.c", "steno_led.c",
         "steno_dictionary_generated.c", "steno_quick_generated.c", "steno_quick_dispatch.c",
     ]:
@@ -394,10 +480,32 @@ def run_engine_state_test(root: Path) -> str:
         str(root / "validation/runtime_stub.c"),
         str(root / "validation/output_capture.c"),
         str(root / "validation/quick_invoke_stub.c"),
+        str(root / "validation/key_event_capture.c"),
         str(root / "src/steno/steno_engine.c"),
         str(root / "src/steno/steno_decoder.c"),
         str(root / "src/steno/steno_dictionary_generated.c"),
         str(root / "src/steno/steno_quick_generated.c"),
+        "-o", str(output),
+    ]
+    subprocess.run(cmd, check=True)
+    proc = subprocess.run([str(output)], check=True, text=True, capture_output=True)
+    output.unlink(missing_ok=True)
+    return proc.stdout.strip()
+
+
+def run_english_return_state_test(root: Path) -> str:
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        return "SKIP (no C compiler)"
+    output = root / "validation/test_english_return"
+    stubs = root / "validation/runtime_stubs"
+    cmd = [
+        cc, "-std=c11", "-Wall", "-Wextra", "-Werror",
+        "-include", str(stubs / "config.h"),
+        "-I" + str(stubs), "-I" + str(root / "include"),
+        str(root / "validation/test_english_return.c"),
+        str(root / "validation/runtime_stub.c"),
+        str(root / "src/steno/steno_english_return.c"),
         "-o", str(output),
     ]
     subprocess.run(cmd, check=True)
@@ -483,8 +591,14 @@ def validate_right_build_hardening(root: Path) -> None:
     reset_block = build.split("artifact-name: cornix_settings_reset")[0].rsplit("- board:", 1)[-1]
     if "studio-rpc-usb-uart" in reset_block:
         fail("settings_reset must not enable the Studio USB-UART transport on cornix_right")
-    if "snippet: nrf52840-nosd" not in reset_block:
-        fail("settings_reset must retain the nrf52840-nosd snippet")
+    if "snippet:" in reset_block:
+        fail("settings_reset must use the upstream Cornix board+shield form without extra snippets")
+    shared_conf = read(root / "config/cornix.conf")
+    if re.search(r"^CONFIG_CORNIX_STENO", shared_conf, re.M):
+        fail("settings_reset would inherit STENO from shared cornix.conf")
+    reset_conf = read(root / "config/settings_reset.conf")
+    if "CONFIG_CORNIX_STENO=n" not in reset_conf:
+        fail("settings_reset.conf must explicitly disable the STENO engine")
 
     cmake = (root / "CMakeLists.txt").read_text(encoding="utf-8")
     if "if(NOT CONFIG_ZMK_SPLIT OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)" not in cmake:
@@ -509,11 +623,13 @@ def main() -> None:
     validate_role_layout(root)
     kconfig_count = validate_kconfig(root)
     dictionary_count = validate_dictionary(root)
+    validate_release_docs(root)
     validate_sources(root)
     validate_led_integration(root)
     host = run_host_decoder_test(root)
     api_syntax = run_api_syntax_checks(root)
     engine_state = run_engine_state_test(root)
+    english_return = run_english_return_state_test(root)
     context_keys = run_context_key_test(root)
     led_logic = run_led_logic_test(root)
     peripheral_syntax = run_peripheral_led_syntax_check(root)
@@ -523,15 +639,16 @@ def main() -> None:
     print("Cornix ZMK BASE+STENO package validation: PASS")
     print(f"- YAML files: {yaml_count}")
     print(f"- Layers: {len(layers)} x 50 bindings")
-    print("- Final convenience keys + Shift/JLKI select layer: PASS")
+    print("- ABBR/SYMBOL repeat nav + ㅣ/JLKI + Shift/JLKI selection: PASS")
     print("- Final mirrored consonant layout: PASS")
     print(f"- Kconfig assignments checked: {kconfig_count}")
-    print(f"- Dictionary entries: {dictionary_count} + 12 GUI-editable quick macros")
+    print(f"- Canonical exact-mask dictionary entries: {dictionary_count} + 12 GUI-editable quick macros")
     print(f"- Host decoder: {host}")
     print(f"- ZMK/Zephyr API-shaped syntax: {api_syntax}")
     print(f"- Engine state: {engine_state}")
+    print(f"- English-return state: {english_return}")
     print(f"- Vowel dual / one-shot Tab: {context_keys}")
-    print(f"- BASE indicator + sequential STENO LED logic: {led_logic}")
+    print(f"- BASE indicator + STENO count/category LED logic: {led_logic}")
     print(f"- Right/peripheral compile shape: {peripheral_syntax}")
     print(f"- cornix.keymap SHA-256: {digest}")
 

@@ -77,12 +77,6 @@ enum cornix_steno_role {
 #define CST_SYMBOL_MASK (CST_ROLE_BIT(CST_R_SYMBOL_L) | CST_ROLE_BIT(CST_R_SYMBOL_R))
 #define CST_MARKER_MASK (CST_VEXT_MASK | CST_ABBR_MASK | CST_SYMBOL_MASK)
 
-enum cornix_steno_dictionary_bank {
-    CST_DICT_NONE = 0,
-    CST_DICT_ABBR = 1,
-    CST_DICT_VEXT = 2,
-};
-
 enum cornix_steno_dual_policy {
     CST_DUAL_VOWEL = 0,
     CST_DUAL_EDIT = 1,

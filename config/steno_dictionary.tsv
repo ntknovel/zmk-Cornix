@@ -1,64 +1,47 @@
-# output	bank	logical roles (physical positions are intentionally absent)
-# Final mirrored Cornix/KLOR layout: 61 exact-mask entries, validated by logical role and finger group.
-그런	1	I_G+F_R
-다른	1	F_D+I_R
-같은	1	I_G+F_NG
-다시	1	F_D+I_S
-조금	1	I_J+F_G
-그렇게	2	I_G+F_R+F_G
-이런	1	I_NG+F_R
-그리고	1	I_G+F_R+F_G
-하지만	1	I_H+I_J+F_M
-이렇게	1	I_NG+F_R+F_G
-함께	2	I_H+F_G
-없이	1	I_NG+F_NG
-커다란	1	I_KH+F_D+I_R
-이미	1	I_NG+F_M
-전부	1	I_J+F_B
-너무	1	I_N+F_M
-말했다	1	I_M+F_H+F_D
-그러자	1	I_G+F_R+F_J
-완전히	1	F_NG+I_J+I_H
-그대로	1	I_G+I_D+F_R
-아닌	1	I_NG+F_N
-바로	1	I_B+F_R
-점점	1	I_J+F_J
-그래도	1	I_G+I_R+F_D
-계속해서	1	F_G+I_S+I_H+F_S
-빠르게	1	I_DOUBLE+I_B+F_R+F_G
-천천히	1	I_CH+F_H
-가만히	1	I_G+F_M+I_H
-결국	1	I_G+F_G
-곧바로	1	I_G+F_B+F_R
-그때	2	I_G+F_D
-잠시	1	I_J+F_S
-그럼	2	I_G+F_R
-정말로	1	I_J+F_M+F_R
-때문에	2	I_D+I_M+F_NG
-조용히	2	F_NG+I_J+I_H
-그러면	1	I_G+F_R+F_M
-동시에	1	I_D+I_S+F_NG
-오히려	1	I_NG+F_H+F_R
-갑자기	1	I_G+F_J
-서서히	1	I_S+F_S+I_H
-그럼에도	1	F_G+F_R+I_NG+I_D
-아니면	1	I_NG+F_N+F_M
-순식간에	1	I_S+F_S+F_G+I_NG
-그러니까	2	I_G+F_R+I_N+F_G
-그렇다면	1	I_G+I_R+F_D+F_M
-그런데	2	I_G+I_R+F_D
-말 없이	1	I_M+F_NG
-잠시 후	1	I_J+F_S+I_H
-그러나	1	I_G+F_R+I_N
-그렇군	1	I_G+I_R+F_G
-바라봤다	1	I_B+I_R+F_B+F_D
-한숨을 쉬었다	1	I_H+I_S+F_NG+F_S+I_D
-자신도 모르게	1	I_J+I_S+I_D+F_M+F_R+F_G
-고개를 끄덕였다	1	I_G+F_G+I_DOUBLE+F_D
-눈을 크게 떴다	2	I_N+I_KH+F_G+F_D
-침을 꿀꺽 삼켰다	1	F_CH+I_DOUBLE+I_KH+I_D
-# 최근 대화에서 요청한 공용 표현/어미의 초기 논리 매핑
-근데	1	I_G+F_D
-였다	1	I_NG+F_D
-했다	1	I_H+F_D
-으면	2	I_NG+F_M
+# Canonical Cornix STENO exact-mask dictionary v1.8.0
+# id	category	output	logical roles	status	notes
+# ABBR_L and ABBR_R are distinct selectors. VEXT_L is canonical AB2;
+# runtime lookup accepts either VEXT side for AB2 entries only.
+BASIC_JEOMJEOM	basic_word	점점	I_J+F_J	confirmed	일반 WORD: 초ㅈ+종ㅈ
+BASIC_JINJJA	basic_word	진짜	I_J+F_J+F_DOUBLE	confirmed	두 번째 ㅈ이 ㅉ임을 쌍종으로 표시
+BASIC_GYEOLGUK	basic_word	결국	I_G+F_G	confirmed	
+BASIC_GEUREOKE	basic_word	그렇게	I_G+I_R+F_G	confirmed	
+BASIC_GEUREOTGUN	basic_word	그렇군	I_G+F_R+F_G	confirmed	
+BASIC_GEUREON	basic_word	그런	I_G+F_R	confirmed	
+BASIC_GEUREOM	basic_word	그럼	ABBR_L+I_G+F_R	confirmed	
+BASIC_GEURAEDO	basic_word	그래도	I_G+I_R+F_D	confirmed	
+BASIC_GEUREONDE	basic_word	그런데	ABBR_L+I_G+I_R+F_D	confirmed	
+BASIC_GEUREOMEDO	basic_word	그럼에도	I_G+I_R+I_NG+F_D	confirmed	
+BASIC_GEUDERO	basic_word	그대로	I_G+I_D+F_R	confirmed	
+BASIC_GAPJAGI	basic_word	갑자기	I_G+F_J+I_DOUBLE	confirmed	마지막 반복 ㄱ을 쌍초/반복 표식으로 표시
+BASIC_WANJEONHI	basic_word	완전히	I_NG+I_J+F_H	confirmed	
+BASIC_JOYONGHI	basic_word	조용히	I_NG+F_J+F_H	confirmed	현재 배열에서 초ㅈ+종ㅇ+종ㅎ은 오른손 검지 충돌. 초ㅇ+종ㅈ+종ㅎ으로 배치.
+BASIC_DOEEOT	basic_word	되었	I_D+I_NG	confirmed	TAIL 조립용 일반 WORD 조각
+BASIC_GEUNDE	basic_word	근데	I_G+F_D	confirmed	
+BASIC_GEUTTAE	basic_word	그때	I_G+F_D+F_DOUBLE	confirmed	일반 WORD: 두 번째 ㄷ이 ㄸ임을 쌍종으로 표시
+CONN_GEDAGA	connective	게다가	I_G+I_D+I_DOUBLE	confirmed	
+CONN_GEULIGO	connective	그리고	I_G+I_R+I_DOUBLE	confirmed	
+CONN_GEUREOJA	connective	그러자	I_G+I_R+F_J	confirmed	
+CONN_GEUREOGI	connective	그러기	ABBR_L+I_G+I_R+I_DOUBLE	confirmed	
+CONN_GEUREOTJI	connective	그렇지	ABBR_L+I_G+I_R+F_J	confirmed	
+CONN_HAJIMAN	connective	하지만	I_H+I_J+F_M	confirmed	
+TAIL_YEOTDA	tail	였다	F_NG+F_D	confirmed	ㅇㄷ군 최우선, 오른손-only
+TAIL_EOPDA	tail	없다	ABBR_R+F_NG+F_D	confirmed	ㅇㄷ군 2순위, 오른손 중심
+TAIL_EOTDA	tail	었다	ABBR_L+F_NG+F_D	current	
+TAIL_ATDA	tail	았다	ABBR_L+ABBR_R+F_NG+F_D	current	
+TAIL_IEOTDA	tail	이었다	F_DOUBLE+F_NG+F_D	confirmed	사용자 요청: 오른쪽 쌍종 + 종ㅇ + 종ㄷ; H/J 동일 검지 예외
+TAIL_YEOSSEOTDA	tail	였었다	VEXT_R+F_NG+F_D	confirmed	사용자 요청: 오른쪽 쌍모 전용 exact mask; 일반 AB2 정규화 예외
+TAIL_EOSSEOTDA	tail	었었다	VEXT_L+ABBR_R+F_NG+F_D	current	
+TAIL_ITDA	tail	있다	VEXT_L+ABBR_L+F_NG+F_D	current	
+TAIL_EDA	tail	에다	ABBR_R+I_NG+F_D	current	오른손 ㅇㄷ의 7개 무충돌 슬롯을 다 쓴 뒤 사용하는 혼합 예외; 사용자 제안 'ㅇ초성+ㄷ종성+약어'.
+TAIL_HAETDA	tail	했다	F_H+F_D	confirmed	
+TAIL_DWAETDA	tail	됐다	F_DOUBLE+F_D	confirmed	쌍종=반복 ㄷ
+TAIL_NEUNDE	tail	는데	VEXT_L+F_N	confirmed	종ㄴ+종ㄷ이 같은 오른손 중지라 AB2 단일 코어 사용
+TAIL_EULJIDO	tail	을지도	F_NG+F_J+F_D	confirmed	
+TAIL_EOJYEOTDA	tail	어졌다	ABBR_R+F_NG+F_J+F_D	confirmed	
+TAIL_JIMAN	tail	지만	F_J+F_M	confirmed	
+TAIL_SEUMNIDA	tail	습니다	VEXT_L+F_S+F_D	confirmed	겠/했/였/있/없/않/되었 + 습니다 조립
+TAIL_EOSSEUMYEON	tail	었으면	VEXT_L+ABBR_R+F_M	current	되+었으면 등 조립
+TAIL_HANEUNGE	tail	하는게	F_H+F_N+F_G	confirmed	
+TAIL_ONEUNGE	tail	오는게	F_NG+F_N+F_G	confirmed	
+TAIL_GANEUNGE	tail	가는게	F_DOUBLE+F_N+F_G	confirmed	쌍종=반복 ㄱ

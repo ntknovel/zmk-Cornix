@@ -1,42 +1,159 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dt-bindings/zmk/keys.h>
 #include <zephyr/kernel.h>
 #include <cornix_steno/engine.h>
+#include <cornix_steno/quick.h>
 #include <cornix_steno/roles.h>
-extern uint32_t test_output_keys[]; extern size_t test_output_count;
-void test_output_reset(void); static int failures;
-static void expect(const char *name,const uint32_t *keys,size_t count){
- if(test_output_count!=count||(count&&memcmp(test_output_keys,keys,count*sizeof(keys[0])))){fprintf(stderr,"FAIL %s got=%zu expected=%zu\n",name,test_output_count,count);failures++;} test_output_reset();}
-static void press(enum cornix_steno_role x,uint32_t p,int64_t t){test_time_set(t);cornix_steno_engine_role_pressed(x,p,t);} 
-static void release(enum cornix_steno_role x,uint32_t p,int64_t t){test_time_set(t);cornix_steno_engine_role_released(x,p,t);} 
-int main(void){
- cornix_steno_engine_set_active(true);
- press(CST_R_I_G,14,0);press(CST_R_V_A,44,8);press(CST_R_F_N,8,12);
- release(CST_R_I_G,14,30);release(CST_R_V_A,44,35);release(CST_R_F_N,8,40);
- const uint32_t gan[]={R,K,S};expect("normal gan",gan,3);
 
- press(CST_R_I_G,14,100);press(CST_R_V_A,44,108);press(CST_R_F_N,8,112);
- press(CST_R_I_NG,16,200);release(CST_R_I_NG,16,215);test_time_set(215);test_time_advance(55);
- release(CST_R_I_G,14,280);release(CST_R_V_A,44,285);release(CST_R_F_N,8,290);
- expect("late accidental removed",gan,3);
+extern uint32_t test_output_keys[];
+extern size_t test_output_count;
+void test_output_reset(void);
+struct test_key_event { uint32_t key; bool state; int64_t ts; };
+extern struct test_key_event test_key_events[];
+extern size_t test_key_event_count;
+void test_key_events_reset(void);
+extern size_t test_quick_invoke_count;
+extern enum cornix_steno_quick_slot test_quick_last_slot;
+void test_quick_invoke_reset(void);
+static int failures;
 
- press(CST_R_I_G,14,400);release(CST_R_I_G,14,410);expect("solo consonant silent",NULL,0);
+static void expect(const char *name, const uint32_t *keys, size_t count) {
+    if (test_output_count != count ||
+        (count && memcmp(test_output_keys, keys, count * sizeof(keys[0])))) {
+        fprintf(stderr, "FAIL %s got=%zu expected=%zu\n", name, test_output_count, count);
+        failures++;
+    }
+    test_output_reset();
+}
+static void expect_events(const char *name, uint32_t key, size_t taps) {
+    if (test_key_event_count != taps * 2) {
+        fprintf(stderr, "FAIL %s events=%zu expected=%zu\n", name,
+                test_key_event_count, taps * 2); failures++;
+    } else {
+        for (size_t i = 0; i < taps; i++) {
+            if (test_key_events[i*2].key != key || !test_key_events[i*2].state ||
+                test_key_events[i*2+1].key != key || test_key_events[i*2+1].state) {
+                fprintf(stderr, "FAIL %s bad tap %zu\n", name, i); failures++; break;
+            }
+        }
+    }
+    test_key_events_reset();
+}
+static int press(enum cornix_steno_role x, uint32_t p, int64_t t) {
+    test_time_set(t); return cornix_steno_engine_role_pressed(x, p, t);
+}
+static int release(enum cornix_steno_role x, uint32_t p, int64_t t) {
+    test_time_set(t); return cornix_steno_engine_role_released(x, p, t);
+}
 
- press(CST_R_ABBR_L,12,500);press(CST_R_I_G,14,505);press(CST_R_F_R,20,510);press(CST_R_F_G,21,515);
- release(CST_R_ABBR_L,12,530);release(CST_R_I_G,14,535);release(CST_R_F_R,20,540);release(CST_R_F_G,21,545);
- if(test_output_count<2||test_output_keys[0]!=R||test_output_keys[1]!=M){fprintf(stderr,"FAIL dictionary prefix count=%zu\n",test_output_count);failures++;}test_output_reset();
+int main(void) {
+    cornix_steno_engine_set_active(true);
 
- press(CST_R_ABBR_L,12,600);release(CST_R_ABBR_L,12,610);const uint32_t ex[]={EXCL};expect("marker single",ex,1);
+    /* Normal release skew inside 50 ms keeps all keys. */
+    press(CST_R_I_G,14,0); press(CST_R_V_A,44,8); press(CST_R_F_N,8,12);
+    release(CST_R_I_G,14,30); release(CST_R_V_A,44,35); release(CST_R_F_N,8,40);
+    const uint32_t gan[]={R,K,S}; expect("normal gan",gan,3);
 
- /* Reserved blank quick slot is consumed and remains silent. */
- press(CST_R_ABBR_L,12,700);press(CST_R_V_EU,42,705);press(CST_R_V_O,41,710);press(CST_R_V_U,43,715);
- release(CST_R_ABBR_L,12,730);release(CST_R_V_EU,42,735);release(CST_R_V_O,41,740);release(CST_R_V_U,43,745);
- expect("blank quick slot",NULL,0);
+    /* A wrong key released early is removed while the intended chord stays held. */
+    press(CST_R_I_G,14,100); press(CST_R_V_A,44,108); press(CST_R_F_N,8,112);
+    press(CST_R_I_NG,16,120); release(CST_R_I_NG,16,130);
+    test_time_set(130); test_time_advance(55);
+    release(CST_R_I_G,14,210); release(CST_R_V_A,44,220); release(CST_R_F_N,8,230);
+    expect("early accidental removed",gan,3);
 
- press(CST_R_I_G,14,800);cornix_steno_engine_set_active(false);release(CST_R_I_G,14,820);expect("mode exit cancel",NULL,0);
- if(failures) return EXIT_FAILURE;
- puts("Cornix STENO engine state tests: PASS");
- return EXIT_SUCCESS;
+    /* Direct canonical abbreviation: 그런. */
+    press(CST_R_I_G,14,300); press(CST_R_F_R,20,310);
+    release(CST_R_I_G,14,330); test_time_advance(55); release(CST_R_F_R,20,400);
+    const uint32_t geureon[]={R,M,F,J,S}; expect("direct abbreviation prefix protected",geureon,5);
+
+    /* ABBR anchor held while consonants are tapped sequentially: 그럼. */
+    press(CST_R_ABBR_L,12,500); press(CST_R_I_G,14,600); release(CST_R_I_G,14,620);
+    test_time_advance(55); press(CST_R_F_R,20,690); release(CST_R_F_R,20,710);
+    release(CST_R_ABBR_L,12,730);
+    const uint32_t geureom[]={R,M,F,J,A}; expect("held abbreviation anchor",geureom,5);
+
+    /* Quick M0 remains GUI-editable and invokes the macro dispatcher. */
+    test_quick_invoke_reset();
+    press(CST_R_ABBR_L,12,800); press(CST_R_V_EU,42,810);
+    release(CST_R_V_EU,42,830); release(CST_R_ABBR_L,12,840);
+    if (test_quick_invoke_count != 1 || test_quick_last_slot != CST_QUICK_M0) {
+        fprintf(stderr,"FAIL quick M0 count=%zu slot=%d\n",test_quick_invoke_count,
+                test_quick_last_slot); failures++;
+    }
+    expect("quick no dictionary queue",NULL,0);
+
+    /* ABBR + same-side double repeats plain horizontal movement. */
+    test_key_events_reset();
+    press(CST_R_ABBR_L,12,900); press(CST_R_I_DOUBLE,17,910); release(CST_R_I_DOUBLE,17,920);
+    press(CST_R_I_DOUBLE,17,930); release(CST_R_I_DOUBLE,17,940); release(CST_R_ABBR_L,12,950);
+    expect_events("ABBR-L repeated left",LEFT,2);
+
+    press(CST_R_ABBR_R,23,1000); press(CST_R_F_DOUBLE,18,1010); release(CST_R_F_DOUBLE,18,1020);
+    press(CST_R_F_DOUBLE,18,1030); release(CST_R_F_DOUBLE,18,1040); release(CST_R_ABBR_R,23,1050);
+    expect_events("ABBR-R repeated right",RIGHT,2);
+
+    /* SYMBOL + same-side double repeats Shift selection movement. */
+    press(CST_R_SYMBOL_L,40,1100); press(CST_R_I_DOUBLE,17,1110); release(CST_R_I_DOUBLE,17,1120);
+    press(CST_R_I_DOUBLE,17,1130); release(CST_R_I_DOUBLE,17,1140); release(CST_R_SYMBOL_L,40,1150);
+    expect_events("SYMBOL-L repeated select left",LS(LEFT),2);
+
+    press(CST_R_SYMBOL_R,47,1200); press(CST_R_F_DOUBLE,18,1210); release(CST_R_F_DOUBLE,18,1220);
+    press(CST_R_F_DOUBLE,18,1230); release(CST_R_F_DOUBLE,18,1240); release(CST_R_SYMBOL_R,47,1250);
+    expect_events("SYMBOL-R repeated select right",LS(RIGHT),2);
+
+    /* A larger exact abbreviation containing ABBR+double is not stolen by nav. */
+    test_key_events_reset();
+    press(CST_R_ABBR_L,12,1300); press(CST_R_I_G,14,1310); press(CST_R_I_R,15,1320);
+    press(CST_R_I_DOUBLE,17,1330); release(CST_R_I_DOUBLE,17,1340);
+    release(CST_R_I_G,14,1350); release(CST_R_I_R,15,1360); release(CST_R_ABBR_L,12,1370);
+    const uint32_t geureogi[]={R,M,F,J,R,L}; expect("abbr double exact survives nav",geureogi,6);
+    expect_events("abbr double exact no arrow",LEFT,0);
+
+    /* Continuous correction: one held symbol, sequential consonant/vowel units. */
+    press(CST_R_SYMBOL_R,47,1400);
+    press(CST_R_I_G,14,1410); release(CST_R_I_G,14,1420);
+    press(CST_R_V_A,44,1430); release(CST_R_V_A,44,1440);
+    press(CST_R_F_N,8,1450); release(CST_R_F_N,8,1460);
+    release(CST_R_SYMBOL_R,47,1470);
+    expect("continuous correction gan",gan,3);
+
+    /* Correction double marker and consonant form one doubled jamo. */
+    press(CST_R_SYMBOL_L,40,1500); press(CST_R_I_DOUBLE,17,1510);
+    press(CST_R_I_G,14,1520); release(CST_R_I_DOUBLE,17,1530);
+    release(CST_R_I_G,14,1540); release(CST_R_SYMBOL_L,40,1550);
+    const uint32_t ssang_g[]={LS(R)}; expect("correction doubled consonant",ssang_g,1);
+
+    /* Physical ㅣ+I/J/K/L navigation remains immediate. */
+    test_key_events_reset();
+    press(CST_R_V_I,45,1600); press(CST_R_F_N,8,1610); release(CST_R_F_N,8,1630);
+    release(CST_R_V_I,45,1640);
+    if (test_key_event_count != 2 || test_key_events[0].key != UP ||
+        !test_key_events[0].state || test_key_events[1].key != UP ||
+        test_key_events[1].state) {
+        fprintf(stderr,"FAIL physical I+I navigation events=%zu\n",test_key_event_count); failures++;
+    }
+    test_key_events_reset(); expect("physical nav no text",NULL,0);
+
+    /* Legal final cluster rolling restores an early first final inside 90 ms. */
+    press(CST_R_I_G,14,1700); press(CST_R_V_A,44,1710); press(CST_R_F_R,20,1720);
+    release(CST_R_F_R,20,1730); test_time_advance(55);
+    press(CST_R_F_G,21,1800); release(CST_R_F_G,21,1810);
+    release(CST_R_I_G,14,1820); release(CST_R_V_A,44,1830);
+    const uint32_t dalk[]={R,K,F,R}; expect("final roll rieul-giyeok",dalk,4);
+
+    /* Same-index-finger tail rolling remains protected: 이었다. */
+    press(CST_R_F_D,34,1900); press(CST_R_F_DOUBLE,18,1910); release(CST_R_F_DOUBLE,18,1920);
+    test_time_advance(55); press(CST_R_F_NG,19,1990); release(CST_R_F_NG,19,2000);
+    release(CST_R_F_D,34,2010);
+    const uint32_t ieotda[]={D,L,D,J,LS(T),E,K}; expect("tail rolling ieotda",ieotda,7);
+
+    press(CST_R_I_G,14,2100); cornix_steno_engine_set_active(false);
+    release(CST_R_I_G,14,2120); expect("mode exit cancel",NULL,0);
+
+    if (failures) return EXIT_FAILURE;
+    puts("Cornix STENO v1.8.0 full-parity engine tests: PASS");
+    return EXIT_SUCCESS;
 }

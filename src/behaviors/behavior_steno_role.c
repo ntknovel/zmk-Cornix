@@ -19,10 +19,25 @@ static int on_pressed(struct zmk_behavior_binding *binding,
     const struct device *dev = zmk_behavior_get_binding(binding->behavior_dev);
     if (!dev) return -ENODEV;
     const struct behavior_steno_role_config *cfg = dev->config;
-    cornix_steno_led_key_pressed(event.position);
     cornix_steno_tab_notify_other_press(event.position, event.timestamp);
     cornix_steno_dual_notify_other_press(event.position, event.timestamp);
-    return cornix_steno_engine_role_pressed(cfg->role, event.position, event.timestamp);
+
+    /*
+     * Count the physical press first, then let the engine replace the white
+     * count with a live exact-mask category color.  Immediate navigation is
+     * outside the STENO stroke, so roll the temporary count back at once.
+     */
+    cornix_steno_led_key_pressed(event.position);
+    const int err = cornix_steno_engine_role_pressed(cfg->role, event.position, event.timestamp);
+    if (err < 0) {
+        cornix_steno_led_key_released(event.position);
+        return err;
+    }
+    if (err == CST_ENGINE_EVENT_CONSUMED) {
+        cornix_steno_led_key_released(event.position);
+        return ZMK_BEHAVIOR_OPAQUE;
+    }
+    return err;
 }
 
 static int on_released(struct zmk_behavior_binding *binding,
@@ -31,6 +46,8 @@ static int on_released(struct zmk_behavior_binding *binding,
     if (!dev) return -ENODEV;
     const struct behavior_steno_role_config *cfg = dev->config;
     const int err = cornix_steno_engine_role_released(cfg->role, event.position, event.timestamp);
+    if (err < 0) return err;
+    if (err == CST_ENGINE_EVENT_CONSUMED) return ZMK_BEHAVIOR_OPAQUE;
     cornix_steno_led_key_released(event.position);
     return err;
 }

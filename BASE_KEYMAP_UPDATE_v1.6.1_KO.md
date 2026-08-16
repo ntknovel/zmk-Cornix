@@ -1,4 +1,4 @@
-# Cornix BASE 키맵 업데이트 v1.6.1
+# Cornix BASE 키맵 업데이트 v1.6.2
 
 STENO 배열, 61개 기본 약어, 12개 퀵 약어, LED·RF 설정은 변경하지 않고 BASE 레이어의 세 위치만 수정한다.
 
