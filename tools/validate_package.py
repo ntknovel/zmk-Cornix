@@ -119,7 +119,11 @@ def validate_keymap(root: Path) -> dict[str, list[str]]:
 
 def validate_kconfig(root: Path) -> int:
     kconfig = read(root / "Kconfig")
-    conf = read(root / "config/cornix.conf")
+    shared_conf = read(root / "config/cornix.conf")
+    steno_conf = read(root / "config/boards/shields/cornix_steno_led/cornix_steno_led.conf")
+    if re.search(r"^CONFIG_CORNIX_STENO", shared_conf, re.M):
+        fail("shared cornix.conf must not enable STENO; settings_reset would inherit it")
+    conf = shared_conf + "\n" + steno_conf
     assigned = sorted(set(re.findall(r"^CONFIG_(CORNIX_STENO(?:_[A-Z0-9_]+)?)=", conf, re.M)))
     for symbol in assigned:
         if symbol == "CORNIX_STENO":
@@ -128,8 +132,10 @@ def validate_kconfig(root: Path) -> int:
             pattern = rf"config\s+{symbol}\s*\n\s*(?:bool|int)\s+\""
         if not re.search(pattern, kconfig):
             fail(f"Kconfig symbol CONFIG_{symbol} is assigned but has no user-visible prompt")
-    if "CONFIG_CORNIX_STENO_MAX_POSITIONS=50" not in conf:
+    if "CONFIG_CORNIX_STENO_MAX_POSITIONS=50" not in steno_conf:
         fail("Cornix fixed 50-position build should use MAX_POSITIONS=50")
+    if not re.search(r"menuconfig\s+CORNIX_STENO.*?default\s+n", kconfig, re.S):
+        fail("CORNIX_STENO must default to n so settings_reset stays minimal")
     return len(assigned)
 
 
@@ -483,8 +489,14 @@ def validate_right_build_hardening(root: Path) -> None:
     reset_block = build.split("artifact-name: cornix_settings_reset")[0].rsplit("- board:", 1)[-1]
     if "studio-rpc-usb-uart" in reset_block:
         fail("settings_reset must not enable the Studio USB-UART transport on cornix_right")
-    if "snippet: nrf52840-nosd" not in reset_block:
-        fail("settings_reset must retain the nrf52840-nosd snippet")
+    if "snippet:" in reset_block:
+        fail("settings_reset must use the upstream Cornix board+shield form without extra snippets")
+    shared_conf = read(root / "config/cornix.conf")
+    if re.search(r"^CONFIG_CORNIX_STENO", shared_conf, re.M):
+        fail("settings_reset would inherit STENO from shared cornix.conf")
+    reset_conf = read(root / "config/settings_reset.conf")
+    if "CONFIG_CORNIX_STENO=n" not in reset_conf:
+        fail("settings_reset.conf must explicitly disable the STENO engine")
 
     cmake = (root / "CMakeLists.txt").read_text(encoding="utf-8")
     if "if(NOT CONFIG_ZMK_SPLIT OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)" not in cmake:

@@ -7,7 +7,7 @@ config ZMK_BEHAVIOR_RF_POWER
 
 menuconfig CORNIX_STENO
     bool "Cornix Korean STENO engine"
-    default y
+    default n
     help
       Enable the Cornix BASE/STENO mode switch, Korean chord decoder,
       context-sensitive STENO keys, and exact-mask abbreviation dictionary.

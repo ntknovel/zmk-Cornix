@@ -1,8 +1,10 @@
-Cornix ZMK 한국어 STENO 퀵 약어 프리셋 v1.6.1
+Cornix ZMK 한국어 STENO 퀵 약어 프리셋 v1.6.3
 ================================================
 
 핵심 변경
 ---------
+- 약어키/2차 겹모 은행을 홀드 앵커로 사용해 순차 탭 약어가 50ms 오타 보정으로 사라지는 문제 수정
+- 61개 사전 약어와 quick_0~quick_11 모두 같은 앵커 경로로 안정화
 - BASE 왼쪽 하단 [: 탭 [ / 홀드 Ctrl+Y
 - BASE 오른쪽 하단 ]: 탭 ] / 홀드 RCtrl
 - BASE 오른쪽 최상단: Ctrl+A
@@ -15,15 +17,15 @@ Cornix ZMK 한국어 STENO 퀵 약어 프리셋 v1.6.1
 가장 쉬운 적용
 -------------
 1. 아직 v1.5.1을 적용하지 않았거나 저장소 상태가 섞였다면
-   Cornix_ZMK_STENO_BASE_KEYS_v1.6.1_UPLOAD.zip을 저장소 루트에 덮어씁니다.
+   Cornix_ZMK_STENO_ABBR_ANCHOR_FIX_v1.6.3_UPLOAD.zip을 저장소 루트에 덮어씁니다.
 2. 이미 v1.5.1이 적용된 상태라면
-   Cornix_ZMK_STENO_BASE_KEYS_v1.6.1_PATCH_ONLY.zip만 덮어씁니다.
+   Cornix_ZMK_STENO_ABBR_ANCHOR_FIX_v1.6.3_PATCH_ONLY.zip만 덮어씁니다.
 3. Codespaces 터미널에서 실행합니다.
 
    cd /workspaces/zmk-Cornix
    python3 tools/validate_package.py .
    git add -A
-   git commit -m "Update Cornix Base bracket dual keys"
+   git commit -m "Fix Cornix STENO abbreviation anchor"
    git push
 
 4. GitHub Actions에서 left/right/settings_reset 빌드가 모두 성공한 뒤 UF2를 사용합니다.

@@ -127,12 +127,37 @@ static void schedule_next_correction_locked(int64_t now) {
     }
 }
 
+static bool dictionary_anchor_active_locked(void) {
+    const uint64_t roles = roles_from_positions_locked(state.accepted_mask);
+    const bool has_abbr = (roles & CST_ABBR_MASK) != 0;
+    const bool has_vext_bank = (roles & CST_VEXT_MASK) != 0 &&
+                               (roles & CST_BASE_VOWEL_MASK) == 0 &&
+                               (roles & (CST_INITIAL_MASK | CST_FINAL_MASK)) != 0;
+    return has_abbr || has_vext_bank;
+}
+
 static void correction_work_handler(struct k_work *work) {
     ARG_UNUSED(work);
     const int64_t now = k_uptime_get();
 
     k_mutex_lock(&steno_mutex, K_FOREVER);
     if (!state.active || state.down_mask == 0) {
+        state.release_candidate_mask = 0;
+        k_mutex_unlock(&steno_mutex);
+        return;
+    }
+
+    /*
+     * ABBR/VEXT bank keys are intentionally usable as held anchors.  The user
+     * may hold the bank key and tap the consonant roles one after another;
+     * those released roles must remain in the final exact mask.  The previous
+     * 40/50 ms late-key correction treated the taps as typos and collapsed the
+     * stroke to the marker itself ("!", '"', '[' or '?').  Preserve every
+     * released role once an abbreviation bank is active.  Exact lookup is the
+     * safety net: an accidental extra role makes the entry miss and therefore
+     * remains silent rather than producing a different word.
+     */
+    if (dictionary_anchor_active_locked()) {
         state.release_candidate_mask = 0;
         k_mutex_unlock(&steno_mutex);
         return;
