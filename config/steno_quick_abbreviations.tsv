@@ -1,5 +1,13 @@
-# slot	output	logical roles
-QUICK_L_LEFT		ABBR_L+V_EU+V_O+V_U
-QUICK_R_RIGHT		ABBR_R+V_A+V_I+V_EO
-QUICK_L_RIGHT		ABBR_L+V_A+V_EO+V_I
-QUICK_R_LEFT		ABBR_R+V_O+V_U+V_EU
+# slot	legacy output (leave blank; standard ZMK macro owns output)	logical roles
+M0		ABBR_L+V_EU
+M1		ABBR_L+V_O
+M2		ABBR_L+V_U
+M3		ABBR_R+V_A
+M4		ABBR_R+V_I
+M5		ABBR_R+V_EO
+M6		ABBR_L+V_A
+M7		ABBR_L+V_EO
+M8		ABBR_L+V_I
+M9		ABBR_R+V_O
+M10		ABBR_R+V_U
+M11		ABBR_R+V_EU

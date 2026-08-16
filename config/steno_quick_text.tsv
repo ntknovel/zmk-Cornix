@@ -1,0 +1,14 @@
+# macro_id	fixed STENO trigger	output text
+# Edit only column 3, then run: python3 tools/update_quick_macro_text.py
+M0	약어L+ㅡ	사구구
+M1	약어L+ㅗ	구서룡
+M2	약어L+ㅜ	피피쿵
+M3	약어R+ㅏ	스타라이트
+M4	약어R+ㅣ	유안나
+M5	약어R+ㅓ	유혜나
+M6	약어L+ㅏ	실험체
+M7	약어L+ㅓ	A 시
+M8	약어L+ㅣ	W 시
+M9	약어R+ㅗ	케이지
+M10	약어R+ㅜ	일렉트리스
+M11	약어R+ㅡ	마이스터

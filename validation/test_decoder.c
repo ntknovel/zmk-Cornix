@@ -93,12 +93,18 @@ int main(void) {
     const uint32_t geu[]={R,M};
     expect_dictionary("그리고",CST_DICT_ABBR,grg,geu,2);
     expect_dictionary("그렇게",CST_DICT_VEXT,grg,geu,2);
-    if (cornix_steno_quick_count()!=4) { fprintf(stderr,"FAIL quick count\n"); failures++; }
+    if (cornix_steno_quick_count()!=12) { fprintf(stderr,"FAIL quick count\n"); failures++; }
     const struct cornix_steno_quick_entry *quick=cornix_steno_quick_lookup(
-        RBIT(CST_R_ABBR_L)|RBIT(CST_R_V_EU)|RBIT(CST_R_V_O)|RBIT(CST_R_V_U));
-    if (!quick || quick->key_count!=0) { fprintf(stderr,"FAIL blank quick slot\n"); failures++; }
+        RBIT(CST_R_ABBR_L)|RBIT(CST_R_V_EU));
+    if (!quick || quick->macro_slot!=CST_QUICK_M0) {
+        fprintf(stderr,"FAIL GUI quick macro M0\n"); failures++;
+    }
+    quick=cornix_steno_quick_lookup(RBIT(CST_R_ABBR_R)|RBIT(CST_R_V_EU));
+    if (!quick || quick->macro_slot!=CST_QUICK_M11) {
+        fprintf(stderr,"FAIL GUI quick macro M11\n"); failures++;
+    }
 
     if (failures) return EXIT_FAILURE;
-    puts("Cornix STENO decoder/dictionary tests: PASS (61 + 4 quick slots)");
+    puts("Cornix STENO decoder/dictionary tests: PASS (61 + 12 GUI quick macros)");
     return EXIT_SUCCESS;
 }

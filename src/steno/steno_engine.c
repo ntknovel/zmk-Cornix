@@ -69,8 +69,11 @@ static void process_stroke(uint64_t position_mask, uint64_t role_mask, int64_t t
 #if IS_ENABLED(CONFIG_CORNIX_STENO_DICTIONARY)
     const struct cornix_steno_quick_entry *quick = cornix_steno_quick_lookup(role_mask);
     if (quick) {
-        if (quick->key_count) cornix_steno_output_enqueue_sequence(quick->keys, quick->key_count);
-        return; /* Blank quick slots are intentionally consumed. */
+        const int quick_err = cornix_steno_quick_invoke(quick, timestamp);
+        if (quick_err < 0) {
+            LOG_WRN("Quick abbreviation macro %s failed: %d", quick->slot, quick_err);
+        }
+        return; /* The fixed exact-mask is always consumed, even for a blank macro. */
     }
 #endif
 

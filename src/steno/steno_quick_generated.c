@@ -3,16 +3,22 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <dt-bindings/zmk/keys.h>
 #include <cornix_steno/quick.h>
 #include <cornix_steno/roles.h>
 
-
 static const struct cornix_steno_quick_entry entries[] = {
-    { .slot = "QUICK_L_LEFT", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_EU) | CST_ROLE_BIT(CST_R_V_O) | CST_ROLE_BIT(CST_R_V_U)), .keys = NULL, .key_count = 0 },
-    { .slot = "QUICK_R_RIGHT", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_A) | CST_ROLE_BIT(CST_R_V_I) | CST_ROLE_BIT(CST_R_V_EO)), .keys = NULL, .key_count = 0 },
-    { .slot = "QUICK_L_RIGHT", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_A) | CST_ROLE_BIT(CST_R_V_EO) | CST_ROLE_BIT(CST_R_V_I)), .keys = NULL, .key_count = 0 },
-    { .slot = "QUICK_R_LEFT", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_O) | CST_ROLE_BIT(CST_R_V_U) | CST_ROLE_BIT(CST_R_V_EU)), .keys = NULL, .key_count = 0 },
+    { .slot = "M0", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_EU)), .macro_slot = CST_QUICK_M0 },
+    { .slot = "M1", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_O)), .macro_slot = CST_QUICK_M1 },
+    { .slot = "M2", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_U)), .macro_slot = CST_QUICK_M2 },
+    { .slot = "M3", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_A)), .macro_slot = CST_QUICK_M3 },
+    { .slot = "M4", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_I)), .macro_slot = CST_QUICK_M4 },
+    { .slot = "M5", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_EO)), .macro_slot = CST_QUICK_M5 },
+    { .slot = "M6", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_A)), .macro_slot = CST_QUICK_M6 },
+    { .slot = "M7", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_EO)), .macro_slot = CST_QUICK_M7 },
+    { .slot = "M8", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_V_I)), .macro_slot = CST_QUICK_M8 },
+    { .slot = "M9", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_O)), .macro_slot = CST_QUICK_M9 },
+    { .slot = "M10", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_U)), .macro_slot = CST_QUICK_M10 },
+    { .slot = "M11", .role_mask = (CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_V_EU)), .macro_slot = CST_QUICK_M11 },
 };
 
 const struct cornix_steno_quick_entry *cornix_steno_quick_lookup(uint64_t role_mask) {

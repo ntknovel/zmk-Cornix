@@ -10,18 +10,26 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/util.h>
 
-#include <zmk/behavior.h>
 #include <zmk/battery.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/battery_state_changed.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #include <zmk/events/endpoint_changed.h>
-#include <zmk/events/position_state_changed.h>
-#include <zmk/events/split_peripheral_status_changed.h>
-#include <zmk/events/usb_conn_state_changed.h>
-#include <zmk/usb.h>
 
 #include <zmk_rgbled_widget/widget.h>
+
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#define CST_STENO_CENTRAL 1
+#include <zmk/behavior.h>
+#include <zmk/events/position_state_changed.h>
+#else
+#define CST_STENO_CENTRAL 0
+#endif
+
+#if IS_ENABLED(CONFIG_ZMK_USB)
+#include <zmk/events/usb_conn_state_changed.h>
+#include <zmk/usb.h>
+#endif
 
 #include <cornix_steno/led.h>
 
@@ -39,8 +47,9 @@ BUILD_ASSERT(CONFIG_RGBLED_WIDGET_LED_COUNT == 2,
 #define CST_TOTAL_LED_COUNT UINT8_C(4)
 
 K_MUTEX_DEFINE(led_state_mutex);
-static struct k_work_delayable entry_flash_work;
 static struct k_work_delayable render_work;
+#if CST_STENO_CENTRAL
+static struct k_work_delayable entry_flash_work;
 
 /* Master state is changed only by central-locality STENO behaviors. */
 static bool master_active;
@@ -48,11 +57,13 @@ static bool master_enabled = true;
 static bool master_entry_flash;
 static uint8_t master_held_count;
 static uint64_t master_physical_down_mask;
+#endif
 
 /* Applied state exists independently on both halves. */
 static uint8_t applied_packed_state = CST_LED_ENABLED;
 static bool rendered_active;
 static bool initialized;
+#if CST_STENO_CENTRAL
 static uint8_t last_published_state = UINT8_MAX;
 
 static uint8_t build_master_state_locked(void) {
@@ -97,6 +108,7 @@ static int publish_packed_state(uint8_t packed_state) {
     }
     return err;
 }
+#endif /* CST_STENO_CENTRAL */
 
 static enum status_type status_for_local_led(uint8_t local_index) {
     return local_index == 0 ? STATUS_BATTERY : STATUS_CONNECTIVITY;
@@ -147,7 +159,11 @@ static void restore_base_indicators(void) {
      */
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
     const uint8_t level = zmk_battery_state_of_charge();
-    if (zmk_usb_is_powered() ||
+    bool externally_powered = false;
+#if IS_ENABLED(CONFIG_ZMK_USB)
+    externally_powered = zmk_usb_is_powered();
+#endif
+    if (externally_powered ||
         (level > 0 && level <= CONFIG_RGBLED_WIDGET_BATTERY_LEVEL_CRITICAL)) {
         indicate_battery();
     }
@@ -204,6 +220,7 @@ static void render_work_handler(struct k_work *work) {
     render_steno_state(packed_state);
 }
 
+#if CST_STENO_CENTRAL
 static void entry_flash_work_handler(struct k_work *work) {
     ARG_UNUSED(work);
 
@@ -311,6 +328,7 @@ bool cornix_steno_led_is_enabled(void) {
     k_mutex_unlock(&led_state_mutex);
     return enabled;
 }
+#endif /* CST_STENO_CENTRAL */
 
 int cornix_steno_led_apply_packed(uint8_t packed_state) {
     packed_state &= (CST_LED_ACTIVE | CST_LED_ENABLED | CST_LED_ENTRY_FLASH |
@@ -359,6 +377,8 @@ ZMK_LISTENER(cornix_steno_led_reassert_listener,
              cornix_steno_led_reassert_listener_cb);
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
 ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_battery_state_changed);
+#endif
+#if IS_ENABLED(CONFIG_ZMK_USB)
 ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_usb_conn_state_changed);
 #endif
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
@@ -369,24 +389,25 @@ ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener,
 #if IS_ENABLED(CONFIG_RGBLED_WIDGET_CONN_SHOW_USB)
 ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_endpoint_changed);
 #endif
-#elif IS_ENABLED(CONFIG_ZMK_SPLIT_BLE)
-ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener,
-                 zmk_split_peripheral_status_changed);
 #endif
 
 static int cornix_steno_led_init(void) {
+#if CST_STENO_CENTRAL
     k_work_init_delayable(&entry_flash_work, entry_flash_work_handler);
+#endif
     k_work_init_delayable(&render_work, render_work_handler);
 
     k_mutex_lock(&led_state_mutex, K_FOREVER);
+#if CST_STENO_CENTRAL
     master_active = false;
     master_enabled = true;
     master_entry_flash = false;
     master_held_count = 0;
     master_physical_down_mask = 0;
+    last_published_state = UINT8_MAX;
+#endif
     applied_packed_state = CST_LED_ENABLED;
     rendered_active = false;
-    last_published_state = UINT8_MAX;
     initialized = true;
     k_mutex_unlock(&led_state_mutex);
     return 0;

@@ -14,5 +14,5 @@ include:
   # Reset image intentionally does not enable the indicator hardware.
   - board: cornix_right//zmk
     shield: settings_reset
-    snippet: studio-rpc-usb-uart nrf52840-nosd
+    snippet: nrf52840-nosd
     artifact-name: cornix_settings_reset

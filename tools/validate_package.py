@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover
 
 LAYER_NAMES = ["base", "num", "mouse", "nav", "fn", "symbol", "steno", "select_nav"]
 EXPECTED_POSITION_BEHAVIORS = {
-    "base": {30: "st_mode", 31: "kp"},
+    "base": {11: "kp", 30: "st_mode", 31: "kp", 40: "ht200", 47: "ht200"},
     "num": {30: "kp", 31: "kp"},
     "mouse": {30: "kp", 31: "kp"},
     "nav": {30: "none", 31: "none"},
@@ -100,6 +100,8 @@ def validate_keymap(root: Path) -> dict[str, list[str]]:
         fail("Select Nav must expose only physical I/J/K/L as arrows")
     normalized=" ".join(keymap.split())
     required=[
+        "&kp P &kp LC(A)", "&kp LCTRL &kp LALT &ht200 LC(Y) LBKT",
+        "&lt250 FN K_APP &ht200 RCTRL RBKT &kp RALT &kp BSPC",
         "&st_mode &kp LC(F)", "&kp C_STOP &kp C_PLAY_PAUSE", "&kp F11 &kp F12",
         "&st_f_kh &ht150 RCTRL RALT", "&st_mode &st_lang &st_f_p",
         "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_eo &st_symbol_r &select_shift &kp BSPC",
@@ -192,8 +194,15 @@ def validate_dictionary(root: Path) -> int:
             fail("generated quick-slot source is stale")
     quick_rows=[line for line in quick_src.read_text(encoding="utf-8").splitlines()
                 if line.strip() and not line.lstrip().startswith("#")]
-    if len(quick_rows) != 4:
-        fail(f"expected 4 quick slots, found {len(quick_rows)}")
+    if len(quick_rows) != 12:
+        fail(f"expected 12 quick slots, found {len(quick_rows)}")
+    quick_text = root / "config/steno_quick_text.tsv"
+    quick_text_rows = [line for line in quick_text.read_text(encoding="utf-8").splitlines()
+                       if line.strip() and not line.lstrip().startswith("#")]
+    if len(quick_text_rows) != 12:
+        fail(f"expected 12 quick text presets, found {len(quick_text_rows)}")
+    if not (root / "tools/update_quick_macro_text.py").is_file():
+        fail("text-to-macro quick updater is missing")
     return count
 
 
@@ -303,6 +312,14 @@ def validate_led_integration(root: Path) -> None:
 
 
 def validate_sources(root: Path) -> None:
+    keymap = read(root / "config/cornix.keymap")
+    for label in [f"quick_{i}" for i in range(12)]:
+        if not re.search(rf"{label}:\s*{label}\s*\{{.*?compatible\s*=\s*\"zmk,behavior-macro\";", keymap, re.S):
+            fail(f"GUI quick macro node missing: {label}")
+    dispatch = read(root / "src/steno/steno_quick_dispatch.c")
+    for label in [f"quick_{i}" for i in range(12)]:
+        if f"DT_NODELABEL({label})" not in dispatch:
+            fail(f"quick macro dispatch missing node label: {label}")
     decoder = read(root / "src/steno/steno_decoder.c")
     if re.search(r"^#define\s+V\s*\(", decoder, re.M):
         fail("decoder defines V(...), which collides with ZMK's V keycode macro")
@@ -316,7 +333,7 @@ def validate_sources(root: Path) -> None:
         "behavior_steno_mode.c", "behavior_steno_pulse.c", "behavior_steno_arrow.c",
         "steno_engine.c", "steno_decoder.c", "steno_output.c", "steno_dual.c",
         "steno_tab.c", "behavior_steno_led.c", "behavior_steno_led_toggle.c", "steno_led.c",
-        "steno_dictionary_generated.c", "steno_quick_generated.c",
+        "steno_dictionary_generated.c", "steno_quick_generated.c", "steno_quick_dispatch.c",
     ]:
         if source not in cmake:
             fail(f"CMakeLists.txt does not include {source}")
@@ -376,6 +393,7 @@ def run_engine_state_test(root: Path) -> str:
         str(root / "validation/test_engine.c"),
         str(root / "validation/runtime_stub.c"),
         str(root / "validation/output_capture.c"),
+        str(root / "validation/quick_invoke_stub.c"),
         str(root / "src/steno/steno_engine.c"),
         str(root / "src/steno/steno_decoder.c"),
         str(root / "src/steno/steno_dictionary_generated.c"),
@@ -432,6 +450,54 @@ def run_led_logic_test(root: Path) -> str:
     return proc.stdout.strip()
 
 
+
+
+def run_peripheral_led_syntax_check(root: Path) -> str:
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        return "SKIP (no C compiler)"
+    stubs = root / "validation/api_stubs"
+    base = (stubs / "config.h").read_text(encoding="utf-8")
+    peripheral = base.replace("#define CONFIG_ZMK_SPLIT_ROLE_CENTRAL 1",
+                              "#define CONFIG_ZMK_SPLIT_ROLE_CENTRAL 0")
+    if "#define CONFIG_ZMK_USB" not in peripheral:
+        peripheral = peripheral.replace("#define CONFIG_ZMK_BLE 1",
+                                        "#define CONFIG_ZMK_BLE 1\n#define CONFIG_ZMK_USB 0")
+    with tempfile.TemporaryDirectory(prefix="cornix-peripheral-") as td:
+        cfg = Path(td) / "config_peripheral.h"
+        cfg.write_text(peripheral, encoding="utf-8")
+        for source in [root / "src/steno/steno_led.c",
+                       root / "src/behaviors/behavior_steno_led.c"]:
+            cmd = [
+                cc, "-std=c11", "-Wall", "-Wextra", "-Werror",
+                "-Wno-unused-function", "-Wno-unused-variable",
+                "-include", str(cfg),
+                "-I" + str(stubs), "-I" + str(root / "include"),
+                "-fsyntax-only", str(source),
+            ]
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
+    return "PASS (peripheral LED receiver)"
+
+def validate_right_build_hardening(root: Path) -> None:
+    build = (root / "build.yaml").read_text(encoding="utf-8")
+    reset_block = build.split("artifact-name: cornix_settings_reset")[0].rsplit("- board:", 1)[-1]
+    if "studio-rpc-usb-uart" in reset_block:
+        fail("settings_reset must not enable the Studio USB-UART transport on cornix_right")
+    if "snippet: nrf52840-nosd" not in reset_block:
+        fail("settings_reset must retain the nrf52840-nosd snippet")
+
+    cmake = (root / "CMakeLists.txt").read_text(encoding="utf-8")
+    if "if(NOT CONFIG_ZMK_SPLIT OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)" not in cmake:
+        fail("central-only STENO source gate is missing")
+    if "src/steno/steno_quick_dispatch.c" not in cmake:
+        fail("quick macro dispatcher missing from central source list")
+
+    led = (root / "src/steno/steno_led.c").read_text(encoding="utf-8")
+    if "CST_STENO_CENTRAL" not in led:
+        fail("LED central/peripheral compile guard missing")
+    if "zmk_split_peripheral_status_changed" in led:
+        fail("peripheral must not subscribe to the central-only peripheral-status event")
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("root", nargs="?", default=".", type=Path)
@@ -450,20 +516,23 @@ def main() -> None:
     engine_state = run_engine_state_test(root)
     context_keys = run_context_key_test(root)
     led_logic = run_led_logic_test(root)
+    peripheral_syntax = run_peripheral_led_syntax_check(root)
 
     digest = hashlib.sha256((root / "config/cornix.keymap").read_bytes()).hexdigest()
+    validate_right_build_hardening(root)
     print("Cornix ZMK BASE+STENO package validation: PASS")
     print(f"- YAML files: {yaml_count}")
     print(f"- Layers: {len(layers)} x 50 bindings")
     print("- Final convenience keys + Shift/JLKI select layer: PASS")
     print("- Final mirrored consonant layout: PASS")
     print(f"- Kconfig assignments checked: {kconfig_count}")
-    print(f"- Dictionary entries: {dictionary_count} + 4 blank quick slots")
+    print(f"- Dictionary entries: {dictionary_count} + 12 GUI-editable quick macros")
     print(f"- Host decoder: {host}")
     print(f"- ZMK/Zephyr API-shaped syntax: {api_syntax}")
     print(f"- Engine state: {engine_state}")
     print(f"- Vowel dual / one-shot Tab: {context_keys}")
     print(f"- BASE indicator + sequential STENO LED logic: {led_logic}")
+    print(f"- Right/peripheral compile shape: {peripheral_syntax}")
     print(f"- cornix.keymap SHA-256: {digest}")
 
 
