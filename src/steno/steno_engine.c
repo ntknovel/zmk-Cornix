@@ -40,6 +40,7 @@ enum anchored_stream_mode {
     CST_STREAM_NAV_RIGHT,
     CST_STREAM_SELECT_LEFT,
     CST_STREAM_SELECT_RIGHT,
+    CST_STREAM_NUMBER,
     CST_STREAM_CORRECTION,
 };
 
@@ -108,6 +109,15 @@ static uint32_t stream_key_for_mode(enum anchored_stream_mode mode) {
     case CST_STREAM_NAV_RIGHT: return RIGHT;
     case CST_STREAM_SELECT_LEFT: return LS(LEFT);
     case CST_STREAM_SELECT_RIGHT: return LS(RIGHT);
+    default: return 0;
+    }
+}
+
+
+static uint32_t number_key_for_top_position(uint32_t position) {
+    switch (position) {
+    case 1: return N0; case 2: return N1; case 3: return N2; case 4: return N3; case 5: return N4;
+    case 6: return N5; case 7: return N6; case 8: return N7; case 9: return N8; case 10: return N9;
     default: return 0;
     }
 }
@@ -478,7 +488,15 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
         }
         const enum cornix_steno_role expected =
             matching_double_for_anchor(state.stream_anchor_role);
-        if (state.stream_mode == CST_STREAM_CORRECTION) {
+        if (state.stream_mode == CST_STREAM_NUMBER) {
+            if (number_key_for_top_position(position) && !(state.stream_unit_down_mask & bit)) {
+                state.stream_unit_down_mask |= bit;
+                state.stream_unit_seen_mask |= bit;
+            } else {
+                state.stream_unit_down_mask |= bit;
+                state.stream_unit_seen_mask |= bit;
+            }
+        } else if (state.stream_mode == CST_STREAM_CORRECTION) {
             if (!(state.stream_unit_down_mask & bit)) {
                 state.stream_unit_down_mask |= bit;
                 state.stream_unit_seen_mask |= bit;
@@ -517,6 +535,36 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
         cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
         raise_zmk_keycode_state_changed_from_encoded(send_key, true, timestamp);
         return CST_ENGINE_EVENT_CONSUMED;
+    }
+
+    /* Repeating number stream: hold either SYMBOL key and tap physical Q..P.
+     * Each top-row key emits 0..9 immediately on its own key-up; the SYMBOL
+     * anchor may stay held for the next digit, just like repeat navigation. */
+    if (number_key_for_top_position(position) && state.down_mask != 0 &&
+        (state.down_mask & (state.down_mask - 1u)) == 0) {
+        uint32_t anchor_position = UINT32_MAX;
+        enum cornix_steno_role anchor_role = CST_R_NONE;
+        for (uint32_t p = 0; p < CONFIG_CORNIX_STENO_MAX_POSITIONS; p++) {
+            if (!(state.down_mask & CST_POSITION_BIT(p))) continue;
+            if (is_symbol_role(state.position_role[p])) {
+                anchor_position = p;
+                anchor_role = state.position_role[p];
+            }
+            break;
+        }
+        if (anchor_position != UINT32_MAX) {
+            state.stream_mode = CST_STREAM_NUMBER;
+            state.stream_anchor_role = anchor_role;
+            state.stream_anchor_position = anchor_position;
+            state.stream_anchor_down = true;
+            state.stream_unit_down_mask = bit;
+            state.stream_unit_seen_mask = bit;
+            reset_normal_stroke_locked();
+            k_mutex_unlock(&steno_mutex);
+            k_work_cancel_delayable(&correction_work);
+            cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
+            return CST_ENGINE_EVENT_CONSUMED;
+        }
     }
 
     /* SYMBOL is no longer a correction modifier. Direct jamo correction is
@@ -588,7 +636,12 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
             if (state.stream_unit_down_mask == 0) reset_stream_locked();
         } else if (state.stream_unit_down_mask & bit) {
             state.stream_unit_down_mask &= ~bit;
-            if (state.stream_mode == CST_STREAM_CORRECTION) {
+            if (state.stream_mode == CST_STREAM_NUMBER) {
+                send_key = number_key_for_top_position(position);
+                state.stream_unit_seen_mask &= ~bit;
+                if (!state.stream_anchor_down && state.stream_unit_down_mask == 0)
+                    reset_stream_locked();
+            } else if (state.stream_mode == CST_STREAM_CORRECTION) {
                 if (state.stream_unit_down_mask == 0) {
                     correction_roles = state.stream_unit_role_mask;
                     state.stream_unit_role_mask = 0;

@@ -42,6 +42,21 @@ static void expect_events(const char *name, uint32_t key, size_t taps) {
     }
     test_key_events_reset();
 }
+static void expect_event_sequence(const char *name, const uint32_t *keys, size_t count) {
+    if (test_key_event_count != count * 2) {
+        fprintf(stderr, "FAIL %s events=%zu expected=%zu\n", name,
+                test_key_event_count, count * 2); failures++;
+    } else {
+        for (size_t i = 0; i < count; i++) {
+            if (test_key_events[i*2].key != keys[i] || !test_key_events[i*2].state ||
+                test_key_events[i*2+1].key != keys[i] || test_key_events[i*2+1].state) {
+                fprintf(stderr, "FAIL %s bad tap %zu\n", name, i); failures++; break;
+            }
+        }
+    }
+    test_key_events_reset();
+}
+
 static int press(enum cornix_steno_role x, uint32_t p, int64_t t) {
     test_time_set(t); return cornix_steno_engine_role_pressed(x, p, t);
 }
@@ -103,6 +118,23 @@ int main(void) {
     press(CST_R_SYMBOL_R,47,1200); press(CST_R_F_DOUBLE,32,1210); release(CST_R_F_DOUBLE,32,1220);
     press(CST_R_F_DOUBLE,32,1230); release(CST_R_F_DOUBLE,32,1240); release(CST_R_SYMBOL_R,47,1250);
     expect_events("SYMBOL-R repeated select right",LS(RIGHT),2);
+
+    /* Either SYMBOL side anchors an immediate repeating number stream. */
+    test_key_events_reset();
+    press(CST_R_SYMBOL_L,40,1300);
+    press(CST_R_I_B,1,1310); release(CST_R_I_B,1,1320);
+    press(CST_R_I_J,2,1330); release(CST_R_I_J,2,1340);
+    press(CST_R_I_D,3,1350); release(CST_R_I_D,3,1360);
+    release(CST_R_SYMBOL_L,40,1370);
+    expect_event_sequence("SYMBOL-L immediate numbers", (uint32_t[]){N0,N1,N2}, 3);
+
+    test_key_events_reset();
+    press(CST_R_SYMBOL_R,47,1400);
+    press(CST_R_F_S,6,1410); release(CST_R_F_S,6,1420);
+    press(CST_R_F_G,7,1430); release(CST_R_F_G,7,1440);
+    press(CST_R_F_D,8,1450); release(CST_R_F_D,8,1460);
+    release(CST_R_SYMBOL_R,47,1470);
+    expect_event_sequence("SYMBOL-R immediate numbers", (uint32_t[]){N5,N6,N7}, 3);
 
     /* Original logical 그러기 mask survives the new same-finger physical layout. */
     test_key_events_reset();

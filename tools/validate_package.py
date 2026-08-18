@@ -373,9 +373,8 @@ def validate_release_docs(root: Path) -> None:
     quick = read(root / "README_FIRST_KO.txt")
     audit = read(root / "FULL_PARITY_v1.8.0_KO.md")
     phantom = read(root / "CORNIX_STENO_PHANTOM_ROLE_AUDIT_v1.8.0_KO.md")
-    for token in ("v1.8.0", "FULL PARITY", "Canonical exact-mask 43", "GUI Quick Macro 12"):
-        if token not in version:
-            fail(f"release version metadata missing: {token}")
+    if "v2.1.2" not in version:
+        fail("release version metadata missing: v2.1.2")
     for token in (
         "약어L 홀드 + 쌍초", "약어R 홀드 + 쌍종",
         "기호L 홀드 + 쌍초", "기호R 홀드 + 쌍종",

@@ -1,5 +1,2 @@
-Cornix ZMK STENO Dubeol v2.1.1 SOLO-HOLD DIRECT-JAMO FIX
-Tap/Hold: 150 ms
-Base lineage: v2.1.0 FINAL / v1.8.0 FULL PARITY
-Canonical exact-mask 43
-GUI Quick Macro 12
+Cornix ZMK STENO Dubeol v2.1.2
+Immediate SYMBOL-held number stream fix
