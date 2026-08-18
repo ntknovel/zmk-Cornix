@@ -8,7 +8,7 @@ A S D F G | H J K L ;
 Z X C V B | N M , . /
 ㅋ ㅌ ㅊ ㅍ 쌍초 | 쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ
 
-Numbers: either SYMBOL-L or SYMBOL-R + physical Q..P = 0..9.
+Numbers: either SYMBOL-L or SYMBOL-R + physical Q..P = 1..0.
 Old vertical two-key numbers are retired.
 ABBR L/R: exact side wins; if only one side exists for a core, either ABBR key works.
 VEXT L/R: mirrored for ordinary AB2/vowels; explicit right-side exceptions such as 였었다 remain exact.

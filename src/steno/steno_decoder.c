@@ -50,17 +50,17 @@ static int decode_number(uint64_t position_mask, struct cornix_steno_decoded *de
     /*
      * Dubeol number layout: the old vertical two-key number chords are retired.
      * Either symbol key mirrors the entire physical top row:
-     *   SYMBOL-L or SYMBOL-R + Q/W/E/R/T/Y/U/I/O/P = 0..9
+     *   SYMBOL-L or SYMBOL-R + Q/W/E/R/T/Y/U/I/O/P = 1..0
      * Physical positions are used deliberately so the number layout is stable
      * even when logical STENO consonant roles are remapped. Exactly one symbol
      * position and one top-row position must be present, so SYMBOL-L+SYMBOL-R
      * keeps its existing reserved meaning instead of becoming a number.
      */
     static const struct { uint8_t symbol, top; uint32_t key; } numbers[] = {
-        {40,1,N0}, {40,2,N1}, {40,3,N2}, {40,4,N3}, {40,5,N4},
-        {40,6,N5}, {40,7,N6}, {40,8,N7}, {40,9,N8}, {40,10,N9},
-        {47,1,N0}, {47,2,N1}, {47,3,N2}, {47,4,N3}, {47,5,N4},
-        {47,6,N5}, {47,7,N6}, {47,8,N7}, {47,9,N8}, {47,10,N9},
+        {40,1,N1}, {40,2,N2}, {40,3,N3}, {40,4,N4}, {40,5,N5},
+        {40,6,N6}, {40,7,N7}, {40,8,N8}, {40,9,N9}, {40,10,N0},
+        {47,1,N1}, {47,2,N2}, {47,3,N3}, {47,4,N4}, {47,5,N5},
+        {47,6,N6}, {47,7,N7}, {47,8,N8}, {47,9,N9}, {47,10,N0},
     };
     for (size_t i = 0; i < sizeof(numbers)/sizeof(numbers[0]); i++) {
         if (exact_position_pair(position_mask, numbers[i].symbol, numbers[i].top)) {

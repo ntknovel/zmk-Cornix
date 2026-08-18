@@ -122,13 +122,13 @@ int main(void) {
         fprintf(stderr, "FAIL correction compound final should be sequential\n"); failures++;
     }
 
-    /* Either symbol key mirrors the full physical Q..P row to 0..9. */
-    const uint32_t digit_keys[10]={N0,N1,N2,N3,N4,N5,N6,N7,N8,N9};
+    /* Either symbol key mirrors the full physical Q..P row to 1..0. */
+    const uint32_t digit_keys[10]={N1,N2,N3,N4,N5,N6,N7,N8,N9,N0};
     for (uint8_t sym=0; sym<2; ++sym) {
         const uint8_t spos = sym ? 47 : 40;
         for (uint8_t i=0; i<10; ++i) {
             char name[40];
-            snprintf(name,sizeof(name),"number %c via SYMBOL-%c",'0'+i,sym?'R':'L');
+            snprintf(name,sizeof(name),"number %c via SYMBOL-%c", i < 9 ? ('1'+i) : '0', sym?'R':'L');
             expect_keys(name,0,CST_POSITION_BIT(spos)|CST_POSITION_BIT((uint8_t)(1+i)),&digit_keys[i],1);
         }
     }

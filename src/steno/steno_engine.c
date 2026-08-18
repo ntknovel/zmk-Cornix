@@ -116,8 +116,8 @@ static uint32_t stream_key_for_mode(enum anchored_stream_mode mode) {
 
 static uint32_t number_key_for_top_position(uint32_t position) {
     switch (position) {
-    case 1: return N0; case 2: return N1; case 3: return N2; case 4: return N3; case 5: return N4;
-    case 6: return N5; case 7: return N6; case 8: return N7; case 9: return N8; case 10: return N9;
+    case 1: return N1; case 2: return N2; case 3: return N3; case 4: return N4; case 5: return N5;
+    case 6: return N6; case 7: return N7; case 8: return N8; case 9: return N9; case 10: return N0;
     default: return 0;
     }
 }
@@ -538,7 +538,7 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
     }
 
     /* Repeating number stream: hold either SYMBOL key and tap physical Q..P.
-     * Each top-row key emits 0..9 immediately on its own key-up; the SYMBOL
+     * Each top-row key emits 1..0 immediately on its own key-up; the SYMBOL
      * anchor may stay held for the next digit, just like repeat navigation. */
     if (number_key_for_top_position(position) && state.down_mask != 0 &&
         (state.down_mask & (state.down_mask - 1u)) == 0) {

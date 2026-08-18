@@ -126,7 +126,7 @@ int main(void) {
     press(CST_R_I_J,2,1330); release(CST_R_I_J,2,1340);
     press(CST_R_I_D,3,1350); release(CST_R_I_D,3,1360);
     release(CST_R_SYMBOL_L,40,1370);
-    expect_event_sequence("SYMBOL-L immediate numbers", (uint32_t[]){N0,N1,N2}, 3);
+    expect_event_sequence("SYMBOL-L immediate numbers", (uint32_t[]){N1,N2,N3}, 3);
 
     test_key_events_reset();
     press(CST_R_SYMBOL_R,47,1400);
@@ -134,7 +134,7 @@ int main(void) {
     press(CST_R_F_G,7,1430); release(CST_R_F_G,7,1440);
     press(CST_R_F_D,8,1450); release(CST_R_F_D,8,1460);
     release(CST_R_SYMBOL_R,47,1470);
-    expect_event_sequence("SYMBOL-R immediate numbers", (uint32_t[]){N5,N6,N7}, 3);
+    expect_event_sequence("SYMBOL-R immediate numbers", (uint32_t[]){N6,N7,N8}, 3);
 
     /* Original logical 그러기 mask survives the new same-finger physical layout. */
     test_key_events_reset();
