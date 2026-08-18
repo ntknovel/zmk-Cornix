@@ -47,12 +47,23 @@ static bool exact_position_pair(uint64_t position_mask, uint8_t a, uint8_t b) {
 }
 
 static int decode_number(uint64_t position_mask, struct cornix_steno_decoded *decoded) {
-    static const struct { uint8_t top, home; uint32_t key; } numbers[] = {
-        {1,13,N1}, {2,14,N2}, {3,15,N3}, {4,16,N4}, {5,17,N5},
-        {6,18,N6}, {7,19,N7}, {8,20,N8}, {9,21,N9}, {10,22,N0},
+    /*
+     * Dubeol number layout: the old vertical two-key number chords are retired.
+     * Either symbol key mirrors the entire physical top row:
+     *   SYMBOL-L or SYMBOL-R + Q/W/E/R/T/Y/U/I/O/P = 0..9
+     * Physical positions are used deliberately so the number layout is stable
+     * even when logical STENO consonant roles are remapped. Exactly one symbol
+     * position and one top-row position must be present, so SYMBOL-L+SYMBOL-R
+     * keeps its existing reserved meaning instead of becoming a number.
+     */
+    static const struct { uint8_t symbol, top; uint32_t key; } numbers[] = {
+        {40,1,N0}, {40,2,N1}, {40,3,N2}, {40,4,N3}, {40,5,N4},
+        {40,6,N5}, {40,7,N6}, {40,8,N7}, {40,9,N8}, {40,10,N9},
+        {47,1,N0}, {47,2,N1}, {47,3,N2}, {47,4,N3}, {47,5,N4},
+        {47,6,N5}, {47,7,N6}, {47,8,N7}, {47,9,N8}, {47,10,N9},
     };
     for (size_t i = 0; i < sizeof(numbers)/sizeof(numbers[0]); i++) {
-        if (exact_position_pair(position_mask, numbers[i].top, numbers[i].home)) {
+        if (exact_position_pair(position_mask, numbers[i].symbol, numbers[i].top)) {
             decoded->kind = CST_DECODE_KEYS;
             return append_key(decoded, numbers[i].key);
         }
@@ -293,4 +304,84 @@ int cornix_steno_decode(uint64_t role_mask, uint64_t position_mask,
 
     /* Consonant-only strokes are reserved for exact-mask abbreviations. */
     return 0;
+}
+
+
+static int consonant_identity_for_role(enum cornix_steno_role role) {
+    switch (role) {
+    case CST_R_I_G: case CST_R_F_G: return 1;   /* ㄱ */
+    case CST_R_I_N: case CST_R_F_N: return 2;   /* ㄴ */
+    case CST_R_I_D: case CST_R_F_D: return 3;   /* ㄷ */
+    case CST_R_I_R: case CST_R_F_R: return 4;   /* ㄹ */
+    case CST_R_I_M: case CST_R_F_M: return 5;   /* ㅁ */
+    case CST_R_I_B: case CST_R_F_B: return 6;   /* ㅂ */
+    case CST_R_I_S: case CST_R_F_S: return 7;   /* ㅅ */
+    case CST_R_I_NG: case CST_R_F_NG: return 8; /* ㅇ */
+    case CST_R_I_J: case CST_R_F_J: return 9;   /* ㅈ */
+    case CST_R_I_CH: case CST_R_F_CH: return 10;/* ㅊ */
+    case CST_R_I_KH: case CST_R_F_KH: return 11;/* ㅋ */
+    case CST_R_I_T: case CST_R_F_T: return 12;  /* ㅌ */
+    case CST_R_I_P: case CST_R_F_P: return 13;  /* ㅍ */
+    case CST_R_I_H: case CST_R_F_H: return 14;  /* ㅎ */
+    default: return 0;
+    }
+}
+
+static uint32_t consonant_key_for_identity(int identity, bool doubled) {
+    if (doubled) {
+        switch (identity) {
+        case 1: return LS(R); /* ㄲ */
+        case 3: return LS(E); /* ㄸ */
+        case 6: return LS(Q); /* ㅃ */
+        case 7: return LS(T); /* ㅆ */
+        case 9: return LS(W); /* ㅉ */
+        default: return 0;
+        }
+    }
+    switch (identity) {
+    case 1: return R; case 2: return S; case 3: return E; case 4: return F;
+    case 5: return A; case 6: return Q; case 7: return T; case 8: return D;
+    case 9: return W; case 10: return C; case 11: return Z; case 12: return X;
+    case 13: return V; case 14: return G; default: return 0;
+    }
+}
+
+int cornix_steno_decode_correction_unit(uint64_t unit_role_mask,
+                                        struct cornix_steno_decoded *decoded) {
+    if (!decoded) return -EINVAL;
+    memset(decoded, 0, sizeof(*decoded));
+
+    if (unit_role_mask & (CST_ABBR_MASK | CST_SYMBOL_MASK)) return -EINVAL;
+
+    const uint64_t consonants = unit_role_mask & (CST_INITIAL_MASK | CST_FINAL_MASK);
+    const uint64_t vowels = unit_role_mask & (CST_BASE_VOWEL_MASK | CST_VEXT_MASK);
+    const bool doubled = (unit_role_mask &
+        (BITR(CST_R_I_DOUBLE) | BITR(CST_R_F_DOUBLE))) != 0;
+    const uint64_t base_consonants = consonants &
+        ~(BITR(CST_R_I_DOUBLE) | BITR(CST_R_F_DOUBLE));
+
+    if (base_consonants) {
+        if (vowels) return -EINVAL;
+        int identity = 0;
+        for (enum cornix_steno_role role = CST_R_I_KH; role <= CST_R_F_CH; role++) {
+            if (role == CST_R_I_DOUBLE || role == CST_R_F_DOUBLE ||
+                !(base_consonants & BITR(role))) continue;
+            const int candidate = consonant_identity_for_role(role);
+            if (!candidate) return -EINVAL;
+            if (identity && identity != candidate) return -EINVAL;
+            identity = candidate;
+        }
+        if (!identity) return -EINVAL;
+        const uint32_t key = consonant_key_for_identity(identity, doubled);
+        if (!key) return -EINVAL;
+        decoded->kind = CST_DECODE_KEYS;
+        return append_key(decoded, key);
+    }
+
+    if (doubled || !(unit_role_mask & CST_BASE_VOWEL_MASK)) return -EINVAL;
+    uint32_t keys[2] = {0};
+    uint8_t count = 0;
+    if (decode_vowel(vowels, keys, &count)) return -EINVAL;
+    decoded->kind = CST_DECODE_KEYS;
+    return append_array(decoded, keys, count);
 }

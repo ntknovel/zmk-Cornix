@@ -1,0 +1,38 @@
+Cornix ZMK STENO v1.7.1 어미 ㅇㄷ군 재배치 검증 보고서
+====================================================
+
+변경
+----
+- canonical exact-mask 사전 42개에 였었다를 추가하여 43개로 확장
+- 오른겹모(VEXT_R)+종ㅇ+종ㄷ = 였었다
+- 오른쌍종(F_DOUBLE)+종ㅇ+종ㄷ = 이었다
+- 겹모(VEXT_L/R)+약어R+종ㅇ+종ㄷ = 었었다 유지
+- 일반 AB2는 좌우 VEXT 정규화를 유지하고, 였었다만 오른 VEXT 전용 exact mask로 보존
+- H/J 동일 오른손 검지 문제를 종ㄷ 홀드 후 H→J 롤링으로 해결
+
+검증 결과
+---------
+- 패키지 정적 검증: PASS
+- YAML 12개: PASS
+- 8레이어 x 50키: PASS
+- 완전대칭 자음 배열: PASS
+- canonical dictionary 43개 + GUI quick macro 12개: PASS
+- 생성 C 사전 재현성: PASS
+- 였었다/이었다/었었다 exact-mask 분리: PASS
+- 이었다 same-index-finger H→J 롤링: PASS
+- 일반 50ms key-up 오타 복구: PASS
+- ZMK/Zephyr API 형태 C 문법 18개: PASS
+- decoder/dictionary host test: PASS
+- engine state host test: PASS
+- vowel dual / one-shot Tab: PASS
+- BASE indicator / STENO LED: PASS
+- peripheral compile shape: PASS
+
+최종 결과
+---------
+Cornix STENO v1.7.1 tail remap validation: PASS
+
+제한
+----
+현재 환경에서는 전체 Zephyr cross build와 실제 Cornix 플래시를 실행하지 않았습니다.
+GitHub Actions에서 left/right/settings_reset 빌드 성공 후 실기 입력을 확인해야 합니다.

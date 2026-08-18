@@ -19,9 +19,18 @@ static void expect_keys(const char *name, uint64_t roles, uint64_t positions,
                 name,err,d.kind,d.key_count,count); failures++;
     }
 }
-static void expect_dictionary(const char *name, uint8_t bank, uint64_t mask,
+static void expect_silent_or_rejected(const char *name, uint64_t roles, uint64_t positions) {
+    struct cornix_steno_decoded d;
+    int err = cornix_steno_decode(roles, positions, &d);
+    if (err >= 0 && (d.kind != CST_DECODE_NONE || d.key_count != 0)) {
+        fprintf(stderr, "FAIL %s produced kind=%d count=%u\n", name, d.kind, d.key_count);
+        failures++;
+    }
+}
+
+static void expect_dictionary(const char *name, uint64_t mask,
                               const uint32_t *prefix, size_t prefix_count) {
-    const struct cornix_steno_dictionary_entry *e=cornix_steno_dictionary_lookup(bank,mask);
+    const struct cornix_steno_dictionary_entry *e=cornix_steno_dictionary_lookup(mask);
     if (!e || e->key_count < prefix_count || memcmp(e->keys,prefix,prefix_count*sizeof(prefix[0]))) {
         fprintf(stderr,"FAIL dictionary %s\n",name); failures++;
     }
@@ -85,14 +94,85 @@ int main(void) {
     expect_keys("initial-only silent",RBIT(CST_R_I_G),0,NULL,0);
     expect_keys("compound-final direct rejected",RBIT(CST_R_SYMBOL_L)|RBIT(CST_R_F_G)|RBIT(CST_R_F_S),0,NULL,0);
 
-    const uint32_t n1[]={N1};
-    expect_keys("number one",RBIT(CST_R_I_KH)|RBIT(CST_R_I_S),CST_POSITION_BIT(1)|CST_POSITION_BIT(13),n1,1);
+    /* Phantom-role audit: D+B is not a legal final and may never become M. */
+    expect_silent_or_rejected("illegal final D+B",
+        RBIT(CST_R_I_G)|RBIT(CST_R_V_A)|RBIT(CST_R_F_D)|RBIT(CST_R_F_B), 0);
+    expect_silent_or_rejected("illegal final D+B+M",
+        RBIT(CST_R_I_G)|RBIT(CST_R_V_A)|RBIT(CST_R_F_D)|RBIT(CST_R_F_B)|RBIT(CST_R_F_M), 0);
 
-    if (cornix_steno_dictionary_count()!=61) { fprintf(stderr,"FAIL dictionary count\n"); failures++; }
-    const uint64_t grg=RBIT(CST_R_I_G)|RBIT(CST_R_F_R)|RBIT(CST_R_F_G);
+    /* Continuous correction units normalize initial/final copies. */
+    struct cornix_steno_decoded correction;
+    if (cornix_steno_decode_correction_unit(RBIT(CST_R_I_G), &correction) ||
+        correction.kind != CST_DECODE_KEYS || correction.key_count != 1 ||
+        correction.keys[0] != R) {
+        fprintf(stderr, "FAIL correction initial G\n"); failures++;
+    }
+    if (cornix_steno_decode_correction_unit(RBIT(CST_R_F_G), &correction) ||
+        correction.kind != CST_DECODE_KEYS || correction.key_count != 1 ||
+        correction.keys[0] != R) {
+        fprintf(stderr, "FAIL correction final G normalization\n"); failures++;
+    }
+    if (cornix_steno_decode_correction_unit(
+            RBIT(CST_R_I_DOUBLE)|RBIT(CST_R_F_G), &correction) ||
+        correction.key_count != 1 || correction.keys[0] != LS(R)) {
+        fprintf(stderr, "FAIL correction double G\n"); failures++;
+    }
+    if (cornix_steno_decode_correction_unit(
+            RBIT(CST_R_F_R)|RBIT(CST_R_F_G), &correction) >= 0) {
+        fprintf(stderr, "FAIL correction compound final should be sequential\n"); failures++;
+    }
+
+    /* Either symbol key mirrors the full physical Q..P row to 0..9. */
+    const uint32_t digit_keys[10]={N0,N1,N2,N3,N4,N5,N6,N7,N8,N9};
+    for (uint8_t sym=0; sym<2; ++sym) {
+        const uint8_t spos = sym ? 47 : 40;
+        for (uint8_t i=0; i<10; ++i) {
+            char name[40];
+            snprintf(name,sizeof(name),"number %c via SYMBOL-%c",'0'+i,sym?'R':'L');
+            expect_keys(name,0,CST_POSITION_BIT(spos)|CST_POSITION_BIT((uint8_t)(1+i)),&digit_keys[i],1);
+        }
+    }
+
+    if (cornix_steno_dictionary_count()!=43) { fprintf(stderr,"FAIL dictionary count\n"); failures++; }
+
+    /* Completed canonical exact-mask dictionary: direct masks and selectors. */
     const uint32_t geu[]={R,M};
-    expect_dictionary("그리고",CST_DICT_ABBR,grg,geu,2);
-    expect_dictionary("그렇게",CST_DICT_VEXT,grg,geu,2);
+    expect_dictionary("그런 direct",
+        RBIT(CST_R_I_G)|RBIT(CST_R_F_R),geu,2);
+    expect_dictionary("그리고 direct",
+        RBIT(CST_R_I_G)|RBIT(CST_R_I_R)|RBIT(CST_R_I_DOUBLE),geu,2);
+    expect_dictionary("그럼 ABBR_L",
+        RBIT(CST_R_ABBR_L)|RBIT(CST_R_I_G)|RBIT(CST_R_F_R),geu,2);
+    expect_dictionary("그럼 ABBR_R mirror",
+        RBIT(CST_R_ABBR_R)|RBIT(CST_R_I_G)|RBIT(CST_R_F_R),geu,2);
+
+    const uint32_t yeotda[]={D,U,LS(T),E,K};
+    expect_dictionary("였다 direct",
+        RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),yeotda,5);
+    const uint32_t eopda[]={D,J,Q,T,E,K};
+    expect_dictionary("없다 ABBR_R",
+        RBIT(CST_R_ABBR_R)|RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),eopda,6);
+    const uint32_t eotda[]={D,J,LS(T),E,K};
+    expect_dictionary("었다 ABBR_L",
+        RBIT(CST_R_ABBR_L)|RBIT(CST_R_F_NG)|RBIT(CST_R_F_D),eotda,5);
+
+    const uint32_t ieotda[]={D,L,D,J,LS(T),E,K};
+    const uint64_t od_tail=RBIT(CST_R_F_NG)|RBIT(CST_R_F_D);
+    expect_dictionary("이었다 right double",
+        RBIT(CST_R_F_DOUBLE)|od_tail,ieotda,7);
+
+    const uint32_t yeosseotda[]={D,U,LS(T),D,J,LS(T),E,K};
+    expect_dictionary("였었다 right VEXT",
+        RBIT(CST_R_VEXT_R)|od_tail,yeosseotda,8);
+    if (cornix_steno_dictionary_lookup(RBIT(CST_R_VEXT_L)|od_tail)) {
+        fprintf(stderr,"FAIL left VEXT incorrectly mirrored to 였었다\n"); failures++;
+    }
+
+    const uint32_t eosseotda[]={D,J,LS(T),D,J,LS(T),E,K};
+    expect_dictionary("었었다 AB2 left",
+        RBIT(CST_R_VEXT_L)|RBIT(CST_R_ABBR_R)|od_tail,eosseotda,8);
+    expect_dictionary("었었다 AB2 right",
+        RBIT(CST_R_VEXT_R)|RBIT(CST_R_ABBR_R)|od_tail,eosseotda,8);
     if (cornix_steno_quick_count()!=12) { fprintf(stderr,"FAIL quick count\n"); failures++; }
     const struct cornix_steno_quick_entry *quick=cornix_steno_quick_lookup(
         RBIT(CST_R_ABBR_L)|RBIT(CST_R_V_EU));
@@ -105,6 +185,6 @@ int main(void) {
     }
 
     if (failures) return EXIT_FAILURE;
-    puts("Cornix STENO decoder/dictionary tests: PASS (61 + 12 GUI quick macros)");
+    puts("Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)");
     return EXIT_SUCCESS;
 }

@@ -1,0 +1,19 @@
+Cornix ZMK STENO v2.0.0 Two-Set Consonant Layout
+==================================================
+Baseline: v1.8.0 FULL PARITY
+RESULT: PASS
+- YAML files: 13
+- Layers: 8 x 50 bindings
+- Two-set consonant physical layout: PASS
+- Canonical exact-mask dictionary: 43 entries
+- GUI-editable quick macros: 12
+- Role projection: 12383 single/pair/triple cases PASS
+- Decoder/dictionary host tests: PASS
+- Key-up / abbreviation anchor / final-roll engine tests: PASS
+- ㅣ+JLKI / Shift+JLKI / ABBR/SYMBOL navigation: PASS
+- English-return / vowel-dual / one-shot Tab: PASS
+- LED logic / peripheral compile-shape: PASS
+
+Physical consonants
+Left:  ㅂ ㅈ ㄷ ㄱ ㅅ / ㅁ ㄴ ㅇ ㄹ ㅎ / ㅋ ㅌ ㅊ ㅍ 쌍초
+Right: 종ㅅ 종ㄱ 종ㄷ 종ㅈ 종ㅂ / 종ㅎ 종ㄹ 종ㅇ 종ㄴ 종ㅁ / 쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ

@@ -1,24 +1,35 @@
-# Cornix STENO 최종 배열·사전 안내 v1.6.1
+# Cornix STENO 최종 배열·canonical 사전 안내 v1.8.0
 
-## 최종 자음 배열
+## 자음 배열
 
 ```text
-Q=ㅋ W=ㅈ E=ㄴ R=ㅎ T=ㅌ | Y=종ㅌ U=종ㅎ I=종ㄴ O=종ㅈ P=종ㅋ
-A=ㅅ S=ㄱ D=ㄹ F=ㅇ G=쌍초 | H=쌍종 J=종ㅇ K=종ㄹ L=종ㄱ ;=종ㅅ
-Z=ㅊ X=ㅂ C=ㄷ V=ㅁ B=ㅍ | N=종ㅍ M=종ㅁ ,=종ㄷ .=종ㅂ /=종ㅊ
+             Q      W      E      R      T       Y      U      I      O      P
+             ㅋ     ㅈ     ㄴ     ㅎ     ㅌ      종ㅌ   종ㅎ   종ㄴ   종ㅈ   종ㅋ
+
+             A      S      D      F      G       H      J      K      L      ;
+             ㅅ     ㄱ     ㄹ     ㅇ    쌍초     쌍종   종ㅇ   종ㄹ   종ㄱ   종ㅅ
+
+             Z      X      C      V      B       N      M      ,      .      /
+             ㅊ     ㅂ     ㄷ     ㅁ     ㅍ      종ㅍ   종ㅁ   종ㄷ   종ㅂ   종ㅊ
 ```
 
-## 완성 사전
+## 사전 파일
 
-- `config/steno_dictionary.tsv`
-- 61개 exact-mask 약어
-- 논리 역할 저장, 물리 배열과 분리
+- 원본: `config/steno_dictionary.tsv`
+- 완성 사전 참고본: `config/abbreviation_dictionary_canonical_v0.1.json`
+- 생성 결과: `src/steno/steno_dictionary_generated.c`
+- 기본 활성 canonical exact-mask: 43개
+- GUI 편집 퀵 Macro: 12개
 
-## 퀵 사전
+재생성:
 
-- 고정 입력 마스크: `config/steno_quick_abbreviations.tsv`
-- 사용자 텍스트 프리셋: `config/steno_quick_text.tsv`
-- standard ZMK Macro: `quick_0`~`quick_11`
-- 슬롯 수: 12
+```bash
+python3 tools/generate_steno_dictionary.py \
+  config/steno_dictionary.tsv \
+  src/steno/steno_dictionary_generated.c \
+  --layout config/steno_role_layout.tsv
+```
 
-판정 우선순위에서 퀵 exact-mask를 먼저 소비하고, 일치하지 않으면 숫자·기호·일반 음절·은행 1/2 약어를 처리한다. 부분집합이나 가장 가까운 조합은 추정하지 않는다.
+사전은 물리키가 아닌 논리 역할로 저장됩니다. ABBR_L/R은 서로 다른 역할입니다.
+일반 AB2 항목은 VEXT_L/R 어느 쪽으로도 호출되지만, `VEXT_R+F_NG+F_D`는 `였었다`로
+예약되어 정규화하지 않습니다. `F_DOUBLE+F_NG+F_D`는 `이었다`입니다.

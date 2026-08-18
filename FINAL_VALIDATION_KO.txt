@@ -1,0 +1,6 @@
+CORNIX v2.1.0 FINAL validation: PASS
+- tools/validate_package.py: PASS
+- validation/run_host_tests.sh: PASS
+- role projection: 12,383 single/pair/triple cases PASS
+- canonical dictionary: 43 + quick 12
+- actual STENO dual tapping term: 150ms (Kconfig + shield conf + stubs)

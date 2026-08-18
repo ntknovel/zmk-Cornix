@@ -1,65 +1,64 @@
-# Cornix STENO 완성 약어 61개
+# Cornix STENO canonical exact-mask 약어 43개
 
-| 출력 | 은행 | 논리 역할 | 물리 위치 |
-|---|---:|---|---|
-| 그런 | 1 | `I_G+F_R` | 14, 20 |
-| 다른 | 1 | `F_D+I_R` | 34, 15 |
-| 같은 | 1 | `I_G+F_NG` | 14, 19 |
-| 다시 | 1 | `F_D+I_S` | 34, 13 |
-| 조금 | 1 | `I_J+F_G` | 2, 21 |
-| 그렇게 | 2 | `I_G+F_R+F_G` | 14, 20, 21 |
-| 이런 | 1 | `I_NG+F_R` | 16, 20 |
-| 그리고 | 1 | `I_G+F_R+F_G` | 14, 20, 21 |
-| 하지만 | 1 | `I_H+I_J+F_M` | 4, 2, 33 |
-| 이렇게 | 1 | `I_NG+F_R+F_G` | 16, 20, 21 |
-| 함께 | 2 | `I_H+F_G` | 4, 21 |
-| 없이 | 1 | `I_NG+F_NG` | 16, 19 |
-| 커다란 | 1 | `I_KH+F_D+I_R` | 1, 34, 15 |
-| 이미 | 1 | `I_NG+F_M` | 16, 33 |
-| 전부 | 1 | `I_J+F_B` | 2, 35 |
-| 너무 | 1 | `I_N+F_M` | 3, 33 |
-| 말했다 | 1 | `I_M+F_H+F_D` | 28, 7, 34 |
-| 그러자 | 1 | `I_G+F_R+F_J` | 14, 20, 9 |
-| 완전히 | 1 | `F_NG+I_J+I_H` | 19, 2, 4 |
-| 그대로 | 1 | `I_G+I_D+F_R` | 14, 27, 20 |
-| 아닌 | 1 | `I_NG+F_N` | 16, 8 |
-| 바로 | 1 | `I_B+F_R` | 26, 20 |
-| 점점 | 1 | `I_J+F_J` | 2, 9 |
-| 그래도 | 1 | `I_G+I_R+F_D` | 14, 15, 34 |
-| 계속해서 | 1 | `F_G+I_S+I_H+F_S` | 21, 13, 4, 22 |
-| 빠르게 | 1 | `I_DOUBLE+I_B+F_R+F_G` | 17, 26, 20, 21 |
-| 천천히 | 1 | `I_CH+F_H` | 25, 7 |
-| 가만히 | 1 | `I_G+F_M+I_H` | 14, 33, 4 |
-| 결국 | 1 | `I_G+F_G` | 14, 21 |
-| 곧바로 | 1 | `I_G+F_B+F_R` | 14, 35, 20 |
-| 그때 | 2 | `I_G+F_D` | 14, 34 |
-| 잠시 | 1 | `I_J+F_S` | 2, 22 |
-| 그럼 | 2 | `I_G+F_R` | 14, 20 |
-| 정말로 | 1 | `I_J+F_M+F_R` | 2, 33, 20 |
-| 때문에 | 2 | `I_D+I_M+F_NG` | 27, 28, 19 |
-| 조용히 | 2 | `F_NG+I_J+I_H` | 19, 2, 4 |
-| 그러면 | 1 | `I_G+F_R+F_M` | 14, 20, 33 |
-| 동시에 | 1 | `I_D+I_S+F_NG` | 27, 13, 19 |
-| 오히려 | 1 | `I_NG+F_H+F_R` | 16, 7, 20 |
-| 갑자기 | 1 | `I_G+F_J` | 14, 9 |
-| 서서히 | 1 | `I_S+F_S+I_H` | 13, 22, 4 |
-| 그럼에도 | 1 | `F_G+F_R+I_NG+I_D` | 21, 20, 16, 27 |
-| 아니면 | 1 | `I_NG+F_N+F_M` | 16, 8, 33 |
-| 순식간에 | 1 | `I_S+F_S+F_G+I_NG` | 13, 22, 21, 16 |
-| 그러니까 | 2 | `I_G+F_R+I_N+F_G` | 14, 20, 3, 21 |
-| 그렇다면 | 1 | `I_G+I_R+F_D+F_M` | 14, 15, 34, 33 |
-| 그런데 | 2 | `I_G+I_R+F_D` | 14, 15, 34 |
-| 말 없이 | 1 | `I_M+F_NG` | 28, 19 |
-| 잠시 후 | 1 | `I_J+F_S+I_H` | 2, 22, 4 |
-| 그러나 | 1 | `I_G+F_R+I_N` | 14, 20, 3 |
-| 그렇군 | 1 | `I_G+I_R+F_G` | 14, 15, 21 |
-| 바라봤다 | 1 | `I_B+I_R+F_B+F_D` | 26, 15, 35, 34 |
-| 한숨을 쉬었다 | 1 | `I_H+I_S+F_NG+F_S+I_D` | 4, 13, 19, 22, 27 |
-| 자신도 모르게 | 1 | `I_J+I_S+I_D+F_M+F_R+F_G` | 2, 13, 27, 33, 20, 21 |
-| 고개를 끄덕였다 | 1 | `I_G+F_G+I_DOUBLE+F_D` | 14, 21, 17, 34 |
-| 눈을 크게 떴다 | 2 | `I_N+I_KH+F_G+F_D` | 3, 1, 21, 34 |
-| 침을 꿀꺽 삼켰다 | 1 | `F_CH+I_DOUBLE+I_KH+I_D` | 36, 17, 1, 27 |
-| 근데 | 1 | `I_G+F_D` | 14, 34 |
-| 였다 | 1 | `I_NG+F_D` | 16, 34 |
-| 했다 | 1 | `I_H+F_D` | 4, 34 |
-| 으면 | 2 | `I_NG+F_M` | 16, 33 |
+Cornix v1.8.0 컴파일 기본값입니다. 퀵 Macro 12개는 별도 ZMK Macro 경로를 사용합니다.
+
+| 분류 | 출력 | 논리 역할 | 상태 | 메모 |
+|---|---|---|---|---|
+| 기본 | 점점 | `I_J + F_J` | confirmed | 일반 WORD: 초ㅈ+종ㅈ |
+| 기본 | 진짜 | `I_J + F_J + F_DOUBLE` | confirmed | 두 번째 ㅈ이 ㅉ임을 쌍종으로 표시 |
+| 기본 | 결국 | `I_G + F_G` | confirmed |  |
+| 기본 | 그렇게 | `I_G + I_R + F_G` | confirmed |  |
+| 기본 | 그렇군 | `I_G + F_R + F_G` | confirmed |  |
+| 기본 | 그런 | `I_G + F_R` | confirmed |  |
+| 기본 | 그럼 | `ABBR_L + I_G + F_R` | confirmed |  |
+| 기본 | 그래도 | `I_G + I_R + F_D` | confirmed |  |
+| 기본 | 그런데 | `ABBR_L + I_G + I_R + F_D` | confirmed |  |
+| 기본 | 그럼에도 | `I_G + I_R + I_NG + F_D` | confirmed |  |
+| 기본 | 그대로 | `I_G + I_D + F_R` | confirmed |  |
+| 기본 | 갑자기 | `I_G + F_J + I_DOUBLE` | confirmed | 마지막 반복 ㄱ을 쌍초/반복 표식으로 표시 |
+| 기본 | 완전히 | `I_NG + I_J + F_H` | confirmed |  |
+| 기본 | 조용히 | `I_NG + F_J + F_H` | confirmed | 현재 배열에서 초ㅈ+종ㅇ+종ㅎ은 오른손 검지 충돌. 초ㅇ+종ㅈ+종ㅎ으로 배치. |
+| 기본 | 되었 | `I_D + I_NG` | confirmed | TAIL 조립용 일반 WORD 조각 |
+| 기본 | 근데 | `I_G + F_D` | confirmed |  |
+| 기본 | 그때 | `I_G + F_D + F_DOUBLE` | confirmed | 일반 WORD: 두 번째 ㄷ이 ㄸ임을 쌍종으로 표시 |
+| 접속 | 게다가 | `I_G + I_D + I_DOUBLE` | confirmed |  |
+| 접속 | 그리고 | `I_G + I_R + I_DOUBLE` | confirmed |  |
+| 접속 | 그러자 | `I_G + I_R + F_J` | confirmed |  |
+| 접속 | 그러기 | `ABBR_L + I_G + I_R + I_DOUBLE` | confirmed |  |
+| 접속 | 그렇지 | `ABBR_L + I_G + I_R + F_J` | confirmed |  |
+| 접속 | 하지만 | `I_H + I_J + F_M` | confirmed |  |
+| 어미 | 였다 | `F_NG + F_D` | confirmed | ㅇㄷ군 최우선, 오른손-only |
+| 어미 | 없다 | `ABBR_R + F_NG + F_D` | confirmed | ㅇㄷ군 2순위, 오른손 중심 |
+| 어미 | 었다 | `ABBR_L + F_NG + F_D` | current |  |
+| 어미 | 았다 | `ABBR_L + ABBR_R + F_NG + F_D` | current |  |
+| 어미 | 이었다 | `F_DOUBLE + F_NG + F_D` | confirmed | 사용자 요청: 오른쪽 쌍종 + 종ㅇ + 종ㄷ; H/J 동일 검지 예외 |
+| 어미 | 였었다 | `VEXT_R + F_NG + F_D` | confirmed | 사용자 요청: 오른쪽 쌍모 전용 exact mask; 일반 AB2 정규화 예외 |
+| 어미 | 었었다 | `VEXT_L + ABBR_R + F_NG + F_D` | current |  |
+| 어미 | 있다 | `VEXT_L + ABBR_L + F_NG + F_D` | current |  |
+| 어미 | 에다 | `ABBR_R + I_NG + F_D` | current | 오른손 ㅇㄷ의 7개 무충돌 슬롯을 다 쓴 뒤 사용하는 혼합 예외; 사용자 제안 'ㅇ초성+ㄷ종성+약어'. |
+| 어미 | 했다 | `F_H + F_D` | confirmed |  |
+| 어미 | 됐다 | `F_DOUBLE + F_D` | confirmed | 쌍종=반복 ㄷ |
+| 어미 | 는데 | `VEXT_L + F_N` | confirmed | 종ㄴ+종ㄷ이 같은 오른손 중지라 AB2 단일 코어 사용 |
+| 어미 | 을지도 | `F_NG + F_J + F_D` | confirmed |  |
+| 어미 | 어졌다 | `ABBR_R + F_NG + F_J + F_D` | confirmed |  |
+| 어미 | 지만 | `F_J + F_M` | confirmed |  |
+| 어미 | 습니다 | `VEXT_L + F_S + F_D` | confirmed | 겠/했/였/있/없/않/되었 + 습니다 조립 |
+| 어미 | 었으면 | `VEXT_L + ABBR_R + F_M` | current | 되+었으면 등 조립 |
+| 어미 | 하는게 | `F_H + F_N + F_G` | confirmed |  |
+| 어미 | 오는게 | `F_NG + F_N + F_G` | confirmed |  |
+| 어미 | 가는게 | `F_DOUBLE + F_N + F_G` | confirmed | 쌍종=반복 ㄱ |
+
+## 어미 ㅇㄷ군
+
+```text
+F_NG + F_D                         → 였다
+ABBR_L + F_NG + F_D                → 었다
+ABBR_R + F_NG + F_D                → 없다
+ABBR_L + ABBR_R + F_NG + F_D       → 았다
+VEXT_R + F_NG + F_D                → 였었다
+F_DOUBLE + F_NG + F_D              → 이었다
+VEXT_L/R + ABBR_R + F_NG + F_D     → 었었다
+VEXT_L/R + ABBR_L + F_NG + F_D     → 있다
+```
+
+일반 AB2만 VEXT 좌우 정규화를 사용하며, `VEXT_R+F_NG+F_D`는 였었다 전용 exact mask입니다.

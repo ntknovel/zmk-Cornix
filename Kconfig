@@ -7,7 +7,7 @@ config ZMK_BEHAVIOR_RF_POWER
 
 menuconfig CORNIX_STENO
     bool "Cornix Korean STENO engine"
-    default y
+    default n
     help
       Enable the Cornix BASE/STENO mode switch, Korean chord decoder,
       context-sensitive STENO keys, and exact-mask abbreviation dictionary.
@@ -19,26 +19,27 @@ config CORNIX_STENO_MAX_POSITIONS
     range 50 64
     default 50
 
-config CORNIX_STENO_CHORD_SETTLE_MS
-    int "Initial STENO chord settle window (ms)"
-    range 0 100
-    default 40
-
 config CORNIX_STENO_KEYUP_CORRECTION_MS
-    int "Late-key release correction window (ms)"
+    int "Early-release correction window (ms)"
     range 0 150
     default 50
+    help
+      A key released while another STENO key remains held stays provisional.
+      If the remaining keys stay held after this window, the earlier key is
+      removed unless it is a dictionary prefix or final-roll candidate.
 
-config CORNIX_STENO_LATE_TAP_MAX_MS
-    int "Maximum held time for a removable late key (ms)"
-    range 20 300
-    default 120
-
+config CORNIX_STENO_FINAL_ROLL_MS
+    int "Legal final-cluster rolling window (ms)"
+    range 50 200
+    default 90
+    help
+      Time in which two sequential final-consonant taps may be restored as one
+      of the eleven legal Korean final clusters.
 
 config CORNIX_STENO_DUAL_TAPPING_TERM_MS
     int "STENO context-key tapping term (ms)"
     range 80 500
-    default 200
+    default 150
 
 config CORNIX_STENO_OUTPUT_QUEUE_SIZE
     int "STENO HID output queue length"
@@ -86,6 +87,13 @@ config CORNIX_STENO_LED_REASSERT_DELAY_MS
     help
       Delay before re-applying STENO input feedback after the normal Cornix
       battery/Bluetooth widget reacts to the same system event.
+
+config CORNIX_STENO_LED_CATEGORY_FLASH_MS
+    int "Abbreviation category confirmation duration (ms)"
+    range 50 2000
+    default 350
+    help
+      Duration of the green/yellow/blue confirmation after an abbreviation.
 
 endif
 

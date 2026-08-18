@@ -218,6 +218,7 @@ int cornix_steno_dual_released(uint32_t position, int64_t timestamp) {
     bool committed_role;
     bool hold_down;
     bool consumed;
+    int64_t pressed_at;
     bool output_paste = false;
 
     k_mutex_lock(&dual_mutex, K_FOREVER);
@@ -235,6 +236,7 @@ int cornix_steno_dual_released(uint32_t position, int64_t timestamp) {
     committed_role = state->committed_role;
     hold_down = state->hold_down;
     consumed = state->consumed;
+    pressed_at = state->pressed_at;
 
     state->active = false;
     state->committed_role = false;
@@ -257,7 +259,17 @@ int cornix_steno_dual_released(uint32_t position, int64_t timestamp) {
         return 0;
     }
     if (output_paste) return cornix_steno_output_enqueue(LC(V));
-    if (!consumed) return cornix_steno_output_enqueue(tap_key);
+    if (!consumed) {
+        /* Vowel thumb tri-state: a short solo tap is Enter/Space, a solo
+         * hold released after the tapping term is the edit key, and any
+         * multi-key STENO participation commits the vowel role instead.
+         * Nothing fires while the key is physically held. */
+        if (policy == CST_DUAL_VOWEL && hold_key != 0 &&
+            timestamp - pressed_at >= CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS) {
+            return cornix_steno_output_enqueue(hold_key);
+        }
+        return cornix_steno_output_enqueue(tap_key);
+    }
     ARG_UNUSED(policy);
     return 0;
 }

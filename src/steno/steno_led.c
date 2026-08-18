@@ -15,7 +15,6 @@
 #include <zmk/events/battery_state_changed.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #include <zmk/events/endpoint_changed.h>
-
 #include <zmk_rgbled_widget/widget.h>
 
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
@@ -39,41 +38,41 @@ LOG_MODULE_REGISTER(cornix_steno_led, CONFIG_ZMK_LOG_LEVEL);
 #error "cornix_steno.dtsi did not define the st_led behavior"
 #endif
 
-/* The public Cornix indicator shield exposes two WS2812 pixels on each half. */
 BUILD_ASSERT(CONFIG_RGBLED_WIDGET_LED_COUNT == 2,
-             "Cornix STENO feedback expects the two production indicator LEDs per half");
+             "Cornix STENO feedback expects two indicator LEDs per half");
 
 #define CST_LOCAL_LED_COUNT UINT8_C(2)
 #define CST_TOTAL_LED_COUNT UINT8_C(4)
 
 K_MUTEX_DEFINE(led_state_mutex);
 static struct k_work_delayable render_work;
+
 #if CST_STENO_CENTRAL
 static struct k_work_delayable entry_flash_work;
-
-/* Master state is changed only by central-locality STENO behaviors. */
+static struct k_work_delayable category_flash_work;
 static bool master_active;
 static bool master_enabled = true;
 static bool master_entry_flash;
 static uint8_t master_held_count;
 static uint64_t master_physical_down_mask;
+static enum cornix_steno_abbreviation_category master_category;
+static uint8_t last_published_state = UINT8_MAX;
 #endif
 
-/* Applied state exists independently on both halves. */
 static uint8_t applied_packed_state = CST_LED_ENABLED;
 static bool rendered_active;
 static bool initialized;
-#if CST_STENO_CENTRAL
-static uint8_t last_published_state = UINT8_MAX;
 
+#if CST_STENO_CENTRAL
 static uint8_t build_master_state_locked(void) {
     return cornix_steno_led_pack_state(master_active, master_enabled,
-                                       master_entry_flash, master_held_count);
+                                       master_entry_flash, master_held_count,
+                                       master_category);
 }
 
 static uint8_t count_master_keys_locked(void) {
-    const uint8_t held = (uint8_t)__builtin_popcountll(master_physical_down_mask);
-    return MIN(held, CST_TOTAL_LED_COUNT);
+    return MIN((uint8_t)__builtin_popcountll(master_physical_down_mask),
+               CST_TOTAL_LED_COUNT);
 }
 
 static int publish_packed_state(uint8_t packed_state) {
@@ -104,11 +103,11 @@ static int publish_packed_state(uint8_t packed_state) {
         k_mutex_lock(&led_state_mutex, K_FOREVER);
         last_published_state = UINT8_MAX;
         k_mutex_unlock(&led_state_mutex);
-        LOG_WRN("Failed to publish global Cornix STENO LED state: %d", err);
+        LOG_WRN("Failed to publish Cornix STENO LED state: %d", err);
     }
     return err;
 }
-#endif /* CST_STENO_CENTRAL */
+#endif
 
 static enum status_type status_for_local_led(uint8_t local_index) {
     return local_index == 0 ? STATUS_BATTERY : STATUS_CONNECTIVITY;
@@ -116,47 +115,25 @@ static enum status_type status_for_local_led(uint8_t local_index) {
 
 static int clear_local_led(uint8_t local_index) {
     int err = ws2812_clear_status_led(status_for_local_led(local_index));
-    if (err < 0) {
-        return err;
-    }
-
-    /*
-     * The production widget may have left a pulse/breath animation attached to
-     * this physical pixel after a BASE battery or connection indication. Clear
-     * the LED by index as well so its animation state becomes static/off before
-     * STENO takes ownership.
-     */
+    if (err < 0) return err;
     return ws2812_clear_led(local_index);
 }
 
-static int set_local_led_white(uint8_t local_index) {
-    /* Stop any previous BASE animation before installing a persistent frame. */
+static int set_local_led_color(uint8_t local_index, uint8_t color) {
+    if (color == CST_LED_COLOR_OFF) return clear_local_led(local_index);
     int err = ws2812_clear_led(local_index);
-    if (err < 0) {
-        return err;
-    }
-
-    return ws2812_set_status_led(status_for_local_led(local_index),
-                                 WS2812_COLOR_WHITE, 0, true);
+    if (err < 0) return err;
+    return ws2812_set_status_led(status_for_local_led(local_index), color, 0, true);
 }
 
 static void clear_steno_overlay(void) {
     for (uint8_t i = 0; i < CST_LOCAL_LED_COUNT; i++) {
         const int err = clear_local_led(i);
-        if (err < 0) {
-            LOG_WRN("Failed to clear Cornix STENO LED %u: %d", i, err);
-        }
+        if (err < 0) LOG_WRN("Failed to clear Cornix STENO LED %u: %d", i, err);
     }
 }
 
 static void restore_base_indicators(void) {
-    /*
-     * Return ownership to the production Cornix widget. A connected profile is
-     * shown for its configured short duration and then the widget clears the
-     * strip/powers it down. Battery is re-requested only while charging or in
-     * the configured low-battery range, so a healthy wireless BASE remains
-     * dark after its normal connection indication.
-     */
 #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
     const uint8_t level = zmk_battery_state_of_charge();
     bool externally_powered = false;
@@ -173,11 +150,11 @@ static void restore_base_indicators(void) {
 #endif
 }
 
-static uint8_t first_global_led_for_this_half(void) {
+static bool this_half_is_central(void) {
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-    return 0;
+    return true;
 #else
-    return CST_LOCAL_LED_COUNT;
+    return false;
 #endif
 }
 
@@ -195,17 +172,16 @@ static void render_steno_state(uint8_t packed_state) {
     }
 
     rendered_active = true;
-
     if (!enabled) {
         clear_steno_overlay();
         return;
     }
 
-    const uint8_t first_global = first_global_led_for_this_half();
     for (uint8_t local = 0; local < CST_LOCAL_LED_COUNT; local++) {
-        const uint8_t global_index = first_global + local;
-        const bool on = cornix_steno_led_global_index_is_on(packed_state, global_index);
-        const int err = on ? set_local_led_white(local) : clear_local_led(local);
+        const uint8_t global_index =
+            cornix_steno_led_global_index_for_local(this_half_is_central(), local);
+        const uint8_t color = cornix_steno_led_global_color(packed_state, global_index);
+        const int err = set_local_led_color(local, color);
         if (err < 0) {
             LOG_WRN("Failed to render Cornix STENO LED %u: %d", local, err);
         }
@@ -223,27 +199,33 @@ static void render_work_handler(struct k_work *work) {
 #if CST_STENO_CENTRAL
 static void entry_flash_work_handler(struct k_work *work) {
     ARG_UNUSED(work);
-
     k_mutex_lock(&led_state_mutex, K_FOREVER);
-    if (!master_active || !master_enabled) {
-        master_entry_flash = false;
-        k_mutex_unlock(&led_state_mutex);
-        return;
-    }
     master_entry_flash = false;
     const uint8_t packed_state = build_master_state_locked();
+    const bool publish = master_active && master_enabled;
     k_mutex_unlock(&led_state_mutex);
+    if (publish) publish_packed_state(packed_state);
+}
 
-    publish_packed_state(packed_state);
+static void category_flash_work_handler(struct k_work *work) {
+    ARG_UNUSED(work);
+    k_mutex_lock(&led_state_mutex, K_FOREVER);
+    master_category = CST_ABBR_CATEGORY_NONE;
+    const uint8_t packed_state = build_master_state_locked();
+    const bool publish = master_active;
+    k_mutex_unlock(&led_state_mutex);
+    if (publish) publish_packed_state(packed_state);
 }
 
 void cornix_steno_led_mode_changed(bool active) {
     k_work_cancel_delayable(&entry_flash_work);
+    k_work_cancel_delayable(&category_flash_work);
 
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     master_active = active;
     master_physical_down_mask = 0;
     master_held_count = 0;
+    master_category = CST_ABBR_CATEGORY_NONE;
     master_entry_flash = active && master_enabled;
     const uint8_t packed_state = build_master_state_locked();
     const bool start_flash = master_entry_flash;
@@ -257,63 +239,90 @@ void cornix_steno_led_mode_changed(bool active) {
 }
 
 void cornix_steno_led_key_pressed(uint32_t position) {
-    if (position >= CONFIG_CORNIX_STENO_MAX_POSITIONS) {
-        return;
-    }
+    if (position >= CONFIG_CORNIX_STENO_MAX_POSITIONS) return;
 
+    k_work_cancel_delayable(&category_flash_work);
+    k_work_cancel_delayable(&entry_flash_work);
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     if (!master_active) {
         k_mutex_unlock(&led_state_mutex);
         return;
     }
+    master_entry_flash = false;
+    master_category = CST_ABBR_CATEGORY_NONE;
     master_physical_down_mask |= UINT64_C(1) << position;
     master_held_count = count_master_keys_locked();
     const uint8_t packed_state = build_master_state_locked();
     k_mutex_unlock(&led_state_mutex);
-
     publish_packed_state(packed_state);
 }
 
 void cornix_steno_led_key_released(uint32_t position) {
-    if (position >= CONFIG_CORNIX_STENO_MAX_POSITIONS) {
-        return;
-    }
-
+    if (position >= CONFIG_CORNIX_STENO_MAX_POSITIONS) return;
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     master_physical_down_mask &= ~(UINT64_C(1) << position);
     master_held_count = count_master_keys_locked();
     const uint8_t packed_state = build_master_state_locked();
     const bool active = master_active;
     k_mutex_unlock(&led_state_mutex);
-
-    if (active) {
-        publish_packed_state(packed_state);
-    }
+    if (active) publish_packed_state(packed_state);
 }
 
 void cornix_steno_led_reset_keys(void) {
+    k_work_cancel_delayable(&category_flash_work);
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     master_physical_down_mask = 0;
     master_held_count = 0;
+    master_category = CST_ABBR_CATEGORY_NONE;
     const uint8_t packed_state = build_master_state_locked();
     const bool active = master_active;
     k_mutex_unlock(&led_state_mutex);
+    if (active) publish_packed_state(packed_state);
+}
 
+void cornix_steno_led_set_category(enum cornix_steno_abbreviation_category category) {
+    if (category < CST_ABBR_CATEGORY_NONE || category > CST_ABBR_CATEGORY_TAIL) {
+        category = CST_ABBR_CATEGORY_NONE;
+    }
+    k_mutex_lock(&led_state_mutex, K_FOREVER);
+    if (!master_active || master_category == category) {
+        k_mutex_unlock(&led_state_mutex);
+        return;
+    }
+    master_category = category;
+    const uint8_t packed_state = build_master_state_locked();
+    k_mutex_unlock(&led_state_mutex);
+    publish_packed_state(packed_state);
+}
+
+void cornix_steno_led_confirm_category(enum cornix_steno_abbreviation_category category) {
+    if (category <= CST_ABBR_CATEGORY_NONE || category > CST_ABBR_CATEGORY_TAIL) {
+        cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
+        return;
+    }
+    k_work_cancel_delayable(&category_flash_work);
+    k_mutex_lock(&led_state_mutex, K_FOREVER);
+    master_category = category;
+    const uint8_t packed_state = build_master_state_locked();
+    const bool active = master_active && master_enabled;
+    k_mutex_unlock(&led_state_mutex);
     if (active) {
         publish_packed_state(packed_state);
+        k_work_reschedule(&category_flash_work,
+                          K_MSEC(CONFIG_CORNIX_STENO_LED_CATEGORY_FLASH_MS));
     }
 }
 
 int cornix_steno_led_toggle(void) {
     k_work_cancel_delayable(&entry_flash_work);
-
+    k_work_cancel_delayable(&category_flash_work);
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     master_enabled = !master_enabled;
+    master_category = CST_ABBR_CATEGORY_NONE;
     master_entry_flash = master_active && master_enabled;
     const bool start_flash = master_entry_flash;
     const uint8_t packed_state = build_master_state_locked();
     k_mutex_unlock(&led_state_mutex);
-
     const int err = publish_packed_state(packed_state);
     if (start_flash) {
         k_work_reschedule(&entry_flash_work,
@@ -328,11 +337,11 @@ bool cornix_steno_led_is_enabled(void) {
     k_mutex_unlock(&led_state_mutex);
     return enabled;
 }
-#endif /* CST_STENO_CENTRAL */
+#endif
 
 int cornix_steno_led_apply_packed(uint8_t packed_state) {
     packed_state &= (CST_LED_ACTIVE | CST_LED_ENABLED | CST_LED_ENTRY_FLASH |
-                     CST_LED_HELD_MASK);
+                     CST_LED_CATEGORY_MASK | CST_LED_HELD_MASK);
 
     k_mutex_lock(&led_state_mutex, K_FOREVER);
     const bool was_active = cornix_steno_led_state_active(applied_packed_state);
@@ -341,25 +350,12 @@ int cornix_steno_led_apply_packed(uint8_t packed_state) {
     const bool ready = initialized;
     k_mutex_unlock(&led_state_mutex);
 
-    if (!ready) {
-        return -EAGAIN;
-    }
-
-    /* A BASE-only toggle changes future STENO behavior without flashing BASE. */
-    if (!was_active && !is_active) {
-        return 0;
-    }
-
+    if (!ready) return -EAGAIN;
+    if (!was_active && !is_active) return 0;
     k_work_reschedule(&render_work, K_NO_WAIT);
     return 0;
 }
 
-/*
- * The normal Cornix indicator listens to the same battery/connection events.
- * While STENO is active, re-apply the held-key overlay after its listener runs.
- * This keeps STENO idle dark (or fully disabled) and prevents BASE status
- * colors from replacing the input feedback until STENO is exited.
- */
 static int cornix_steno_led_reassert_listener_cb(const zmk_event_t *eh) {
     ARG_UNUSED(eh);
     k_mutex_lock(&led_state_mutex, K_FOREVER);
@@ -383,8 +379,7 @@ ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_usb_conn_state_changed)
 #endif
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 #if IS_ENABLED(CONFIG_ZMK_BLE)
-ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener,
-                 zmk_ble_active_profile_changed);
+ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_ble_active_profile_changed);
 #endif
 #if IS_ENABLED(CONFIG_RGBLED_WIDGET_CONN_SHOW_USB)
 ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_endpoint_changed);
@@ -394,6 +389,7 @@ ZMK_SUBSCRIPTION(cornix_steno_led_reassert_listener, zmk_endpoint_changed);
 static int cornix_steno_led_init(void) {
 #if CST_STENO_CENTRAL
     k_work_init_delayable(&entry_flash_work, entry_flash_work_handler);
+    k_work_init_delayable(&category_flash_work, category_flash_work_handler);
 #endif
     k_work_init_delayable(&render_work, render_work_handler);
 
@@ -404,6 +400,7 @@ static int cornix_steno_led_init(void) {
     master_entry_flash = false;
     master_held_count = 0;
     master_physical_down_mask = 0;
+    master_category = CST_ABBR_CATEGORY_NONE;
     last_published_state = UINT8_MAX;
 #endif
     applied_packed_state = CST_LED_ENABLED;

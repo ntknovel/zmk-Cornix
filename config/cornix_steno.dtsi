@@ -52,7 +52,8 @@
             policy = <CST_DUAL_VOWEL>;
             role = <CST_R_V_U>;
             tap-key = <ENTER>;
-            display-name = "ST V-U / Enter";
+            hold-key = <RBKT>;
+            display-name = "ST V-U / Enter / Edit-L";
         };
         st_va_space: st_va_space {
             compatible = "zmk,behavior-cornix-steno-dual";
@@ -60,7 +61,8 @@
             policy = <CST_DUAL_VOWEL>;
             role = <CST_R_V_A>;
             tap-key = <SPACE>;
-            display-name = "ST V-A / Space";
+            hold-key = <BSPC>;
+            display-name = "ST V-A / Space / Edit-R";
         };
 
         st_tab_once: st_tab_once {
@@ -80,6 +82,12 @@
             keycode = <RALT>;
             cancel-stroke;
             display-name = "ST RAlt";
+        };
+        st_lang_return: st_lang_return {
+            compatible = "zmk,behavior-cornix-steno-language-return";
+            #binding-cells = <0>;
+            layer = <STENO>;
+            display-name = "ST English / Korean Return";
         };
         st_arrow: st_arrow {
             compatible = "zmk,behavior-cornix-steno-arrow";

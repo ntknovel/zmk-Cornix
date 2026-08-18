@@ -8,8 +8,10 @@
 #include <drivers/behavior.h>
 #include <zmk/behavior.h>
 #include <zmk/keymap.h>
+#include <dt-bindings/zmk/keys.h>
 #include <cornix_steno/dual.h>
 #include <cornix_steno/engine.h>
+#include <cornix_steno/english_return.h>
 #include <cornix_steno/output.h>
 #include <cornix_steno/tab.h>
 
@@ -34,10 +36,22 @@ static int on_released(struct zmk_behavior_binding *binding,
     cornix_steno_output_flush();
     cornix_steno_tab_reset();
     cornix_steno_dual_reset();
-    cornix_steno_engine_set_active(entering);
+    cornix_steno_engine_cancel_pending();
 
-    return entering ? zmk_keymap_layer_activate(cfg->layer, false)
-                    : zmk_keymap_layer_deactivate(cfg->layer, false);
+    if (entering) {
+        if (cornix_steno_english_return_take_pending()) {
+            const int err = cornix_steno_output_enqueue(RALT);
+            if (err) return err;
+        }
+        cornix_steno_engine_set_active(true);
+        const int err = zmk_keymap_layer_activate(cfg->layer, false);
+        return err ? err : ZMK_BEHAVIOR_OPAQUE;
+    }
+
+    cornix_steno_english_return_set_pending(false);
+    cornix_steno_engine_set_active(false);
+    const int err = zmk_keymap_layer_deactivate(cfg->layer, false);
+    return err ? err : ZMK_BEHAVIOR_OPAQUE;
 }
 
 static const struct behavior_driver_api api = {

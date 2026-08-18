@@ -1,47 +1,59 @@
-Cornix ZMK 한국어 STENO 퀵 약어 프리셋 v1.6.1
+Cornix STENO v1.8.0 FULL PARITY — 빠른 시작
 ================================================
 
-핵심 변경
----------
-- BASE 왼쪽 하단 [: 탭 [ / 홀드 Ctrl+Y
-- BASE 오른쪽 하단 ]: 탭 ] / 홀드 RCtrl
-- BASE 오른쪽 최상단: Ctrl+A
-- 기존 4개 삼중모음 퀵 슬롯을 폐기하고, 완성 약어사전 규격의 M0~M11 12개 슬롯으로 교체
-- 사용자가 지정한 12개 출력 문구를 일반 ZMK Macro에 미리 입력
-- ZMK Keymap Editor의 Macros 화면에서 quick_0~quick_11을 바로 수정 가능
-- 한국어 텍스트만 고쳐 재생성하는 config/steno_quick_text.tsv 방식도 추가
-- v1.5.1의 오른손 peripheral/settings_reset 빌드 하드닝 유지
+이 버전은 v1.7.1의 canonical 약어·어미 재배치를 유지하면서, 이전 분기에서 빠졌던
+키업/약어/좌우이동/수정모드/LED 패치와 KLOR에서 확정한 조작 규칙을 다시 통합한 판입니다.
 
-가장 쉬운 적용
--------------
-1. 아직 v1.5.1을 적용하지 않았거나 저장소 상태가 섞였다면
-   Cornix_ZMK_STENO_BASE_KEYS_v1.6.1_UPLOAD.zip을 저장소 루트에 덮어씁니다.
-2. 이미 v1.5.1이 적용된 상태라면
-   Cornix_ZMK_STENO_BASE_KEYS_v1.6.1_PATCH_ONLY.zip만 덮어씁니다.
-3. Codespaces 터미널에서 실행합니다.
+가장 안전한 적용 방법
+----------------------
+1. 현재 정상 저장소에서 새 브랜치를 만듭니다.
 
    cd /workspaces/zmk-Cornix
+   git status
+   git switch -c cornix-steno-v1.8.0-full-parity
+
+2. Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip을 저장소 루트에 올린 뒤 덮어씁니다.
+
+   unzip -o Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip -d .
+   rm Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip
+
+3. 검증합니다.
+
    python3 tools/validate_package.py .
+   bash validation/run_host_tests.sh
+
+4. 커밋하고 푸시합니다.
+
    git add -A
-   git commit -m "Update Cornix Base bracket dual keys"
-   git push
+   git commit -m "Update Cornix STENO to v1.8.0 full parity"
+   git push -u origin cornix-steno-v1.8.0-full-parity
 
-4. GitHub Actions에서 left/right/settings_reset 빌드가 모두 성공한 뒤 UF2를 사용합니다.
+5. GitHub Actions의 세 산출물이 모두 성공했는지 확인합니다.
 
-현재 퀵 출력
-------------
-약어L+ㅗ = 구서룡      약어L+ㅡ = 사구구      약어L+ㅜ = 피피쿵
-약어R+ㅏ = 스타라이트  약어R+ㅣ = 유안나      약어R+ㅓ = 유혜나
-약어R+ㅗ = 케이지      약어R+ㅡ = 마이스터    약어R+ㅜ = 일렉트리스
-약어L+ㅏ = 실험체      약어L+ㅣ = W 시         약어L+ㅓ = A 시
+   cornix_left_maxrange_steno_indicator
+   cornix_right_maxrange_steno_indicator
+   cornix_settings_reset
 
-빠른 수정
+6. 왼쪽과 오른쪽 UF2는 서로 구분해 플래시합니다. settings_reset은 페어링을 실제로
+   초기화해야 할 때만 사용합니다.
+
+핵심 조작
 ---------
-방법 A: ZMK Keymap Editor -> Macros -> quick_0~quick_11의 Key Press 시퀀스 수정
-방법 B: config/steno_quick_text.tsv의 3번째 열만 수정 후 아래 실행
+- 약어L 홀드 + 쌍초 반복 탭: 왼쪽 이동
+- 약어R 홀드 + 쌍종 반복 탭: 오른쪽 이동
+- 기호L 홀드 + 쌍초 반복 탭: Shift+왼쪽 선택
+- 기호R 홀드 + 쌍종 반복 탭: Shift+오른쪽 선택
+- 기호 홀드 + 자음/모음 순차 탭: 직접 자모 수정 모드
+- ㅣ 홀드 + 물리 I/J/K/L: 위/왼쪽/아래/오른쪽
+- 왼쪽 인코더: Shift+위/아래, 오른쪽 인코더: 위/아래
+- STENO에서 오른쪽 인코더 클릭: RAlt 후 BASE형 영문 상태
+- 영문 복귀 상태에서 오른쪽 인코더 또는 왼쪽 STENO 클릭: RAlt 후 STENO 복귀
 
-   python3 tools/update_quick_macro_text.py
-   python3 tools/validate_package.py .
-
-Windows에서는 UPDATE_QUICK_MACROS.cmd를 실행해도 됩니다.
-방법 B를 실행하면 quick_0~quick_11의 GUI 편집 내용은 TSV 값으로 다시 생성됩니다.
+약어
+----
+- canonical exact-mask 43개
+- GUI에서 Text를 바꿀 수 있는 Quick Macro 12개
+- 약어L/약어R은 서로 다른 선택자
+- 였었다: 오른겹모+종ㅇ+종ㄷ
+- 이었다: 오른쌍종+종ㅇ+종ㄷ
+- 일반 50ms 오타 복구, 11개 겹받침 90ms 롤링 유지
