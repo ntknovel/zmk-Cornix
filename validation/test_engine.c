@@ -112,19 +112,20 @@ int main(void) {
     const uint32_t geureogi[]={R,M,F,J,R,L}; expect("abbr exact survives nav",geureogi,6);
     expect_events("abbr exact no arrow",LEFT,0);
 
-    /* Continuous correction: one held symbol, sequential consonant/vowel units. */
-    press(CST_R_SYMBOL_R,47,1400);
-    press(CST_R_I_G,4,1410); release(CST_R_I_G,4,1420);
-    press(CST_R_V_A,44,1430); release(CST_R_V_A,44,1440);
-    press(CST_R_F_N,21,1450); release(CST_R_F_N,21,1460);
-    release(CST_R_SYMBOL_R,47,1470);
-    expect("continuous correction gan",gan,3);
+    /* Every jamo role is its own correction key on a solo 150 ms hold-release. */
+    press(CST_R_I_G,4,1400); release(CST_R_I_G,4,1550);
+    const uint32_t solo_g[]={R}; expect("solo-hold initial giyeok",solo_g,1);
 
-    /* Correction double marker and consonant form one doubled jamo. */
-    press(CST_R_SYMBOL_L,40,1500); press(CST_R_I_DOUBLE,29,1510);
-    press(CST_R_I_G,4,1520); release(CST_R_I_DOUBLE,29,1530);
-    release(CST_R_I_G,4,1540); release(CST_R_SYMBOL_L,40,1550);
-    const uint32_t ssang_g[]={LS(R)}; expect("correction doubled consonant",ssang_g,1);
+    press(CST_R_F_N,21,1600); release(CST_R_F_N,21,1755);
+    const uint32_t solo_n[]={S}; expect("solo-hold final nieun",solo_n,1);
+
+    press(CST_R_V_I,45,1800); release(CST_R_V_I,45,1950);
+    const uint32_t solo_i[]={L}; expect("solo-hold vowel i",solo_i,1);
+
+    /* Once another STENO role participates, even a long hold is a normal stroke. */
+    press(CST_R_I_G,4,2000); press(CST_R_V_A,44,2050);
+    release(CST_R_V_A,44,2070); release(CST_R_I_G,4,2200);
+    const uint32_t ga[]={R,K}; expect("multi-key overrides solo hold",ga,2);
 
     /* Physical ㅣ+I/J/K/L navigation remains immediate. */
     test_key_events_reset();
@@ -154,6 +155,6 @@ int main(void) {
     release(CST_R_I_G,4,2120); expect("mode exit cancel",NULL,0);
 
     if (failures) return EXIT_FAILURE;
-    puts("Cornix STENO v1.8.0 full-parity engine tests: PASS");
+    puts("Cornix STENO v2.1.1 solo-hold direct-jamo engine tests: PASS");
     return EXIT_SUCCESS;
 }

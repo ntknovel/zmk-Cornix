@@ -1,0 +1,18 @@
+Cornix STENO v2.1.1 — 단일 홀드 직접자모 수정
+
+오해 수정:
+- 별도 EDIT/기호 수정키를 두는 방식이 아님.
+- 각 자음/모음 역할키 자체가 단독으로 150ms 이상 눌렸다가 떼어지면 해당 자모를 직접 1회 출력.
+- 짧은 단독 ㅜ/ㅏ는 기존대로 Enter/Space.
+- 다중키 참여 시 홀드시간과 관계없이 일반 STENO 스트로크.
+- 기호키 correction anchor는 제거. 기호키는 숫자/기호/선택 기능만 담당.
+
+예:
+ㄱ 키 150ms 홀드→release = ㄱ
+종ㄱ 키 150ms 홀드→release = ㄱ
+ㅣ 키 150ms 홀드→release = ㅣ
+ㅜ·Enter 짧은 탭 = Enter
+ㅜ·Enter 150ms 홀드→release = ㅜ
+ㅏ·Space 짧은 탭 = Space
+ㅏ·Space 150ms 홀드→release = ㅏ
+ㄱ+ㅏ를 함께 사용 = 일반 속기 '가' (단독 직접자모 판정 취소)

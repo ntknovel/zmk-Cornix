@@ -13,12 +13,14 @@ static void none(const char*n){if(test_output_count){fprintf(stderr,"FAIL %s une
 int main(void){
  reset_all();cornix_steno_dual_pressed(43,CST_DUAL_VOWEL,CST_R_V_U,ENTER,0,0);cornix_steno_dual_released(43,50);expect("VU Enter",ENTER);
  reset_all();cornix_steno_dual_pressed(44,CST_DUAL_VOWEL,CST_R_V_A,SPACE,0,0);cornix_steno_dual_released(44,50);expect("VA Space",SPACE);
+ reset_all();cornix_steno_dual_pressed(43,CST_DUAL_VOWEL,CST_R_V_U,ENTER,0,0);cornix_steno_dual_released(43,150);expect("VU solo-hold direct",N);
+ reset_all();cornix_steno_dual_pressed(44,CST_DUAL_VOWEL,CST_R_V_A,SPACE,0,0);cornix_steno_dual_released(44,151);expect("VA solo-hold direct",K);
  reset_all();cornix_steno_dual_pressed(43,CST_DUAL_VOWEL,CST_R_V_U,ENTER,0,0);cornix_steno_dual_notify_other_press(14,20);
  if(test_engine_press_count!=1||test_engine_last_role!=CST_R_V_U){fprintf(stderr,"FAIL VU role commit\n");failures++;}
  cornix_steno_dual_released(43,60);if(test_engine_release_count!=1){fprintf(stderr,"FAIL VU release\n");failures++;}none("VU chord no Enter");
  reset_all();cornix_steno_tab_pressed(0,0);cornix_steno_tab_released(0,80);expect("Tab short one-shot",TAB);
  reset_all();cornix_steno_tab_pressed(0,0);test_time_advance(600);cornix_steno_tab_released(0,610);expect("Tab long one-shot",TAB);
  if(failures) return EXIT_FAILURE;
- puts("Cornix STENO vowel-dual/one-shot-Tab tests: PASS");
+ puts("Cornix STENO v2.1.1 vowel tri-state/one-shot-Tab tests: PASS");
  return EXIT_SUCCESS;
 }

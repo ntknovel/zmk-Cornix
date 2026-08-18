@@ -1,0 +1,10 @@
+Cornix v2.1.0 → v2.1.1 SOLO-HOLD DIRECT-JAMO PATCH
+
+현재 v2.1.0 저장소 루트에 이 ZIP 내용을 그대로 덮어쓴 뒤:
+python3 tools/validate_package.py .
+bash validation/run_host_tests.sh
+git add -A
+git commit -m "Fix Cornix v2.1.1 solo-hold direct jamo"
+git push origin <현재 브랜치>
+
+권장: 먼저 git switch -c v2.1.1 한 뒤 적용하여 main을 보존하세요.

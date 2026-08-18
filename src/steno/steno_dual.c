@@ -260,13 +260,13 @@ int cornix_steno_dual_released(uint32_t position, int64_t timestamp) {
     }
     if (output_paste) return cornix_steno_output_enqueue(LC(V));
     if (!consumed) {
-        /* Vowel thumb tri-state: a short solo tap is Enter/Space, a solo
-         * hold released after the tapping term is the edit key, and any
-         * multi-key STENO participation commits the vowel role instead.
+        /* Vowel thumb tri-state: a short solo tap is Enter/Space; a solo
+         * hold released after the tapping term directly emits that vowel jamo;
+         * any multi-key STENO participation commits the vowel role instead.
          * Nothing fires while the key is physically held. */
-        if (policy == CST_DUAL_VOWEL && hold_key != 0 &&
+        if (policy == CST_DUAL_VOWEL &&
             timestamp - pressed_at >= CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS) {
-            return cornix_steno_output_enqueue(hold_key);
+            return cornix_steno_engine_emit_direct_role(role);
         }
         return cornix_steno_output_enqueue(tap_key);
     }

@@ -52,8 +52,7 @@
             policy = <CST_DUAL_VOWEL>;
             role = <CST_R_V_U>;
             tap-key = <ENTER>;
-            hold-key = <RBKT>;
-            display-name = "ST V-U / Enter / Edit-L";
+            display-name = "ST V-U / Enter / Solo-Hold U";
         };
         st_va_space: st_va_space {
             compatible = "zmk,behavior-cornix-steno-dual";
@@ -61,8 +60,7 @@
             policy = <CST_DUAL_VOWEL>;
             role = <CST_R_V_A>;
             tap-key = <SPACE>;
-            hold-key = <BSPC>;
-            display-name = "ST V-A / Space / Edit-R";
+            display-name = "ST V-A / Space / Solo-Hold A";
         };
 
         st_tab_once: st_tab_once {

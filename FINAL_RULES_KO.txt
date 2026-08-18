@@ -13,5 +13,6 @@ Old vertical two-key numbers are retired.
 ABBR L/R: exact side wins; if only one side exists for a core, either ABBR key works.
 VEXT L/R: mirrored for ordinary AB2/vowels; explicit right-side exceptions such as 였었다 remain exact.
 Canonical abbreviation logical roles are restored from v1.8/V29.4; no consonant-side rewrites for finger conflicts.
-Thumb ㅜ/Enter and ㅏ/Space: solo <150 ms -> Enter/Space; solo >=150 ms release -> correction L/R; any chord participation -> vowel/STENO role.
+Solo-hold direct jamo: every consonant/vowel STENO role held alone for >=150 ms and then released emits that role's own jamo directly. No separate EDIT/SYMBOL correction modifier is required.
+Thumb ㅜ/Enter and ㅏ/Space: solo <150 ms -> Enter/Space; solo >=150 ms release -> direct ㅜ/ㅏ jamo; any chord participation -> vowel/STENO role.
 Same-finger abbreviation chords are allowed and are not rejected/rearranged.

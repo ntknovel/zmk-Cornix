@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <cornix_steno/engine.h>
+#include <dt-bindings/zmk/keys.h>
 
 bool test_engine_down;
 size_t test_engine_press_count;
@@ -25,4 +26,13 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
 }
 int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t position, int64_t ts) {
     (void)role;(void)position;(void)ts; test_engine_down=false; test_engine_release_count++; return 0;
+}
+
+int cornix_steno_engine_emit_direct_role(enum cornix_steno_role role) {
+    extern int cornix_steno_output_enqueue(uint32_t key);
+    switch (role) {
+    case CST_R_V_U: return cornix_steno_output_enqueue(N);
+    case CST_R_V_A: return cornix_steno_output_enqueue(K);
+    default: return 0;
+    }
 }

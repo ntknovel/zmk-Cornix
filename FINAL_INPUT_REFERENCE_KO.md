@@ -26,10 +26,10 @@ Z X C V B | N M , . /
 ## 3. ㅜ/Enter · ㅏ/Space Tap/Hold/Chord
 
 - 단독 입력 < 150ms 후 release: ㅜ키=Enter, ㅏ키=Space
-- 단독 입력 >= 150ms 후 release: 수정 기능
+- 단독 입력 >= 150ms 후 release: 해당 키 자체의 자모를 직접 1회 입력
 - 홀드 임계값을 넘겨도 누르고 있는 동안에는 출력하지 않고 release에서 확정
 - 다른 STENO 역할이 한 번이라도 참여: 시간과 관계없이 모음 ㅜ/ㅏ 및 해당 STENO stroke로 판정
-- key-up 순서가 달라도 다중키로 사용되었으면 단독 Enter/Space/수정 출력은 취소
+- key-up 순서가 달라도 다중키로 사용되었으면 단독 Enter/Space/직접자모 출력은 취소
 
 ## 4. 약어 L/R
 
@@ -58,3 +58,16 @@ KLOR V30.1은 KSD format v8을 사용한다. V29.x 저장 데이터가 새 물�
 - CORNIX: package validator + host tests PASS; role projection 12,383 cases PASS
 - KLOR: 20-step validation PASS; role projection 12,383 cases PASS
 - canonical dictionary: 43 entries + Quick Macro 12 slots
+
+
+## v2.1.1 단일 홀드 직접자모 규칙
+
+별도 EDIT 키나 기호키를 수정 modifier로 사용하지 않는다.
+
+- 초성 역할키 단독 150ms 이상 홀드 후 release → 해당 자음 직접 1회
+- 종성 역할키 단독 150ms 이상 홀드 후 release → 초성/종성 구분 없이 같은 자음 직접 1회
+- 기본 모음 역할키 단독 150ms 이상 홀드 후 release → 해당 모음 직접 1회
+- ㅜ·Enter / ㅏ·Space 키는 짧은 탭만 Enter/Space, 150ms 이상 단독 홀드-release는 각각 ㅜ/ㅏ 직접 입력
+- 다른 STENO 역할이 한 번이라도 같은 스트로크에 참여하면 홀드 시간과 무관하게 일반 속기 조합으로 처리
+- 쌍초/쌍종, ABBR, VEXT, SYMBOL처럼 단독 자모가 없는 역할은 기존 단독 기능을 유지
+- SYMBOL은 숫자/기호/선택 기능용이며 더 이상 자모 correction modifier로 사용하지 않음
