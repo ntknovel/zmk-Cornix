@@ -1,2 +1,2 @@
-Cornix ZMK STENO Dubeol v2.1.3
-Immediate SYMBOL-held number stream mapping fix (Q..P = 1..0)
+Cornix ZMK STENO Dubeol v2.2.2
+Full independent-audit input engine fix

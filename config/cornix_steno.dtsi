@@ -38,7 +38,7 @@
         st_v_o: st_v_o { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_O>; display-name = "ST V-O"; };
         st_v_eu: st_v_eu { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_EU>; display-name = "ST V-EU"; };
         st_v_i: st_v_i { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_I>; display-name = "ST V-I"; };
-        st_v_eo: st_v_eo { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_EO>; display-name = "ST V-EO"; };
+        st_v_a: st_v_a { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_V_A>; display-name = "ST V-A"; };
         st_vext_l: st_vext_l { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_VEXT_L>; display-name = "ST VEXT-L"; };
         st_vext_r: st_vext_r { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_VEXT_R>; display-name = "ST VEXT-R"; };
         st_abbr_l: st_abbr_l { compatible = "zmk,behavior-cornix-steno-role"; #binding-cells = <0>; role = <CST_R_ABBR_L>; display-name = "ST ABBR-L"; };
@@ -54,13 +54,13 @@
             tap-key = <ENTER>;
             display-name = "ST V-U / Enter / Solo-Hold U";
         };
-        st_va_space: st_va_space {
+        st_veo_space: st_veo_space {
             compatible = "zmk,behavior-cornix-steno-dual";
             #binding-cells = <0>;
             policy = <CST_DUAL_VOWEL>;
-            role = <CST_R_V_A>;
+            role = <CST_R_V_EO>;
             tap-key = <SPACE>;
-            display-name = "ST V-A / Space / Solo-Hold A";
+            display-name = "ST V-EO / Space / Solo-Hold EO";
         };
 
         st_tab_once: st_tab_once {

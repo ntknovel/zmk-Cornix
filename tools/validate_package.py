@@ -35,7 +35,7 @@ EXPECTED_STENO_BEHAVIORS = {
     24:"st_vext_l",25:"st_i_kh",26:"st_i_t",27:"st_i_ch",28:"st_i_p",29:"st_i_double",
     30:"st_mode",31:"st_lang_return",32:"st_f_double",33:"st_f_p",34:"st_f_ch",35:"st_f_t",36:"st_f_kh",37:"st_vext_r",
     38:"kp",39:"kp",40:"st_symbol_l",41:"st_v_o",42:"st_v_eu",43:"st_vu_enter",
-    44:"st_va_space",45:"st_v_i",46:"st_v_eo",47:"st_symbol_r",48:"select_shift",49:"kp",
+    44:"st_veo_space",45:"st_v_i",46:"st_v_a",47:"st_symbol_r",48:"select_shift",49:"kp",
 }
 
 EXPECTED_SELECT_NAV = ["none"]*50
@@ -106,7 +106,7 @@ def validate_keymap(root: Path) -> dict[str, list[str]]:
         "&lt250 FN K_APP &ht200 RCTRL RBKT &kp RALT &kp BSPC",
         "&st_mode &st_lang_return", "&kp C_STOP &kp C_PLAY_PAUSE", "&kp F11 &kp F12",
         "&st_f_b &ht150 RCTRL RALT", "&st_mode &st_lang_return &st_f_double",
-        "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_eo &st_symbol_r &select_shift &kp BSPC",
+        "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_a &st_symbol_r &select_shift &kp BSPC",
         "sensor-bindings = <&st_enc LS(UP) LS(DOWN) &st_enc UP DOWN>",
         "select_shift: select_shift", "&macro_press &mo SELECT_NAV &kp RSHIFT",
         "&kp LEFT &kp DOWN &kp RIGHT", "&rfm &st_led_toggle",
@@ -346,7 +346,6 @@ def validate_led_integration(root: Path) -> None:
         "CST_TOTAL_LED_COUNT",
         "CONFIG_CORNIX_STENO_LED_ENTRY_FLASH_MS",
         "CONFIG_CORNIX_STENO_LED_CATEGORY_FLASH_MS",
-        "CST_ABBR_CATEGORY_CONNECTIVE",
         "zmk_behavior_invoke_binding",
     ]:
         if token not in led_integration:
@@ -373,12 +372,12 @@ def validate_release_docs(root: Path) -> None:
     quick = read(root / "README_FIRST_KO.txt")
     audit = read(root / "FULL_PARITY_v1.8.0_KO.md")
     phantom = read(root / "CORNIX_STENO_PHANTOM_ROLE_AUDIT_v1.8.0_KO.md")
-    if "v2.1.3" not in version:
-        fail("release version metadata missing: v2.1.3")
+    if "v2.2.2" not in version:
+        fail("release version metadata missing: v2.2.2")
     for token in (
-        "약어L 홀드 + 쌍초", "약어R 홀드 + 쌍종",
-        "기호L 홀드 + 쌍초", "기호R 홀드 + 쌍종",
-        "영문 복귀 상태", "12,383",
+        "약어L + 전용쌍초", "약어R + 전용쌍종",
+        "기호L + 전용쌍초", "기호R + 전용쌍종",
+        "80ms", "12,383",
     ):
         if token not in readme and token not in quick:
             fail(f"release documentation missing current behavior: {token}")

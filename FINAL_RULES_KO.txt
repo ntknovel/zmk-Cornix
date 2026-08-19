@@ -1,18 +1,16 @@
-FINAL INPUT RULES — 2026-08-19
+FINAL INPUT RULES — 2026-08-19 AUDITED
 
-Consonants (physical default)
-Q W E R T | Y U I O P
-ㅂ ㅈ ㄷ ㄱ ㅅ | 종ㅅ 종ㄱ 종ㄷ 종ㅈ 종ㅂ
-A S D F G | H J K L ;
-ㅁ ㄴ ㅇ ㄹ ㅎ | 종ㅎ 종ㄹ 종ㅇ 종ㄴ 종ㅁ
-Z X C V B | N M , . /
-ㅋ ㅌ ㅊ ㅍ 쌍초 | 쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ
+Physical consonants:
+QWERT / ASDFG / ZXCVB = ㅂㅈㄷㄱㅅ / ㅁㄴㅇㄹㅎ / ㅋㅌㅊㅍ dedicated-double.
+Right side mirrors finals; N is dedicated final-double.
+Right thumbs = ㅓ·Space / ㅣ / ㅏ.
 
-Numbers: either SYMBOL-L or SYMBOL-R + physical Q..P = 1..0.
-Old vertical two-key numbers are retired.
-ABBR L/R: exact side wins; if only one side exists for a core, either ABBR key works.
-VEXT L/R: mirrored for ordinary AB2/vowels; explicit right-side exceptions such as 였었다 remain exact.
-Canonical abbreviation logical roles are restored from v1.8/V29.4; no consonant-side rewrites for finger conflicts.
-Solo-hold direct jamo: every consonant/vowel STENO role held alone for >=150 ms and then released emits that role's own jamo directly. No separate EDIT/SYMBOL correction modifier is required.
-Thumb ㅜ/Enter and ㅏ/Space: solo <150 ms -> Enter/Space; solo >=150 ms release -> direct ㅜ/ㅏ jamo; any chord participation -> vowel/STENO role.
-Same-finger abbreviation chords are allowed and are not rejected/rearranged.
+Solo/direct threshold: 80 ms, inclusive, decided only at release.
+All 28 consonant roles, six base vowels, all valid compound/extended vowels, and all 30 tense-selector/target pairs support direct-jamo hold-release.
+Either SYMBOL + physical Q..P streams 1234567890 immediately.
+Undo: ㅗ↔ㅜ anchored tap stream. Redo: ㅓ↔ㅏ anchored tap stream.
+
+Dictionary order: raw exact -> tense-alias fallback -> conditional ABBR-side fallback.
+Canonical 43 logical masks are frozen to the pre-layout-change golden table.
+Only dedicated double roles navigate; ㅋ/ㅇ aliases never navigate.
+SYMBOL is not a direct-jamo correction modifier.

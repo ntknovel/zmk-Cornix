@@ -1,0 +1,10 @@
+Cornix STENO v2.2.0
+- 배열 변경 전 canonical 약어 논리 조합 복원/고정
+- 단독 홀드 직접 자모 임계값 80ms
+- 모든 기본 모음 단독 80ms hold-release 직접 입력
+- ㅜ: 짧은 탭 Enter / 80ms hold-release ㅜ
+- 오른 안쪽 엄지: 짧은 탭 Space / 80ms hold-release ㅓ
+- 오른 엄지 모음 순서: ㅓ ㅣ ㅏ
+- 쌍초 alias: ㅋ, ㅇ, 전용 쉼표/쌍초
+- 쌍종 alias: 종ㅋ, 종ㅇ, 전용 마침표/쌍종
+- SYMBOL hold + QWERTYUIOP tap-release = 1234567890 즉시 연속 출력

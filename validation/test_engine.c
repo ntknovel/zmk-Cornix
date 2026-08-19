@@ -7,6 +7,7 @@
 #include <cornix_steno/engine.h>
 #include <cornix_steno/quick.h>
 #include <cornix_steno/roles.h>
+#include "role_position_map.h"
 
 extern uint32_t test_output_keys[];
 extern size_t test_output_count;
@@ -57,10 +58,16 @@ static void expect_event_sequence(const char *name, const uint32_t *keys, size_t
     test_key_events_reset();
 }
 
-static int press(enum cornix_steno_role x, uint32_t p, int64_t t) {
+static int press(enum cornix_steno_role x, uint32_t ignored, int64_t t) {
+    (void)ignored;
+    const uint32_t p = cst_test_position_for_role(x);
+    if (p == UINT32_MAX) { fprintf(stderr, "FAIL missing physical position for role %d\n", x); failures++; return -1; }
     test_time_set(t); return cornix_steno_engine_role_pressed(x, p, t);
 }
-static int release(enum cornix_steno_role x, uint32_t p, int64_t t) {
+static int release(enum cornix_steno_role x, uint32_t ignored, int64_t t) {
+    (void)ignored;
+    const uint32_t p = cst_test_position_for_role(x);
+    if (p == UINT32_MAX) { fprintf(stderr, "FAIL missing physical position for role %d\n", x); failures++; return -1; }
     test_time_set(t); return cornix_steno_engine_role_released(x, p, t);
 }
 
@@ -105,6 +112,10 @@ int main(void) {
     press(CST_R_ABBR_L,12,900); press(CST_R_I_DOUBLE,29,910); release(CST_R_I_DOUBLE,29,920);
     press(CST_R_I_DOUBLE,29,930); release(CST_R_I_DOUBLE,29,940); release(CST_R_ABBR_L,12,950);
     expect_events("ABBR-L repeated left",LEFT,2);
+    press(CST_R_ABBR_L,12,960); press(CST_R_I_KH,25,970); release(CST_R_I_KH,25,980); release(CST_R_ABBR_L,12,990);
+    expect_events("ABBR-L KH alias is not navigation",LEFT,0);
+    press(CST_R_ABBR_L,12,995); press(CST_R_I_NG,15,1000); release(CST_R_I_NG,15,1010); release(CST_R_ABBR_L,12,1020);
+    expect_events("ABBR-L NG alias is not navigation",LEFT,0);
 
     press(CST_R_ABBR_R,23,1000); press(CST_R_F_DOUBLE,32,1010); release(CST_R_F_DOUBLE,32,1020);
     press(CST_R_F_DOUBLE,32,1030); release(CST_R_F_DOUBLE,32,1040); release(CST_R_ABBR_R,23,1050);
@@ -144,15 +155,53 @@ int main(void) {
     const uint32_t geureogi[]={R,M,F,J,R,L}; expect("abbr exact survives nav",geureogi,6);
     expect_events("abbr exact no arrow",LEFT,0);
 
-    /* Every jamo role is its own correction key on a solo 150 ms hold-release. */
-    press(CST_R_I_G,4,1400); release(CST_R_I_G,4,1550);
+    /* Every jamo role is its own correction key on a solo 80 ms hold-release. */
+    press(CST_R_I_G,4,1400); release(CST_R_I_G,4,1480);
     const uint32_t solo_g[]={R}; expect("solo-hold initial giyeok",solo_g,1);
 
-    press(CST_R_F_N,21,1600); release(CST_R_F_N,21,1755);
+    press(CST_R_F_N,21,1600); release(CST_R_F_N,21,1685);
     const uint32_t solo_n[]={S}; expect("solo-hold final nieun",solo_n,1);
 
-    press(CST_R_V_I,45,1800); release(CST_R_V_I,45,1950);
+    press(CST_R_V_I,45,1800); release(CST_R_V_I,45,1880);
     const uint32_t solo_i[]={L}; expect("solo-hold vowel i",solo_i,1);
+    press(CST_R_V_O,41,1900); release(CST_R_V_O,41,1980); const uint32_t solo_o[]={H}; expect("solo-hold vowel o",solo_o,1);
+    press(CST_R_V_EU,42,2000); release(CST_R_V_EU,42,2080); const uint32_t solo_eu[]={M}; expect("solo-hold vowel eu",solo_eu,1);
+    press(CST_R_V_EO,44,2100); release(CST_R_V_EO,44,2180); const uint32_t solo_eo[]={J}; expect("solo-hold vowel eo",solo_eo,1);
+    press(CST_R_V_A,46,2200); release(CST_R_V_A,46,2280); const uint32_t solo_a[]={K}; expect("solo-hold vowel a",solo_a,1);
+
+    /* Compound vowels are also direct jamo when the entire vowel-only chord is held >=80 ms. */
+    press(CST_R_V_A,46,2300); press(CST_R_V_I,45,2310);
+    release(CST_R_V_I,45,2390); release(CST_R_V_A,46,2400);
+    const uint32_t solo_ae[]={O}; expect("compound-vowel hold ae",solo_ae,1);
+
+    press(CST_R_V_O,41,2420); press(CST_R_V_A,46,2430);
+    release(CST_R_V_A,46,2510); release(CST_R_V_O,41,2520);
+    const uint32_t solo_wa[]={H,K}; expect("compound-vowel hold wa",solo_wa,2);
+
+    press(CST_R_VEXT_L,11,2540); press(CST_R_V_EO,44,2550);
+    release(CST_R_V_EO,44,2630); release(CST_R_VEXT_L,11,2640);
+    const uint32_t solo_yeo[]={U}; expect("extended-vowel hold yeo",solo_yeo,1);
+
+    /* Double-consonant chords are direct jamo on the same 80 ms hold-release. */
+    press(CST_R_I_KH,1,2660); press(CST_R_I_G,4,2670);
+    release(CST_R_I_G,4,2750); release(CST_R_I_KH,1,2760);
+    const uint32_t solo_gg1[]={LS(R)}; expect("double hold KH+G",solo_gg1,1);
+    press(CST_R_I_NG,18,2780); press(CST_R_I_G,4,2790);
+    release(CST_R_I_G,4,2870); release(CST_R_I_NG,18,2880);
+    const uint32_t solo_gg2[]={LS(R)}; expect("double hold NG+G",solo_gg2,1);
+    press(CST_R_I_DOUBLE,29,2900); press(CST_R_I_G,4,2910);
+    release(CST_R_I_G,4,2990); release(CST_R_I_DOUBLE,29,3000);
+    const uint32_t solo_gg3[]={LS(R)}; expect("double hold DOUBLE+G",solo_gg3,1);
+
+    /* Undo/Redo are anchored immediate streams, symmetric in press order. */
+    test_key_events_reset();
+    press(CST_R_V_O,41,3020); press(CST_R_V_U,43,3030); release(CST_R_V_U,43,3040);
+    press(CST_R_V_U,43,3050); release(CST_R_V_U,43,3060); release(CST_R_V_O,41,3070);
+    expect_event_sequence("undo anchored repeats", (uint32_t[]){LC(Z),LC(Z)}, 2);
+    test_key_events_reset();
+    press(CST_R_V_EO,44,3090); press(CST_R_V_A,46,3100); release(CST_R_V_A,46,3110);
+    release(CST_R_V_EO,44,3120);
+    expect_event_sequence("redo reverse-order", (uint32_t[]){LC(Y)}, 1);
 
     /* Once another STENO role participates, even a long hold is a normal stroke. */
     press(CST_R_I_G,4,2000); press(CST_R_V_A,44,2050);
@@ -187,6 +236,6 @@ int main(void) {
     release(CST_R_I_G,4,2120); expect("mode exit cancel",NULL,0);
 
     if (failures) return EXIT_FAILURE;
-    puts("Cornix STENO v2.1.1 solo-hold direct-jamo engine tests: PASS");
+    puts("Cornix STENO v2.2.2 audited engine tests: PASS");
     return EXIT_SUCCESS;
 }

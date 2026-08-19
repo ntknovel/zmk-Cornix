@@ -31,7 +31,11 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
 int cornix_steno_engine_emit_direct_role(enum cornix_steno_role role) {
     extern int cornix_steno_output_enqueue(uint32_t key);
     switch (role) {
+    case CST_R_V_O: return cornix_steno_output_enqueue(H);
+    case CST_R_V_EU: return cornix_steno_output_enqueue(M);
     case CST_R_V_U: return cornix_steno_output_enqueue(N);
+    case CST_R_V_EO: return cornix_steno_output_enqueue(J);
+    case CST_R_V_I: return cornix_steno_output_enqueue(L);
     case CST_R_V_A: return cornix_steno_output_enqueue(K);
     default: return 0;
     }

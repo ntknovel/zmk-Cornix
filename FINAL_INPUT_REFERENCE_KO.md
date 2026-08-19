@@ -1,6 +1,6 @@
-# CORNIX / KLOR 한국어 STENO 최종 입력 기준 v2026-08-19
+# CORNIX / KLOR 한국어 STENO 최종 입력 기준 — 2026-08-19 감사 수정판
 
-## 1. 자음 배열
+## 1. 기본 물리 배열
 
 ```text
 Q W E R T | Y U I O P
@@ -10,64 +10,105 @@ A S D F G | H J K L ;
 ㅁ ㄴ ㅇ ㄹ ㅎ | 종ㅎ 종ㄹ 종ㅇ 종ㄴ 종ㅁ
 
 Z X C V B | N M , . /
-ㅋ ㅌ ㅊ ㅍ 쌍초 | 쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ
+ㅋ ㅌ ㅊ ㅍ 전용쌍초 | 전용쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ
 ```
 
-논리 역할 ID와 canonical 약어 mask는 기존 v1.8.0/V29.4 계보를 유지하고, 위 물리 위치로만 재배치한다. 같은 손가락에 놓인 약어 조합도 임의로 초성/종성을 교체하지 않는다.
+배열만 바뀌었으며, canonical 약어의 논리 역할과 exact mask는 배열 변경 전 43개 정본을 그대로 유지한다. 같은 손가락 조합도 다른 자음으로 치환하지 않는다.
 
-## 2. 숫자
+## 2. 쌍자음과 쌍종 대칭
 
-기호L 또는 기호R 중 어느 쪽이든 + 상단열 하나:
+쌍초 selector는 다음 세 키가 동일하게 동작한다.
 
-`Q W E R T Y U I O P -> 1 2 3 4 5 6 7 8 9 0`
+- `ㅋ`
+- `ㅇ`
+- 전용 `쌍초` 키
 
-옛 세로 2키 숫자 chord는 폐기한다. 기호+상단열은 숫자가 최우선이다.
+쌍종 selector도 대칭으로 다음 세 키가 동일하게 동작한다.
 
-## 3. ㅜ/Enter · ㅏ/Space Tap/Hold/Chord
+- `종ㅋ`
+- `종ㅇ`
+- 전용 `쌍종` 키
 
-- 단독 입력 < 150ms 후 release: ㅜ키=Enter, ㅏ키=Space
-- 단독 입력 >= 150ms 후 release: 해당 키 자체의 자모를 직접 1회 입력
-- 홀드 임계값을 넘겨도 누르고 있는 동안에는 출력하지 않고 release에서 확정
-- 다른 STENO 역할이 한 번이라도 참여: 시간과 관계없이 모음 ㅜ/ㅏ 및 해당 STENO stroke로 판정
-- key-up 순서가 달라도 다중키로 사용되었으면 단독 Enter/Space/직접자모 출력은 취소
+각 selector와 `ㅂ ㅈ ㄷ ㄱ ㅅ` 또는 대응 종성을 80ms 이상 홀드한 뒤 떼면 각각 `ㅃ ㅉ ㄸ ㄲ ㅆ`을 독립 자모로 출력한다. 왼손 15개와 오른손 15개 조합을 모두 검사한다.
 
-## 4. 약어 L/R
+짧은 일반 스트로크는 canonical 약어를 우선한다. 예를 들어 `종ㅇ+종ㄷ`을 짧게 입력하면 `였다`, 80ms 이상 직접입력으로 유지하면 `ㄸ`이다. 전용 쌍종+종ㄷ도 짧게는 `됐다`, 80ms 이상 홀드는 `ㄸ`이다.
 
-- canonical 약어의 논리 자음 조합은 기존 확정 조합을 유지한다.
-- 같은 core에 L/R 서로 다른 결과가 둘 다 존재하면 exact L/R을 구분한다.
-- 한쪽 selector만 등록된 core는 약어L/약어R 어느 쪽으로도 그 약어를 입력할 수 있다.
-- 양쪽 약어키 자체가 조건인 항목은 둘 다 필요하다.
-- Quick Macro의 L/R 별도 슬롯은 exact side를 유지한다.
+## 3. 단독 자모와 모음
 
-## 5. 겹모(VEXT)
+- 초성 14개, 종성 14개: 단독 80ms 이상 홀드 후 release → 같은 자음 1회
+- 기본 모음 6개: 단독 80ms 이상 홀드 후 release → 해당 모음 1회
+- 유효한 복합·확장 모음 전용 chord: 모든 역할을 80ms 이상 유지한 뒤 release → 해당 모음 1회
+- 첫 키와 마지막 키의 release 간격이 50ms를 넘어도, 80ms 직접입력 후보 전체를 보존한다.
 
-- 일반 AB2/VEXT 입력은 좌우 겹모를 동일하게 허용한다.
-- 명시적 방향 예외는 exact side를 유지한다.
-- `였었다 = 오른겹모 + 종ㅇ + 종ㄷ`을 보존한다.
+직접입력 가능한 모음:
 
-## 6. 겹받침 / 같은 손가락
+`ㅏ ㅓ ㅗ ㅜ ㅡ ㅣ ㅐ ㅔ ㅒ ㅖ ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ ㅑ ㅕ ㅛ ㅠ`
 
-현대 한글 11개 겹받침과 기존 final rolling/key-up 복구를 유지한다. 새 배열에서 같은 손가락이 되는 약어는 펌웨어가 다른 자음으로 치환하지 않는다.
+오른 엄지 물리 순서는 `ㅓ·Space | ㅣ | ㅏ`이다.
 
-## 7. KLOR 저장 데이터 migration
+- `ㅜ·Enter`: 단독 80ms 미만 tap → Enter, 80ms 이상 hold-release → ㅜ
+- `ㅓ·Space`: 단독 80ms 미만 tap → Space, 80ms 이상 hold-release → ㅓ
+- 다른 STENO 역할이 참여하면 tap/solo-hold 후보를 취소하고 일반 속기 stroke로 처리한다.
 
-KLOR V30.1은 KSD format v8을 사용한다. V29.x 저장 데이터가 새 물리 배열에서 잘못 재해석되지 않도록 V30.1 signature에서 기본 role map/dictionary migration을 수행한다. Raw HID wire protocol은 v7을 유지한다.
+## 4. Undo / Redo 즉시 스트림
 
-## 8. 검증
+- `ㅗ` 홀드 + `ㅜ` 탭, 또는 `ㅜ` 홀드 + `ㅗ` 탭 → Undo 즉시 1회
+- `ㅓ` 홀드 + `ㅏ` 탭, 또는 `ㅏ` 홀드 + `ㅓ` 탭 → Redo 즉시 1회
+- anchor를 계속 누른 채 상대 키를 반복 탭하면 매 tap release마다 반복 실행한다.
 
-- CORNIX: package validator + host tests PASS; role projection 12,383 cases PASS
-- KLOR: 20-step validation PASS; role projection 12,383 cases PASS
-- canonical dictionary: 43 entries + Quick Macro 12 slots
+정확히 동시에 누르고 같이 떼지 않아도 된다.
 
+## 5. 숫자 즉시 스트림
 
-## v2.1.1 단일 홀드 직접자모 규칙
+기호L 또는 기호R 중 어느 쪽이든 홀드한 상태에서 물리 상단열을 탭한다.
 
-별도 EDIT 키나 기호키를 수정 modifier로 사용하지 않는다.
+```text
+Q W E R T Y U I O P
+1 2 3 4 5 6 7 8 9 0
+```
 
-- 초성 역할키 단독 150ms 이상 홀드 후 release → 해당 자음 직접 1회
-- 종성 역할키 단독 150ms 이상 홀드 후 release → 초성/종성 구분 없이 같은 자음 직접 1회
-- 기본 모음 역할키 단독 150ms 이상 홀드 후 release → 해당 모음 직접 1회
-- ㅜ·Enter / ㅏ·Space 키는 짧은 탭만 Enter/Space, 150ms 이상 단독 홀드-release는 각각 ㅜ/ㅏ 직접 입력
-- 다른 STENO 역할이 한 번이라도 같은 스트로크에 참여하면 홀드 시간과 무관하게 일반 속기 조합으로 처리
-- 쌍초/쌍종, ABBR, VEXT, SYMBOL처럼 단독 자모가 없는 역할은 기존 단독 기능을 유지
-- SYMBOL은 숫자/기호/선택 기능용이며 더 이상 자모 correction modifier로 사용하지 않음
+각 숫자는 해당 상단키를 떼는 즉시 한 번 출력된다. 옛 세로 2키 숫자 chord는 폐기한다. 기호키는 직접 자모 수정 modifier로 사용하지 않는다.
+
+## 6. 약어 정본과 selector 우선순위
+
+- canonical exact-mask 약어 43개는 배열 변경 전 정본과 byte-for-byte 논리 비교한다.
+- raw exact mask를 가장 먼저 조회한다.
+- raw exact가 없을 때만 `ㅋ/ㅇ/종ㅋ/종ㅇ`을 전용 쌍자음 selector로 정규화해 다시 조회한다.
+- ABBR L/R은 요청한 쪽 exact가 우선이며, 그쪽 항목이 없을 때만 반대쪽을 조건부 fallback으로 허용한다.
+- 일반 AB2/VEXT는 좌우 미러를 허용하되, `였었다 = 오른겹모+종ㅇ+종ㄷ`은 오른쪽 exact 예외로 유지한다.
+- Quick Macro 12개는 L/R별 슬롯을 그대로 구분한다.
+
+대표 정본:
+
+```text
+그렇게 = 초ㄱ + 초ㄹ + 종ㄱ
+그리고 = 초ㄱ + 초ㄹ + 전용쌍초
+그러기 = 약어L + 초ㄱ + 초ㄹ + 전용쌍초
+그렇지 = 약어L + 초ㄱ + 초ㄹ + 종ㅈ
+없다   = 약어R + 종ㅇ + 종ㄷ
+```
+
+전용쌍초/쌍종은 방향 이동과 약어가 겹칠 수 있으므로, 약어 selector와 함께 첫 tap을 했을 때 canonical prefix이면 즉시 방향으로 소모하지 않는다. 뒤에 core가 들어오면 약어를 완성하고, core 없이 selector를 떼면 방향키 1회로 확정한다. 두 번 탭하면 방향키 2회가 된다. ㅋ/ㅇ 별칭은 방향키 trigger가 아니다.
+
+## 7. LED — CORNIX
+
+- STENO 진입 순간에만 전체 LED가 한 번 점등된다.
+- 진입 표시가 끝난 idle 상태는 완전 소등이다.
+- 물리 STENO 키를 1개 누르면 1개, 2개면 2개, 3개면 3개, 4개 이상이면 4개가 켜진다.
+- 숫자·Undo·Redo·방향처럼 engine이 입력을 즉시 소비해도 모든 물리 release는 반드시 해당 LED를 끈다.
+
+KLOR는 기존 OLED·RGB·하드웨어 표시 구조를 유지한다.
+
+## 8. 회귀검사 범위
+
+양쪽 공통:
+
+- 역할 single/pair/triple 12,383건
+- canonical 약어 43개 × 입력 순서 4종 = 172건
+- 복합·확장 모음 19개 × release 순서 2종, 55ms release 차 = 38건
+- 쌍초/쌍종 selector 3종 × 대상 5종 × 좌우 × release 순서 2종 = 60건
+- 단독 자음 28개 + 기본 모음 6개 = 34건
+- 79ms/80ms 경계
+- `없다`, 쌍초-first `그러기`, alias `그리고`, 짧은 `였다/됐다`, 숫자 양쪽, Undo/Redo 양방향
+
+CORNIX는 LED entry-flash/idle-off/held-count와 모든 release clear를 추가 검사한다. KLOR는 기존 20단계 QMK/Vial/OLED/matrix 검증을 함께 통과해야 한다.

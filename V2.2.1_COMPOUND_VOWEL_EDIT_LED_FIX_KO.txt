@@ -1,0 +1,6 @@
+Cornix STENO v2.2.1
+- 80ms compound/extended-vowel direct-jamo hold-release
+- 80ms double-consonant direct-jamo hold-release
+- symmetric anchored immediate Undo/Redo streams
+- STENO LED: entry flash only, idle fully off, held physical-key count lights 1..4 LEDs
+- canonical abbreviation masks unchanged

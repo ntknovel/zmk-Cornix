@@ -42,6 +42,8 @@ enum anchored_stream_mode {
     CST_STREAM_SELECT_RIGHT,
     CST_STREAM_NUMBER,
     CST_STREAM_CORRECTION,
+    CST_STREAM_UNDO,
+    CST_STREAM_REDO,
 };
 
 struct steno_state {
@@ -57,6 +59,14 @@ struct steno_state {
     int64_t final_roll_released_at[CONFIG_CORNIX_STENO_MAX_POSITIONS];
     int64_t pressed_at[CONFIG_CORNIX_STENO_MAX_POSITIONS];
     bool stroke_had_multiple;
+
+    /* A valid vowel-only or double-consonant chord held for the full 80 ms
+     * is latched on its first key-up.  The latch preserves every role through
+     * later key-up correction and gives direct-jamo output priority over a
+     * short-stroke dictionary abbreviation. */
+    bool direct_hold_latched;
+    uint64_t direct_hold_position_mask;
+    uint64_t direct_hold_role_mask;
 
     /* Physical ㅣ+JLKI mode. */
     bool physical_nav_mode;
@@ -85,14 +95,25 @@ static bool is_symbol_role(enum cornix_steno_role role) {
     return role == CST_R_SYMBOL_L || role == CST_R_SYMBOL_R;
 }
 
-static enum cornix_steno_role matching_double_for_anchor(enum cornix_steno_role role) {
-    switch (role) {
-    case CST_R_ABBR_L: case CST_R_SYMBOL_L: return CST_R_I_DOUBLE;
-    case CST_R_ABBR_R: case CST_R_SYMBOL_R: return CST_R_F_DOUBLE;
-    default: return CST_R_NONE;
-    }
+/* Double-consonant aliases: left ㅋ/ㅇ/, and mirrored right 종ㅋ/종ㅇ/.
+ * The dedicated I/F_DOUBLE role remains the canonical dictionary bit. */
+static bool role_is_dedicated_double_for_anchor(enum cornix_steno_role anchor,
+                                                  enum cornix_steno_role role) {
+    if (anchor == CST_R_ABBR_L || anchor == CST_R_SYMBOL_L)
+        return role == CST_R_I_DOUBLE;
+    if (anchor == CST_R_ABBR_R || anchor == CST_R_SYMBOL_R)
+        return role == CST_R_F_DOUBLE;
+    return false;
 }
 
+
+static uint32_t deferred_abbr_navigation_key(uint64_t roles) {
+    const uint64_t left = CST_ROLE_BIT(CST_R_ABBR_L) | CST_ROLE_BIT(CST_R_I_DOUBLE);
+    const uint64_t right = CST_ROLE_BIT(CST_R_ABBR_R) | CST_ROLE_BIT(CST_R_F_DOUBLE);
+    if (roles == left) return LEFT;
+    if (roles == right) return RIGHT;
+    return 0;
+}
 static enum anchored_stream_mode stream_mode_for_anchor(enum cornix_steno_role role) {
     switch (role) {
     case CST_R_ABBR_L: return CST_STREAM_NAV_LEFT;
@@ -109,6 +130,8 @@ static uint32_t stream_key_for_mode(enum anchored_stream_mode mode) {
     case CST_STREAM_NAV_RIGHT: return RIGHT;
     case CST_STREAM_SELECT_LEFT: return LS(LEFT);
     case CST_STREAM_SELECT_RIGHT: return LS(RIGHT);
+    case CST_STREAM_UNDO: return LC(Z);
+    case CST_STREAM_REDO: return LC(Y);
     default: return 0;
     }
 }
@@ -120,6 +143,55 @@ static uint32_t number_key_for_top_position(uint32_t position) {
     case 6: return N6; case 7: return N7; case 8: return N8; case 9: return N9; case 10: return N0;
     default: return 0;
     }
+}
+
+static enum anchored_stream_mode edit_stream_mode_for_pair(enum cornix_steno_role a,
+                                                            enum cornix_steno_role b) {
+    if ((a == CST_R_V_O && b == CST_R_V_U) ||
+        (a == CST_R_V_U && b == CST_R_V_O)) return CST_STREAM_UNDO;
+    if ((a == CST_R_V_A && b == CST_R_V_EO) ||
+        (a == CST_R_V_EO && b == CST_R_V_A)) return CST_STREAM_REDO;
+    return CST_STREAM_NONE;
+}
+
+static enum cornix_steno_role edit_stream_counterpart(enum anchored_stream_mode mode,
+                                                       enum cornix_steno_role anchor) {
+    if (mode == CST_STREAM_UNDO)
+        return anchor == CST_R_V_O ? CST_R_V_U : CST_R_V_O;
+    if (mode == CST_STREAM_REDO)
+        return anchor == CST_R_V_A ? CST_R_V_EO : CST_R_V_A;
+    return CST_R_NONE;
+}
+
+static bool role_mask_is_direct_vowel_hold(uint64_t roles) {
+    if (!roles || (roles & ~(CST_BASE_VOWEL_MASK | CST_VEXT_MASK))) return false;
+    /* Undo/Redo are commands, not direct vowel chords. */
+    if (roles == (CST_ROLE_BIT(CST_R_V_O) | CST_ROLE_BIT(CST_R_V_U)) ||
+        roles == (CST_ROLE_BIT(CST_R_V_A) | CST_ROLE_BIT(CST_R_V_EO))) return false;
+    struct cornix_steno_decoded decoded;
+    return cornix_steno_decode_correction_unit(roles, &decoded) == 0 &&
+           decoded.kind == CST_DECODE_KEYS && decoded.key_count;
+}
+
+static bool role_mask_is_direct_double_hold(uint64_t roles) {
+    const uint64_t i_alias = CST_ROLE_BIT(CST_R_I_DOUBLE) | CST_ROLE_BIT(CST_R_I_KH) |
+                             CST_ROLE_BIT(CST_R_I_NG);
+    const uint64_t i_target = CST_ROLE_BIT(CST_R_I_B) | CST_ROLE_BIT(CST_R_I_J) |
+                              CST_ROLE_BIT(CST_R_I_D) | CST_ROLE_BIT(CST_R_I_G) |
+                              CST_ROLE_BIT(CST_R_I_S);
+    const uint64_t f_alias = CST_ROLE_BIT(CST_R_F_DOUBLE) | CST_ROLE_BIT(CST_R_F_KH) |
+                             CST_ROLE_BIT(CST_R_F_NG);
+    const uint64_t f_target = CST_ROLE_BIT(CST_R_F_B) | CST_ROLE_BIT(CST_R_F_J) |
+                              CST_ROLE_BIT(CST_R_F_D) | CST_ROLE_BIT(CST_R_F_G) |
+                              CST_ROLE_BIT(CST_R_F_S);
+    const bool initial = !(roles & ~CST_INITIAL_MASK) && (roles & i_alias) &&
+                         __builtin_popcountll(roles & i_target) == 1;
+    const bool final = !(roles & ~CST_FINAL_MASK) && (roles & f_alias) &&
+                       __builtin_popcountll(roles & f_target) == 1;
+    if (!initial && !final) return false;
+    struct cornix_steno_decoded decoded;
+    return cornix_steno_decode_correction_unit(roles, &decoded) == 0 &&
+           decoded.kind == CST_DECODE_KEYS && decoded.key_count;
 }
 
 static uint32_t physical_nav_key_for_position(uint32_t position) {
@@ -158,6 +230,9 @@ static void reset_normal_stroke_locked(void) {
     memset(state.final_roll_released_at, 0, sizeof(state.final_roll_released_at));
     memset(state.pressed_at, 0, sizeof(state.pressed_at));
     state.stroke_had_multiple = false;
+    state.direct_hold_latched = false;
+    state.direct_hold_position_mask = 0;
+    state.direct_hold_role_mask = 0;
 }
 
 static void reset_stream_locked(void) {
@@ -362,6 +437,10 @@ static void correction_work_handler(struct k_work *work) {
     for (uint32_t position = 0; position < CONFIG_CORNIX_STENO_MAX_POSITIONS; position++) {
         const uint64_t bit = CST_POSITION_BIT(position);
         if (!(state.release_candidate_mask & bit)) continue;
+        if (state.direct_hold_latched && (state.direct_hold_position_mask & bit)) {
+            state.release_candidate_mask &= ~bit;
+            continue;
+        }
         if (state.down_mask & bit) {
             state.release_candidate_mask &= ~bit;
             continue;
@@ -486,8 +565,6 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
             k_mutex_unlock(&steno_mutex);
             return CST_ENGINE_EVENT_CONSUMED;
         }
-        const enum cornix_steno_role expected =
-            matching_double_for_anchor(state.stream_anchor_role);
         if (state.stream_mode == CST_STREAM_NUMBER) {
             if (number_key_for_top_position(position) && !(state.stream_unit_down_mask & bit)) {
                 state.stream_unit_down_mask |= bit;
@@ -502,7 +579,17 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
                 state.stream_unit_seen_mask |= bit;
                 state.stream_unit_role_mask |= CST_ROLE_BIT(role);
             }
-        } else if (role == expected && !(state.stream_unit_down_mask & bit)) {
+        } else if (state.stream_mode == CST_STREAM_UNDO || state.stream_mode == CST_STREAM_REDO) {
+            if (role == edit_stream_counterpart(state.stream_mode, state.stream_anchor_role) &&
+                !(state.stream_unit_down_mask & bit)) {
+                state.stream_unit_down_mask |= bit;
+                state.stream_unit_seen_mask |= bit;
+            } else {
+                state.stream_unit_down_mask |= bit;
+                state.stream_unit_seen_mask |= bit;
+            }
+        } else if (role_is_dedicated_double_for_anchor(state.stream_anchor_role, role) &&
+                   !(state.stream_unit_down_mask & bit)) {
             state.stream_unit_down_mask |= bit;
             state.stream_unit_seen_mask |= bit;
         } else {
@@ -519,6 +606,50 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
         return CST_ENGINE_EVENT_NORMAL;
     }
 
+    /* A first ABBR+dedicated-double tap is kept as a possible canonical
+     * abbreviation prefix.  If the same dedicated double is tapped again
+     * while only the ABBR anchor remains down, convert to repeat navigation:
+     * emit the deferred first tap now and the current tap on its key-up. */
+    if (state.down_mask != 0 && (state.down_mask & (state.down_mask - 1u)) == 0 &&
+        role == state.position_role[position]) {
+        uint32_t anchor_position = UINT32_MAX;
+        enum cornix_steno_role anchor_role = CST_R_NONE;
+        for (uint32_t p = 0; p < CONFIG_CORNIX_STENO_MAX_POSITIONS; p++) {
+            if (state.down_mask & CST_POSITION_BIT(p)) {
+                anchor_position = p;
+                anchor_role = state.position_role[p];
+                break;
+            }
+        }
+        const uint64_t accepted_roles = roles_from_positions_locked(state.accepted_mask);
+        if (is_abbr_role(anchor_role) &&
+            role_is_dedicated_double_for_anchor(anchor_role, role) &&
+            deferred_abbr_navigation_key(accepted_roles) != 0 &&
+            cornix_steno_dictionary_has_prefix(accepted_roles)) {
+            state.stream_mode = stream_mode_for_anchor(anchor_role);
+            state.stream_anchor_role = anchor_role;
+            state.stream_anchor_position = anchor_position;
+            state.stream_anchor_down = true;
+            state.stream_unit_down_mask = bit;
+            state.stream_unit_seen_mask = bit;
+            send_key = deferred_abbr_navigation_key(accepted_roles);
+            reset_normal_stroke_locked();
+            k_mutex_unlock(&steno_mutex);
+            k_work_cancel_delayable(&correction_work);
+            cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
+            if (send_key) emit_key_tap(send_key, timestamp);
+            return CST_ENGINE_EVENT_CONSUMED;
+        }
+    }
+
+    /* Any new role after a direct-hold chord was latched changes the intended
+     * stroke, so cancel the direct output candidate before accepting it. */
+    if (state.direct_hold_latched) {
+        state.direct_hold_latched = false;
+        state.direct_hold_position_mask = 0;
+        state.direct_hold_role_mask = 0;
+    }
+
     /* Enter physical ㅣ+JLKI when ㅣ is the only normal role already down. */
     const uint32_t nav_key = physical_nav_key_for_position(position);
     if (nav_key && state.down_mask == CST_POSITION_BIT(CST_NAV_VOWEL_POSITION) &&
@@ -531,10 +662,38 @@ int cornix_steno_engine_role_pressed(enum cornix_steno_role role, uint32_t posit
         send_key = nav_key;
         k_mutex_unlock(&steno_mutex);
         k_work_cancel_delayable(&correction_work);
-        cornix_steno_led_key_released(CST_NAV_VOWEL_POSITION);
         cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
         raise_zmk_keycode_state_changed_from_encoded(send_key, true, timestamp);
         return CST_ENGINE_EVENT_CONSUMED;
+    }
+
+    /* Immediate/repeatable thumb editing: hold either member of the pair and
+     * tap the other. The command is emitted on the tapped key's key-up; the
+     * anchor may remain held for another tap. Order is symmetric. */
+    if (state.down_mask != 0 && (state.down_mask & (state.down_mask - 1u)) == 0) {
+        uint32_t anchor_position = UINT32_MAX;
+        enum cornix_steno_role anchor_role = CST_R_NONE;
+        for (uint32_t p = 0; p < CONFIG_CORNIX_STENO_MAX_POSITIONS; p++) {
+            if (state.down_mask & CST_POSITION_BIT(p)) {
+                anchor_position = p;
+                anchor_role = state.position_role[p];
+                break;
+            }
+        }
+        const enum anchored_stream_mode edit_mode = edit_stream_mode_for_pair(anchor_role, role);
+        if (edit_mode != CST_STREAM_NONE) {
+            state.stream_mode = edit_mode;
+            state.stream_anchor_role = anchor_role;
+            state.stream_anchor_position = anchor_position;
+            state.stream_anchor_down = true;
+            state.stream_unit_down_mask = bit;
+            state.stream_unit_seen_mask = bit;
+            reset_normal_stroke_locked();
+            k_mutex_unlock(&steno_mutex);
+            k_work_cancel_delayable(&correction_work);
+            cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
+            return CST_ENGINE_EVENT_CONSUMED;
+        }
     }
 
     /* Repeating number stream: hold either SYMBOL key and tap physical Q..P.
@@ -600,11 +759,10 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
     bool finalize = false;
     bool process_correction = false;
     bool direct_solo_hold = false;
+    bool direct_composite_hold = false;
     enum cornix_steno_role direct_role = CST_R_NONE;
+    uint64_t direct_composite_roles = 0;
     bool consumed = false;
-    bool clear_anchor_led = false;
-    bool clear_tap_led = false;
-    uint32_t anchor_led_position = UINT32_MAX;
     enum cornix_steno_abbreviation_category category = CST_ABBR_CATEGORY_NONE;
     bool update_category = false;
 
@@ -649,7 +807,13 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
                     process_correction = correction_roles != 0;
                     if (!state.stream_anchor_down) reset_stream_locked();
                 }
-            } else if (role == matching_double_for_anchor(state.stream_anchor_role)) {
+            } else if ((state.stream_mode == CST_STREAM_UNDO || state.stream_mode == CST_STREAM_REDO) &&
+                       role == edit_stream_counterpart(state.stream_mode, state.stream_anchor_role)) {
+                send_key = stream_key_for_mode(state.stream_mode);
+                state.stream_unit_seen_mask &= ~bit;
+                if (!state.stream_anchor_down && state.stream_unit_down_mask == 0)
+                    reset_stream_locked();
+            } else if (role_is_dedicated_double_for_anchor(state.stream_anchor_role, role)) {
                 send_key = stream_key_for_mode(state.stream_mode);
                 if (!state.stream_anchor_down && state.stream_unit_down_mask == 0)
                     reset_stream_locked();
@@ -668,9 +832,30 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
         return CST_ENGINE_EVENT_NORMAL;
     }
 
+    /* Latch a complete valid direct-jamo chord at its first key-up, before the
+     * 50 ms typo correction can discard an early-released member. */
+    if (!state.direct_hold_latched && state.down_mask == state.accepted_mask) {
+        const uint64_t roles = roles_from_positions_locked(state.accepted_mask);
+        int64_t latest_press = 0;
+        for (uint32_t p = 0; p < CONFIG_CORNIX_STENO_MAX_POSITIONS; p++) {
+            if (!(state.accepted_mask & CST_POSITION_BIT(p))) continue;
+            if (state.pressed_at[p] > latest_press) latest_press = state.pressed_at[p];
+        }
+        if (latest_press > 0 &&
+            timestamp - latest_press >= CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS &&
+            (role_mask_is_direct_vowel_hold(roles) || role_mask_is_direct_double_hold(roles))) {
+            state.direct_hold_latched = true;
+            state.direct_hold_position_mask = state.accepted_mask;
+            state.direct_hold_role_mask = roles;
+        }
+    }
+
     state.down_mask &= ~bit;
 
-    /* Confirm ABBR/SYMBOL + same-side double as repeatable movement on double release. */
+    /* Dedicated double only: aliases ㅋ/ㅇ and 종ㅋ/종ㅇ never start movement.
+     * If ABBR+double is a dictionary prefix, preserve the first tap for a
+     * possible selector-first abbreviation and resolve it on later input or
+     * ABBR release. */
     enum cornix_steno_role anchor_role = CST_R_NONE;
     uint32_t anchor_position = UINT32_MAX;
     for (uint32_t p = 0; p < CONFIG_CORNIX_STENO_MAX_POSITIONS; p++) {
@@ -681,25 +866,26 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
             break;
         }
     }
-    if (anchor_role != CST_R_NONE && role == matching_double_for_anchor(anchor_role) &&
+    if (anchor_role != CST_R_NONE &&
+        role_is_dedicated_double_for_anchor(anchor_role, role) &&
         normal_stroke_is_anchor_double_locked(anchor_role, anchor_position, role, position)) {
-        state.stream_mode = stream_mode_for_anchor(anchor_role);
-        state.stream_anchor_role = anchor_role;
-        state.stream_anchor_position = anchor_position;
-        state.stream_anchor_down = true;
-        send_key = stream_key_for_mode(state.stream_mode);
-        clear_anchor_led = true;
-        clear_tap_led = true;
-        anchor_led_position = anchor_position;
-        reset_normal_stroke_locked();
-        consumed = true;
-        k_mutex_unlock(&steno_mutex);
-        k_work_cancel_delayable(&correction_work);
-        if (clear_anchor_led) cornix_steno_led_key_released(anchor_led_position);
-        if (clear_tap_led) cornix_steno_led_key_released(position);
-        cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
-        if (send_key) emit_key_tap(send_key, timestamp);
-        return CST_ENGINE_EVENT_CONSUMED;
+        const uint64_t pair_roles = roles_from_positions_locked(state.accepted_mask);
+        const bool defer_for_dictionary = is_abbr_role(anchor_role) &&
+                                          cornix_steno_dictionary_has_prefix(pair_roles);
+        if (!defer_for_dictionary) {
+            state.stream_mode = stream_mode_for_anchor(anchor_role);
+            state.stream_anchor_role = anchor_role;
+            state.stream_anchor_position = anchor_position;
+            state.stream_anchor_down = true;
+            send_key = stream_key_for_mode(state.stream_mode);
+            reset_normal_stroke_locked();
+            consumed = true;
+            k_mutex_unlock(&steno_mutex);
+            k_work_cancel_delayable(&correction_work);
+            cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
+            if (send_key) emit_key_tap(send_key, timestamp);
+            return CST_ENGINE_EVENT_CONSUMED;
+        }
     }
 
     if (state.down_mask != 0) {
@@ -715,7 +901,9 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
     } else {
         final_positions = state.accepted_mask;
         final_roles = roles_from_positions_locked(final_positions);
-        if (!state.stroke_had_multiple && final_positions == bit &&
+        const uint32_t deferred_nav = deferred_abbr_navigation_key(final_roles);
+
+        if (!deferred_nav && !state.stroke_had_multiple && final_positions == bit &&
             timestamp - state.pressed_at[position] >= CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS) {
             struct cornix_steno_decoded direct_decoded;
             if (cornix_steno_decode_correction_unit(CST_ROLE_BIT(role), &direct_decoded) == 0 &&
@@ -724,6 +912,11 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
                 direct_role = role;
             }
         }
+        if (!deferred_nav && state.direct_hold_latched) {
+            direct_composite_hold = true;
+            direct_composite_roles = state.direct_hold_role_mask;
+        }
+        send_key = deferred_nav;
         reset_normal_stroke_locked();
         finalize = true;
     }
@@ -732,7 +925,9 @@ int cornix_steno_engine_role_released(enum cornix_steno_role role, uint32_t posi
     if (update_category) cornix_steno_led_set_category(category);
     if (finalize) {
         k_work_cancel_delayable(&correction_work);
-        if (direct_solo_hold) cornix_steno_engine_emit_direct_role(direct_role);
+        if (send_key) emit_key_tap(send_key, timestamp);
+        else if (direct_solo_hold) cornix_steno_engine_emit_direct_role(direct_role);
+        else if (direct_composite_hold) process_correction_unit(direct_composite_roles);
         else if (final_positions && final_roles) process_stroke(final_positions, final_roles, timestamp);
         else cornix_steno_led_set_category(CST_ABBR_CATEGORY_NONE);
     }

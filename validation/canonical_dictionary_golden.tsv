@@ -1,0 +1,47 @@
+# Canonical Cornix STENO exact-mask dictionary v1.8.0
+# id	category	output	logical roles	status	notes
+# ABBR_L and ABBR_R are distinct selectors. VEXT_L is canonical AB2;
+# runtime lookup accepts either VEXT side for AB2 entries only.
+BASIC_JEOMJEOM	basic_word	점점	I_J+F_J	confirmed	일반 WORD: 초ㅈ+종ㅈ
+BASIC_JINJJA	basic_word	진짜	I_J+F_J+F_DOUBLE	confirmed	두 번째 ㅈ이 ㅉ임을 쌍종으로 표시
+BASIC_GYEOLGUK	basic_word	결국	I_G+F_G	confirmed	
+BASIC_GEUREOKE	basic_word	그렇게	I_G+I_R+F_G	confirmed	
+BASIC_GEUREOTGUN	basic_word	그렇군	I_G+F_R+F_G	confirmed	
+BASIC_GEUREON	basic_word	그런	I_G+F_R	confirmed	
+BASIC_GEUREOM	basic_word	그럼	ABBR_L+I_G+F_R	confirmed	
+BASIC_GEURAEDO	basic_word	그래도	I_G+I_R+F_D	confirmed	
+BASIC_GEUREONDE	basic_word	그런데	ABBR_L+I_G+I_R+F_D	confirmed	
+BASIC_GEUREOMEDO	basic_word	그럼에도	I_G+I_R+I_NG+F_D	confirmed	
+BASIC_GEUDERO	basic_word	그대로	I_G+I_D+F_R	confirmed	
+BASIC_GAPJAGI	basic_word	갑자기	I_G+F_J+I_DOUBLE	confirmed	마지막 반복 ㄱ을 쌍초/반복 표식으로 표시
+BASIC_WANJEONHI	basic_word	완전히	I_NG+I_J+F_H	confirmed	
+BASIC_JOYONGHI	basic_word	조용히	I_NG+F_J+F_H	confirmed	현재 배열에서 초ㅈ+종ㅇ+종ㅎ은 오른손 검지 충돌. 초ㅇ+종ㅈ+종ㅎ으로 배치.
+BASIC_DOEEOT	basic_word	되었	I_D+I_NG	confirmed	TAIL 조립용 일반 WORD 조각
+BASIC_GEUNDE	basic_word	근데	I_G+F_D	confirmed	
+BASIC_GEUTTAE	basic_word	그때	I_G+F_D+F_DOUBLE	confirmed	일반 WORD: 두 번째 ㄷ이 ㄸ임을 쌍종으로 표시
+CONN_GEDAGA	connective	게다가	I_G+I_D+I_DOUBLE	confirmed	
+CONN_GEULIGO	connective	그리고	I_G+I_R+I_DOUBLE	confirmed	
+CONN_GEUREOJA	connective	그러자	I_G+I_R+F_J	confirmed	
+CONN_GEUREOGI	connective	그러기	ABBR_L+I_G+I_R+I_DOUBLE	confirmed	
+CONN_GEUREOTJI	connective	그렇지	ABBR_L+I_G+I_R+F_J	confirmed	
+CONN_HAJIMAN	connective	하지만	I_H+I_J+F_M	confirmed	
+TAIL_YEOTDA	tail	였다	F_NG+F_D	confirmed	ㅇㄷ군 최우선, 오른손-only
+TAIL_EOPDA	tail	없다	ABBR_R+F_NG+F_D	confirmed	ㅇㄷ군 2순위, 오른손 중심
+TAIL_EOTDA	tail	었다	ABBR_L+F_NG+F_D	current	
+TAIL_ATDA	tail	았다	ABBR_L+ABBR_R+F_NG+F_D	current	
+TAIL_IEOTDA	tail	이었다	F_DOUBLE+F_NG+F_D	confirmed	사용자 요청: 오른쪽 쌍종 + 종ㅇ + 종ㄷ; H/J 동일 검지 예외
+TAIL_YEOSSEOTDA	tail	였었다	VEXT_R+F_NG+F_D	confirmed	사용자 요청: 오른쪽 쌍모 전용 exact mask; 일반 AB2 정규화 예외
+TAIL_EOSSEOTDA	tail	었었다	VEXT_L+ABBR_R+F_NG+F_D	current	
+TAIL_ITDA	tail	있다	VEXT_L+ABBR_L+F_NG+F_D	current	
+TAIL_EDA	tail	에다	ABBR_R+I_NG+F_D	current	오른손 ㅇㄷ의 7개 무충돌 슬롯을 다 쓴 뒤 사용하는 혼합 예외; 사용자 제안 'ㅇ초성+ㄷ종성+약어'.
+TAIL_HAETDA	tail	했다	F_H+F_D	confirmed	
+TAIL_DWAETDA	tail	됐다	F_DOUBLE+F_D	confirmed	쌍종=반복 ㄷ
+TAIL_NEUNDE	tail	는데	VEXT_L+F_N	confirmed	종ㄴ+종ㄷ이 같은 오른손 중지라 AB2 단일 코어 사용
+TAIL_EULJIDO	tail	을지도	F_NG+F_J+F_D	confirmed	
+TAIL_EOJYEOTDA	tail	어졌다	ABBR_R+F_NG+F_J+F_D	confirmed	
+TAIL_JIMAN	tail	지만	F_J+F_M	confirmed	
+TAIL_SEUMNIDA	tail	습니다	VEXT_L+F_S+F_D	confirmed	겠/했/였/있/없/않/되었 + 습니다 조립
+TAIL_EOSSEUMYEON	tail	었으면	VEXT_L+ABBR_R+F_M	current	되+었으면 등 조립
+TAIL_HANEUNGE	tail	하는게	F_H+F_N+F_G	confirmed	
+TAIL_ONEUNGE	tail	오는게	F_NG+F_N+F_G	confirmed	
+TAIL_GANEUNGE	tail	가는게	F_DOUBLE+F_N+F_G	confirmed	쌍종=반복 ㄱ

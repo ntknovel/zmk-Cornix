@@ -1,6 +1,12 @@
-CORNIX v2.1.0 FINAL validation: PASS
-- tools/validate_package.py: PASS
-- validation/run_host_tests.sh: PASS
-- role projection: 12,383 single/pair/triple cases PASS
-- canonical dictionary: 43 + quick 12
-- actual STENO dual tapping term: 150ms (Kconfig + shield conf + stubs)
+CORNIX ZMK STENO v2.2.2 최종 검증: PASS
+- package validator: PASS
+- role projection single/pair/triple 12,383: PASS
+- canonical 43 x 4 input orders = 172: PASS
+- compound/extended vowel 19 x 2 release orders with 55ms skew = 38: PASS
+- initial/final tense selector matrix = 60: PASS
+- solo consonant/vowel 34 + 79/80ms boundary: PASS
+- abbreviation order regressions, immediate numbers, Undo/Redo: PASS
+- LED entry flash / idle off / held count / release clear: PASS
+- ZMK API-shaped compile checks and right/peripheral LED shape: PASS
+
+실제 Zephyr cross-build와 좌우 UF2 생성은 GitHub Actions에서 최종 확인해야 합니다.

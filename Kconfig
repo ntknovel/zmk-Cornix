@@ -39,7 +39,7 @@ config CORNIX_STENO_FINAL_ROLL_MS
 config CORNIX_STENO_DUAL_TAPPING_TERM_MS
     int "STENO context-key tapping term (ms)"
     range 80 500
-    default 150
+    default 80
 
 config CORNIX_STENO_OUTPUT_QUEUE_SIZE
     int "STENO HID output queue length"
