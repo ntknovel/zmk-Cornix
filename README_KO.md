@@ -1,212 +1,58 @@
-# Cornix ZMK 한국어 STENO v1.8.0 — Full Parity
+# Cornix ZMK 한국어 STENO v2.2.6
 
-이 버전은 **v1.7.1 canonical 약어·어미 재배치판을 기준**으로, 이전 개발 분기에서 빠졌던
-키업·약어·이동·수정·LED 기능과 KLOR에서 최종 확정한 입력 규칙을 한 소스 트리에 다시
-통합한 Cornix 최신판이다.
+v2.2.5의 공식 `settings_reset` 빌드 수정과 v2.2.4의 500ms 단독 수정·전역 key-up 삭제 OFF 입력 엔진을 유지하면서, **오른손 종성 자음을 초성으로 빌려 쓰는 피로분산 규칙**과 전용 `,`/`.` 교차 쌍자음 규칙을 추가한 전체 저장소다.
 
-## 1. 보존한 기반
+## 새 피로분산 입력
 
-- Cornix 일반 키보드 6개 기존 레이어
-- RF 안정화 설정: BLE 1M 우선, +8 dBm, 배터리 보고 300초
-- 공식 Bluetooth·배터리 상태 LED
-- 좌우 개별 UF2 빌드
-- `settings_reset` 별도 산출물
-- 최종 완전대칭 STENO 자음 배열
-- canonical exact-mask 약어 43개
-- GUI 편집형 Quick Macro 12개
-- v1.7.1 어미 재배치
+- 초성 없이 정확히 왼손 엄지 `ㅗ`, `ㅡ`, `ㅜ` 중 하나와 오른손 종성 자음 하나를 누르면 오른손 자음을 초성으로 해석한다.
+- 오른손 자음은 초성으로 한 번만 출력하며 받침으로 중복하지 않는다.
+- 예: `종ㅂ+ㅜ=부`, `종ㄱ+ㅗ=고`, `종ㅁ+ㅡ=므`.
+- 전용 쌍초 역할(단독 출력 `,`) + 왼 엄지 모음 + 오른손 `종ㅂ/종ㅈ/종ㄷ/종ㄱ/종ㅅ`은 `ㅃ/ㅉ/ㄸ/ㄲ/ㅆ` 초성을 만든다.
+- 전용 쌍종 역할(단독 출력 `.`)도 같은 오른손 미러 초성을 쌍자음으로 만들 수 있다.
+- 전용 쌍종 역할 + 왼손 `초ㅂ/초ㅈ/초ㄷ/초ㄱ/초ㅅ` + 모음은 반대편에서 왼손 초성을 쌍자음으로 만든다.
+- 요청 예시: `전용쌍초(,)+ㅜ+종ㅂ=뿌`, `전용쌍종(.)+초ㅂ+ㅏ=빠`.
+- 새 교차 selector는 전용 `,`/`.` 두 역할만 인정한다. ㅋ/ㅇ·종ㅋ/종ㅇ 별칭은 기존 동일 손 쌍자음 기능만 유지한다.
+- 종성→초성 미러는 정확한 `ㅗ/ㅡ/ㅜ` 단모음과 오른손 자음 1개에만 적용한다. 오른손 엄지 모음, 복합모음, 두 종성, 두 전용 selector 동시 입력은 제외한다.
+- 왼손 초성이 존재하고 `.` 외에 실제 오른손 자음까지 있으면 기존 종성 쌍자음 해석을 보존한다.
 
-## 2. 최종 STENO 자음 배열
+## 기존 입력 동작
 
-```text
-                    왼손 초성                         오른손 종성
+- 물리 자음 배열: `ㅂㅈㄷㄱㅅ / ㅁㄴㅇㄹㅎ / ㅋㅌㅊㅍ·전용쌍초`, 오른손 종성 대칭
+- 오른 엄지: `ㅓ·Space / ㅣ / ㅏ`; 왼 엄지: `ㅗ / ㅡ / ㅜ·Enter`
+- ㅜ/ㅓ 단독 500ms 미만은 Enter/Space, 500ms 이상 hold-release는 직접 ㅜ/ㅓ
+- 모든 독립 수정·직접 자모 입력은 500ms 이상 hold-release에서만 실행
+- 다른 STENO 역할이 참여하는 순간 단독 후보를 취소하고 정상 chord로 즉시 합류
+- 전역 key-up 역할 삭제는 `0ms=OFF`: 먼저 뗀 키도 마지막 key-up까지 stroke에 보존
+- 일반 stroke는 마지막 key-up 즉시 확정하며 별도 settle 대기 없음
+- 90ms 합법 겹받침 상태 추적은 국소·비차단 방식
+- 기호L/R + QWERTYUIOP 즉시 `1234567890`
+- `ㅗ↔ㅜ` Undo, `ㅓ↔ㅏ` Redo 즉시 반복
+- canonical 약어 43개와 Quick Macro 12개, RF/LED/인코더 구조 유지
+- 이동: `약어L + 전용쌍초`=Left, `약어R + 전용쌍종`=Right
+- 선택 이동: `기호L + 전용쌍초`=Shift+Left, `기호R + 전용쌍종`=Shift+Right
 
-             Q      W      E      R      T       Y      U      I      O      P
-             ㅋ     ㅈ     ㄴ     ㅎ     ㅌ      종ㅌ   종ㅎ   종ㄴ   종ㅈ   종ㅋ
+## 빌드 행
 
-             A      S      D      F      G       H      J      K      L      ;
-             ㅅ     ㄱ     ㄹ     ㅇ    쌍초     쌍종   종ㅇ   종ㄹ   종ㄱ   종ㅅ
+`build.yaml`은 다음 세 산출물을 만든다.
 
-             Z      X      C      V      B       N      M      ,      .      /
-             ㅊ     ㅂ     ㄷ     ㅁ     ㅍ      종ㅍ   종ㅁ   종ㄷ   종ㅂ   종ㅊ
+1. `cornix_left_maxrange_steno_indicator`
+2. `cornix_right_maxrange_steno_indicator`
+3. `cornix_settings_reset`
+
+오른쪽 보드는 BLE peripheral이므로 reset 행은 pinned Cornix 공식 구성과 같은 snippets를 사용한다. 이 `studio-rpc-usb-uart`는 **reset 이미지의 USB 전송 경로용**이며 정상 left STENO 펌웨어에 ZMK Studio를 활성화하는 설정은 아니다.
+
+```yaml
+- board: cornix_right//zmk
+  shield: settings_reset
+  snippet: studio-rpc-usb-uart nrf52840-nosd
+  artifact-name: cornix_settings_reset
 ```
 
-## 3. 통일된 좌우 이동
-
-쌍초·쌍종키를 반복 탭키로 통일했다.
-
-| 홀드 | 반복 탭 | 출력 |
-|---|---|---|
-| 약어L | 쌍초 | `←` 한 칸 |
-| 약어R | 쌍종 | `→` 한 칸 |
-| 기호L | 쌍초 | `Shift+←` 한 칸 |
-| 기호R | 쌍종 | `Shift+→` 한 칸 |
-
-홀드키를 유지한 채 반복 탭할 수 있으며, 이동 뒤 `!`, `"`, `]`, Backspace, `,`, `.` 등의
-단독 기능은 추가로 나오지 않는다. 더 큰 정확 약어가 `약어+쌍자음`을 포함하는 경우에는
-전체 exact mask가 우선되어 방향키가 약어를 가로채지 않는다.
-
-## 4. 직접 수정 모드
-
-기호L 또는 기호R을 누른 채 자음·모음을 하나씩 탭하면 두벌식 자모를 순서대로 직접 보낸다.
-수정 상태에서는 초성·종성 구분 없이 같은 자음으로 정규화한다.
-
-```text
-기호 홀드 → 초ㄱ 탭      → ㄱ
-기호 홀드 → 종ㄱ 탭      → ㄱ
-기호 홀드 → ㄱ → ㅏ → ㄴ → 간
-```
-
-쌍자음은 쌍초/쌍종 표식과 자음을 한 단위로 눌러 출력하고, 겹받침은 자음을 차례대로 입력한다.
-기호+같은 쪽 쌍자음만 정확히 사용하면 수정 모드가 아니라 Shift 좌우 선택이 된다.
-
-## 5. ㅣ+JLKI와 인코더
-
-- 물리 `ㅣ` 홀드 + I/J/K/L: 위/왼쪽/아래/오른쪽
-- Select Nav 레이어의 Shift+I/J/K/L 선택 이동 유지
-- 왼쪽 인코더 회전: `Shift+↑ / Shift+↓`
-- 오른쪽 인코더 회전: `↑ / ↓`
-- 한 노치당 한 번의 press/release
-
-## 6. 영문 복귀 상태
-
-STENO에서 오른쪽 인코더 클릭:
-
-```text
-RAlt 1회 → STENO OFF → BASE와 같은 키배치의 영문 상태
-```
-
-그 상태에서 오른쪽 인코더를 다시 누르거나 왼쪽 STENO 토글을 누르면:
-
-```text
-RAlt 1회 → STENO ON
-```
-
-일반 BASE에서 오른쪽 인코더 클릭은 기존 `Ctrl+F`를 유지한다. 별도 동적 레이어를 늘리지 않고
-런타임 복귀 상태로 구현했기 때문에 기존 8레이어 키맵과 편집기 구조를 깨지 않는다.
-
-## 7. 약어와 퀵 Macro
-
-- canonical exact-mask 약어: 43개
-- GUI 편집형 Quick Macro: 12개
-- 약어L과 약어R은 서로 다른 의미
-- 일반 AB2는 좌·우 겹모음 어느 쪽으로도 입력 가능
-- `였었다`만 오른쪽 겹모음 전용
-- 모든 키를 놓은 뒤 exact-mask로만 출력
-- 등록되지 않은 조합은 유사 추정 없이 무출력
-- 약어 후보인 동안 50ms key-up 보정이 필수 역할을 잘라내지 않음
-
-어미 ㅇㄷ군:
-
-```text
-종ㅇ + 종ㄷ                          → 였다
-약어L + 종ㅇ + 종ㄷ                 → 었다
-약어R + 종ㅇ + 종ㄷ                 → 없다
-약어L + 약어R + 종ㅇ + 종ㄷ         → 았다
-오른겹모 + 종ㅇ + 종ㄷ              → 였었다
-오른쌍종 + 종ㅇ + 종ㄷ              → 이었다
-겹모 + 약어R + 종ㅇ + 종ㄷ          → 었었다
-겹모 + 약어L + 종ㅇ + 종ㄷ          → 있다
-```
-
-Quick Macro의 기본 Text는 `config/steno_quick_text.tsv`에서 수정하고 다음을 실행한다.
-
-```bash
-python3 tools/update_quick_macro_text.py
-```
-
-## 8. Key-up 보정과 겹받침 롤링
-
-- 일반 오입력 복구: 50ms
-- 합법 겹받침 11개 롤링: 90ms
-- 먼저 놓인 키가 사전 exact mask의 부분 조합이면 약어 후보로 보존
-- 약어/겹모 앵커를 누른 채 자음을 차례로 탭해도 최종 mask 유지
-- 팬텀 역할 감사: 42개 역할의 모든 단독·2키·3키, 총 12,383가지 검사
-- Cornix는 ZMK 표준 matrix driver를 사용하므로 KLOR의 커스텀 2µs 스캐너 수정은 적용하지 않음
-
-## 9. LED
-
-BASE에서는 공식 Bluetooth·배터리 표시가 LED를 담당한다. STENO가 활성화되면 일시적으로
-STENO 피드백이 제어권을 가져간다.
-
-- 진입 플래시
-- 현재 물리 홀드 수 1~4개 흰색 표시
-- 기본 약어: 초록
-- 접속 약어: 노랑
-- 어미 약어: 파랑
-- STENO 종료 시 공식 상태 표시로 복귀
-- Fn-BT의 STENO LED On/Off 유지
-
-## 10. 적용과 빌드
-
-저장소 루트에서 새 브랜치를 만든다.
-
-```bash
-cd /workspaces/zmk-Cornix
-git status
-git switch -c cornix-steno-v1.8.0-full-parity
-```
-
-UPLOAD ZIP을 저장소 루트에 덮어쓴 뒤 검증한다.
-
-```bash
-unzip -o Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip -d .
-rm Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip
-
-python3 tools/validate_package.py .
-bash validation/run_host_tests.sh
-```
-
-커밋·푸시:
-
-```bash
-git add -A
-git commit -m "Update Cornix STENO to v1.8.0 full parity"
-git push -u origin cornix-steno-v1.8.0-full-parity
-```
-
-GitHub Actions에서 다음을 모두 확인한다.
-
-```text
-cornix_left_maxrange_steno_indicator
-cornix_right_maxrange_steno_indicator
-cornix_settings_reset
-```
-
-왼쪽과 오른쪽 UF2는 서로 구분해 플래시한다. `settings_reset`은 페어링 초기화가 필요할 때만
-사용한다.
-
-## 11. 검증 범위
-
-로컬 패키지 검증은 다음을 실행한다.
+## 검증
 
 ```bash
 python3 tools/validate_package.py .
 bash validation/run_host_tests.sh
 ```
 
-검사 범위:
-
-- 8레이어 × 50키
-- canonical 43개 + Quick Macro 12개
-- 좌우 반복 이동과 Shift 선택
-- 연속 수정 모드
-- ㅣ+JLKI
-- 50ms key-up 복구
-- 11개 겹받침 90ms 롤링
-- 영문 복귀 상태
-- LED 카테고리
-- 12,383개 팬텀 역할 불변성
-- 좌우/peripheral API 형태
-
-전체 Zephyr cross build는 GitHub Actions에서 최종 확인한다.
-
-> `v1.7.x` 이름의 문서는 변경 이력 보존용이다. 현재 적용 기준은 이 README와
-> `FULL_PARITY_v1.8.0_KO.md`이다.
-
-약어L 홀드 + 쌍초
-약어R 홀드 + 쌍종
-기호L 홀드 + 쌍초
-기호R 홀드 + 쌍종
-영문 복귀 상태
-12,383
+검증에는 역할 single/pair/triple 12,383건, canonical 약어 172건, 복합모음 38건, 기존 쌍자음 60건, 새 피로분산 release-order 189건과 경계 사례, 500ms 경계, `박` 롤링, OLED가 없는 ZMK 소스 API 형태, 정확한 reset snippets와 commit pin 검사가 포함된다. 실제 nRF52840 cross-build는 GitHub Actions 세 작업이 모두 성공하는지 최종 확인한다.

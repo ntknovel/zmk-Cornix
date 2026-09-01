@@ -1,6 +1,6 @@
-Cornix ZMK STENO Dubeol v2.1.0 FINAL
-Tap/Hold: 150 ms
-Base lineage: v1.8.0 FULL PARITY
-FULL PARITY
-Canonical exact-mask 43
-GUI Quick Macro 12
+Cornix ZMK STENO Dubeol v2.2.6
+Fatigue-distribution mirrored onset for exact left-thumb ㅗ/ㅡ/ㅜ
+Dedicated comma/period cross-hand tense selectors; ㅋ/ㅇ aliases excluded from the new rule
+500 ms deliberate solo correction; global key-up role deletion disabled
+90 ms non-blocking legal compound-final tolerance; modifier dual-role term 200 ms
+v2.2.5 official Cornix settings_reset build-matrix repair retained

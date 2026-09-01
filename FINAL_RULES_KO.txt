@@ -1,17 +1,37 @@
-FINAL INPUT RULES — 2026-08-19
+FINAL INPUT RULES — 2026-09-01 MIRRORED-ONSET UPDATE
 
-Consonants (physical default)
-Q W E R T | Y U I O P
-ㅂ ㅈ ㄷ ㄱ ㅅ | 종ㅅ 종ㄱ 종ㄷ 종ㅈ 종ㅂ
-A S D F G | H J K L ;
-ㅁ ㄴ ㅇ ㄹ ㅎ | 종ㅎ 종ㄹ 종ㅇ 종ㄴ 종ㅁ
-Z X C V B | N M , . /
-ㅋ ㅌ ㅊ ㅍ 쌍초 | 쌍종 종ㅍ 종ㅊ 종ㅌ 종ㅋ
+Physical consonants:
+QWERT / ASDFG / ZXCVB = ㅂㅈㄷㄱㅅ / ㅁㄴㅇㄹㅎ / ㅋㅌㅊㅍ dedicated-double.
+Right side mirrors finals; N is the dedicated final-double role.
+Right thumbs = ㅓ·Space / ㅣ / ㅏ. Left thumbs = ㅗ / ㅡ / ㅜ·Enter.
 
-Numbers: either SYMBOL-L or SYMBOL-R + physical Q..P = 0..9.
-Old vertical two-key numbers are retired.
-ABBR L/R: exact side wins; if only one side exists for a core, either ABBR key works.
-VEXT L/R: mirrored for ordinary AB2/vowels; explicit right-side exceptions such as 였었다 remain exact.
-Canonical abbreviation logical roles are restored from v1.8/V29.4; no consonant-side rewrites for finger conflicts.
-Thumb ㅜ/Enter and ㅏ/Space: solo <150 ms -> Enter/Space; solo >=150 ms release -> correction L/R; any chord participation -> vowel/STENO role.
-Same-finger abbreviation chords are allowed and are not rejected/rearranged.
+Fatigue-distribution onset mirror:
+- With no ordinary initial, exact left-thumb ㅗ/ㅡ/ㅜ + exactly one right final-role consonant emits that consonant as the onset plus the vowel.
+- The borrowed right consonant is consumed as the onset and is not emitted again as a final.
+- Dedicated initial-double (single output comma) may tense a right mirrored target across hands.
+- Dedicated final-double (single output period) may tense either a right mirrored target or a clean left initial target across hands.
+- Cross-hand tense targets are only ㅂ/ㅈ/ㄷ/ㄱ/ㅅ -> ㅃ/ㅉ/ㄸ/ㄲ/ㅆ.
+- Only the dedicated comma/period roles are selectors in this new path. ㅋ/ㅇ and final ㅋ/ㅇ aliases are not cross-hand selectors.
+- Right vowels, compound/extended vowels, multiple right consonants, and both dedicated selectors together do not enter the mirror path.
+- If an ordinary initial exists and period accompanies another right target, the established final-double interpretation is preserved.
+
+Deliberate correction/direct-jamo threshold: 500 ms, inclusive, decided only at release.
+- ㅜ or ㅓ released before 500 ms while completely solo: Enter or Space.
+- The same key released at 500 ms or later while completely solo: direct ㅜ or ㅓ.
+- All 28 consonant roles, six base vowels, valid compound/extended vowels, and tense-selector/target pairs use the same 500 ms deliberate hold rule.
+- Any other STENO role press cancels the solo interpretation immediately, even after 500 ms, and joins the ordinary chord.
+
+Ordinary chords:
+- Global key-up role deletion is disabled. Every physically pressed role remains in the stroke until the final key-up.
+- The completed stroke resolves immediately on the final key-up; there is no global settle wait.
+- The 90 ms legal compound-final roll metadata is local and non-blocking. It never postpones ordinary output.
+- Therefore an early-released or late-added final ㄱ can still form 박 while ㅂ+ㅏ remain in the same physical stroke.
+
+True Ctrl/Alt modifier dual-role keys keep their separate 200 ms tapping term.
+Either SYMBOL + physical Q..P streams 1234567890 immediately.
+Undo: ㅗ↔ㅜ anchored tap stream. Redo: ㅓ↔ㅏ anchored tap stream.
+
+Dictionary order: raw exact -> tense-alias fallback -> conditional ABBR-side fallback.
+Canonical 43 logical masks are frozen to the pre-layout-change golden table.
+Only dedicated double roles navigate; ㅋ/ㅇ aliases never navigate.
+SYMBOL is not a direct-jamo correction modifier.

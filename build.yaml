@@ -11,7 +11,10 @@ include:
     shield: cornix_indicator cornix_steno_led
     artifact-name: cornix_right_maxrange_steno_indicator
 
-  # Reset image intentionally does not enable the indicator hardware.
+  # The right half defaults to a BLE peripheral with USB disabled.  The official
+  # Cornix reset recipe for this pinned hardware revision therefore enables the
+  # Studio USB-UART transport and the nRF52840 no-softdevice partition snippet.
   - board: cornix_right//zmk
     shield: settings_reset
+    snippet: studio-rpc-usb-uart nrf52840-nosd
     artifact-name: cornix_settings_reset

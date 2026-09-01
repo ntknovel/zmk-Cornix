@@ -141,6 +141,21 @@ static const struct cornix_steno_dictionary_entry entries[] = {
     { .role_mask = (CST_ROLE_BIT(CST_R_F_DOUBLE) | CST_ROLE_BIT(CST_R_F_N) | CST_ROLE_BIT(CST_R_F_G)), .category = CST_ABBR_CATEGORY_TAIL, .keys = dict_seq_42, .key_count = (uint16_t)(sizeof(dict_seq_42) / sizeof(dict_seq_42[0])) },
 };
 
+static const struct cornix_steno_dictionary_entry *lookup_raw(uint64_t mask) {
+    for (size_t i = 0; i < sizeof(entries) / sizeof(entries[0]); i++) {
+        if (entries[i].role_mask == mask) return &entries[i];
+    }
+    return NULL;
+}
+
+static bool prefix_raw(uint64_t mask) {
+    if (!mask) return false;
+    for (size_t i = 0; i < sizeof(entries) / sizeof(entries[0]); i++) {
+        if ((mask & ~entries[i].role_mask) == 0) return true;
+    }
+    return false;
+}
+
 uint64_t cornix_steno_dictionary_normalize_mask(uint64_t role_mask) {
     const uint64_t vext_l = CST_ROLE_BIT(CST_R_VEXT_L);
     const uint64_t vext_r = CST_ROLE_BIT(CST_R_VEXT_R);
@@ -155,21 +170,60 @@ uint64_t cornix_steno_dictionary_normalize_mask(uint64_t role_mask) {
     return role_mask;
 }
 
-const struct cornix_steno_dictionary_entry *
-cornix_steno_dictionary_lookup(uint64_t role_mask) {
-    const uint64_t normalized = cornix_steno_dictionary_normalize_mask(role_mask);
+static void add_candidate(uint64_t candidates[20], size_t *count, uint64_t mask) {
+    for (size_t i = 0; i < *count; i++) if (candidates[i] == mask) return;
+    if (*count < 20) candidates[(*count)++] = mask;
+}
+
+static size_t dictionary_candidates(uint64_t role_mask, uint64_t candidates[20]) {
+    size_t count = 0;
+    const uint64_t bases[2] = { role_mask, cornix_steno_dictionary_normalize_mask(role_mask) };
+    const uint64_t idbl = CST_ROLE_BIT(CST_R_I_DOUBLE);
+    const uint64_t ikh = CST_ROLE_BIT(CST_R_I_KH);
+    const uint64_t ing = CST_ROLE_BIT(CST_R_I_NG);
+    const uint64_t fdbl = CST_ROLE_BIT(CST_R_F_DOUBLE);
+    const uint64_t fkh = CST_ROLE_BIT(CST_R_F_KH);
+    const uint64_t fng = CST_ROLE_BIT(CST_R_F_NG);
+    for (size_t b = 0; b < 2; b++) {
+        uint64_t initial[3] = { bases[b], 0, 0 };
+        size_t initial_count = 1;
+        if (!(bases[b] & idbl) && (bases[b] & ikh)) initial[initial_count++] = (bases[b] & ~ikh) | idbl;
+        if (!(bases[b] & idbl) && (bases[b] & ing)) initial[initial_count++] = (bases[b] & ~ing) | idbl;
+        for (size_t i = 0; i < initial_count; i++) {
+            add_candidate(candidates, &count, initial[i]);
+            if (!(initial[i] & fdbl) && (initial[i] & fkh))
+                add_candidate(candidates, &count, (initial[i] & ~fkh) | fdbl);
+            if (!(initial[i] & fdbl) && (initial[i] & fng))
+                add_candidate(candidates, &count, (initial[i] & ~fng) | fdbl);
+        }
+    }
+    return count;
+}
+
+static uint64_t swap_single_abbr(uint64_t mask) {
     const uint64_t abl = CST_ROLE_BIT(CST_R_ABBR_L);
     const uint64_t abr = CST_ROLE_BIT(CST_R_ABBR_R);
-    for (size_t i = 0; i < sizeof(entries) / sizeof(entries[0]); i++) {
-        if (entries[i].role_mask == normalized) return &entries[i];
+    const uint64_t ab = mask & (abl | abr);
+    if (ab == abl) return (mask & ~(abl | abr)) | abr;
+    if (ab == abr) return (mask & ~(abl | abr)) | abl;
+    return mask;
+}
+
+const struct cornix_steno_dictionary_entry *
+cornix_steno_dictionary_lookup(uint64_t role_mask) {
+    uint64_t candidates[20] = {0};
+    const size_t count = dictionary_candidates(role_mask, candidates);
+    /* Raw exact and same-side normalized forms always win. */
+    for (size_t i = 0; i < count; i++) {
+        const struct cornix_steno_dictionary_entry *entry = lookup_raw(candidates[i]);
+        if (entry) return entry;
     }
-    /* ABBR L/R are mirrored only when the exact side is unassigned. */
-    const uint64_t ab = normalized & (abl | abr);
-    if (ab == abl || ab == abr) {
-        const uint64_t swapped = (normalized & ~(abl | abr)) | (ab == abl ? abr : abl);
-        for (size_t i = 0; i < sizeof(entries) / sizeof(entries[0]); i++) {
-            if (entries[i].role_mask == swapped) return &entries[i];
-        }
+    /* Only after every requested-side candidate misses may ABBR L/R mirror. */
+    for (size_t i = 0; i < count; i++) {
+        const uint64_t swapped = swap_single_abbr(candidates[i]);
+        if (swapped == candidates[i]) continue;
+        const struct cornix_steno_dictionary_entry *entry = lookup_raw(swapped);
+        if (entry) return entry;
     }
     return NULL;
 }
@@ -179,18 +233,12 @@ bool cornix_steno_dictionary_has_exact(uint64_t role_mask) {
 }
 
 bool cornix_steno_dictionary_has_prefix(uint64_t role_mask) {
-    if (!role_mask) return false;
-    const uint64_t normalized = cornix_steno_dictionary_normalize_mask(role_mask);
-    const uint64_t abl = CST_ROLE_BIT(CST_R_ABBR_L);
-    const uint64_t abr = CST_ROLE_BIT(CST_R_ABBR_R);
-    uint64_t swapped = normalized;
-    const uint64_t ab = normalized & (abl | abr);
-    if (ab == abl) swapped = (normalized & ~(abl | abr)) | abr;
-    else if (ab == abr) swapped = (normalized & ~(abl | abr)) | abl;
-    for (size_t i = 0; i < sizeof(entries) / sizeof(entries[0]); i++) {
-        if ((role_mask & ~entries[i].role_mask) == 0 ||
-            (normalized & ~entries[i].role_mask) == 0 ||
-            (swapped & ~entries[i].role_mask) == 0) return true;
+    uint64_t candidates[20] = {0};
+    const size_t count = dictionary_candidates(role_mask, candidates);
+    for (size_t i = 0; i < count; i++) if (prefix_raw(candidates[i])) return true;
+    for (size_t i = 0; i < count; i++) {
+        const uint64_t swapped = swap_single_abbr(candidates[i]);
+        if (swapped != candidates[i] && prefix_raw(swapped)) return true;
     }
     return false;
 }

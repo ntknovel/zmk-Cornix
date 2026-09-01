@@ -20,26 +20,42 @@ config CORNIX_STENO_MAX_POSITIONS
     default 50
 
 config CORNIX_STENO_KEYUP_CORRECTION_MS
-    int "Early-release correction window (ms)"
+    int "Early-release role-deletion window (ms; 0 disables)"
     range 0 150
-    default 50
+    default 0
     help
-      A key released while another STENO key remains held stays provisional.
-      If the remaining keys stay held after this window, the earlier key is
-      removed unless it is a dictionary prefix or final-roll candidate.
+      Legacy typo recovery removed a key that was released while other STENO
+      keys remained held. Set this to 0 to preserve the full physical stroke
+      until every key is released. This avoids losing a deliberately rolled
+      final consonant such as the final ㄱ in 박.
 
 config CORNIX_STENO_FINAL_ROLL_MS
     int "Legal final-cluster rolling window (ms)"
     range 50 200
     default 90
     help
-      Time in which two sequential final-consonant taps may be restored as one
-      of the eleven legal Korean final clusters.
+      Non-blocking tolerance for the eleven legal Korean compound finals.
+      It never delays ordinary stroke output; it only recognizes a legal pair
+      if a second final is pressed within this window.
+
+config CORNIX_STENO_SOLO_CORRECTION_MS
+    int "Deliberate solo correction/direct-jamo hold (ms)"
+    range 100 1000
+    default 500
+    help
+      A correction/direct-jamo action is emitted only after its complete
+      independent direct-input stroke has been held for at least this long and
+      then released. Any ordinary STENO-key participation cancels the solo
+      candidate and enters the normal chord immediately.
 
 config CORNIX_STENO_DUAL_TAPPING_TERM_MS
-    int "STENO context-key tapping term (ms)"
+    int "STENO modifier dual-role tapping term (ms)"
     range 80 500
-    default 150
+    default 200
+    help
+      Timeout for the optional modifier/tap dual-role policy only. It is kept
+      separate from the 500 ms deliberate correction hold so normal modifier
+      responsiveness is not slowed down.
 
 config CORNIX_STENO_OUTPUT_QUEUE_SIZE
     int "STENO HID output queue length"

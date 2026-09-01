@@ -1,0 +1,25 @@
+CORNIX STENO v2.2.4 변경 내역
+================================
+
+1. 500ms 단독 수정 임계값을 별도 설정으로 분리
+   - CONFIG_CORNIX_STENO_SOLO_CORRECTION_MS=500
+   - mod-tap용 CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS=200
+
+2. 전역 key-up 역할 삭제 비활성화
+   - CONFIG_CORNIX_STENO_KEYUP_CORRECTION_MS=0
+   - 먼저 뗀 키를 조합에서 제거하지 않음
+   - 종ㄱ을 먼저 뗀 박 입력이 바가 되는 문제 방지
+
+3. 일반 chord 확정
+   - 마지막 key-up에 즉시 해석
+   - 별도의 전역 settle 대기 없음
+
+4. 합법 겹받침
+   - CONFIG_CORNIX_STENO_FINAL_ROLL_MS=90
+   - 11개 합법 종성쌍에만 쓰는 비차단 국소 판정
+
+5. 추가 시험
+   - 조기-release 종ㄱ 보존 박
+   - 늦게 추가한 종ㄱ 박
+   - 500ms 이후 다른 키가 참여하는 정상 chord
+   - ㅜ/ㅓ 499/500ms 경계

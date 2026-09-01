@@ -35,7 +35,7 @@ EXPECTED_STENO_BEHAVIORS = {
     24:"st_vext_l",25:"st_i_kh",26:"st_i_t",27:"st_i_ch",28:"st_i_p",29:"st_i_double",
     30:"st_mode",31:"st_lang_return",32:"st_f_double",33:"st_f_p",34:"st_f_ch",35:"st_f_t",36:"st_f_kh",37:"st_vext_r",
     38:"kp",39:"kp",40:"st_symbol_l",41:"st_v_o",42:"st_v_eu",43:"st_vu_enter",
-    44:"st_va_space",45:"st_v_i",46:"st_v_eo",47:"st_symbol_r",48:"select_shift",49:"kp",
+    44:"st_veo_space",45:"st_v_i",46:"st_v_a",47:"st_symbol_r",48:"select_shift",49:"kp",
 }
 
 EXPECTED_SELECT_NAV = ["none"]*50
@@ -106,7 +106,7 @@ def validate_keymap(root: Path) -> dict[str, list[str]]:
         "&lt250 FN K_APP &ht200 RCTRL RBKT &kp RALT &kp BSPC",
         "&st_mode &st_lang_return", "&kp C_STOP &kp C_PLAY_PAUSE", "&kp F11 &kp F12",
         "&st_f_b &ht150 RCTRL RALT", "&st_mode &st_lang_return &st_f_double",
-        "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_eo &st_symbol_r &select_shift &kp BSPC",
+        "&kp LCTRL &kp LALT &st_symbol_l", "&st_v_a &st_symbol_r &select_shift &kp BSPC",
         "sensor-bindings = <&st_enc LS(UP) LS(DOWN) &st_enc UP DOWN>",
         "select_shift: select_shift", "&macro_press &mo SELECT_NAV &kp RSHIFT",
         "&kp LEFT &kp DOWN &kp RIGHT", "&rfm &st_led_toggle",
@@ -139,8 +139,10 @@ def validate_kconfig(root: Path) -> int:
             fail(f"Kconfig symbol CONFIG_{symbol} is assigned but has no user-visible prompt")
     if "CONFIG_CORNIX_STENO_MAX_POSITIONS=50" not in steno_conf:
         fail("Cornix fixed 50-position build should use MAX_POSITIONS=50")
-    for token in ("CONFIG_CORNIX_STENO_KEYUP_CORRECTION_MS=50",
-                  "CONFIG_CORNIX_STENO_FINAL_ROLL_MS=90"):
+    for token in ("CONFIG_CORNIX_STENO_KEYUP_CORRECTION_MS=0",
+                  "CONFIG_CORNIX_STENO_FINAL_ROLL_MS=90",
+                  "CONFIG_CORNIX_STENO_SOLO_CORRECTION_MS=500",
+                  "CONFIG_CORNIX_STENO_DUAL_TAPPING_TERM_MS=200"):
         if token not in steno_conf:
             fail(f"STENO timing config missing: {token}")
     for forbidden in ("CORNIX_STENO_CHORD_SETTLE_MS", "CORNIX_STENO_LATE_TAP_MAX_MS"):
@@ -227,6 +229,8 @@ def validate_dictionary(root: Path) -> int:
         "dictionary_anchor_active_locked", "cornix_steno_dictionary_has_prefix",
         "CST_STREAM_NAV_LEFT", "CST_STREAM_SELECT_RIGHT", "CST_STREAM_CORRECTION",
         "is_valid_final_roll_pair", "CONFIG_CORNIX_STENO_FINAL_ROLL_MS",
+        "CONFIG_CORNIX_STENO_SOLO_CORRECTION_MS",
+        "CONFIG_CORNIX_STENO_KEYUP_CORRECTION_MS > 0",
         "cornix_steno_decode_correction_unit", "CST_NAV_VOWEL_POSITION",
     ):
         if token not in engine_text:
@@ -346,7 +350,6 @@ def validate_led_integration(root: Path) -> None:
         "CST_TOTAL_LED_COUNT",
         "CONFIG_CORNIX_STENO_LED_ENTRY_FLASH_MS",
         "CONFIG_CORNIX_STENO_LED_CATEGORY_FLASH_MS",
-        "CST_ABBR_CATEGORY_CONNECTIVE",
         "zmk_behavior_invoke_binding",
     ]:
         if token not in led_integration:
@@ -373,13 +376,12 @@ def validate_release_docs(root: Path) -> None:
     quick = read(root / "README_FIRST_KO.txt")
     audit = read(root / "FULL_PARITY_v1.8.0_KO.md")
     phantom = read(root / "CORNIX_STENO_PHANTOM_ROLE_AUDIT_v1.8.0_KO.md")
-    for token in ("v1.8.0", "FULL PARITY", "Canonical exact-mask 43", "GUI Quick Macro 12"):
-        if token not in version:
-            fail(f"release version metadata missing: {token}")
+    if "v2.2.6" not in version:
+        fail("release version metadata missing: v2.2.6")
     for token in (
-        "약어L 홀드 + 쌍초", "약어R 홀드 + 쌍종",
-        "기호L 홀드 + 쌍초", "기호R 홀드 + 쌍종",
-        "영문 복귀 상태", "12,383",
+        "약어L + 전용쌍초", "약어R + 전용쌍종",
+        "기호L + 전용쌍초", "기호R + 전용쌍종",
+        "500ms", "전역 key-up", "12,383", "종성 자음을 초성", "뿌", "빠",
     ):
         if token not in readme and token not in quick:
             fail(f"release documentation missing current behavior: {token}")
@@ -401,7 +403,12 @@ def validate_sources(root: Path) -> None:
         if f"DT_NODELABEL({label})" not in dispatch:
             fail(f"quick macro dispatch missing node label: {label}")
     decoder = read(root / "src/steno/steno_decoder.c")
-    for token in ("cornix_steno_decode_correction_unit", "consonant_identity_for_role"):
+    for token in (
+        "cornix_steno_decode_correction_unit", "consonant_identity_for_role",
+        "is_left_thumb_mirrored_onset_vowel",
+        "decode_mirrored_initial_from_final",
+        "is_clean_initial_tense_target",
+    ):
         if token not in decoder:
             fail(f"continuous correction decoder support missing: {token}")
     english = read(root / "src/behaviors/behavior_steno_language_return.c")
@@ -411,7 +418,24 @@ def validate_sources(root: Path) -> None:
             fail(f"English-return behavior missing: {token}")
     if re.search(r"^#define\s+V\s*\(", decoder, re.M):
         fail("decoder defines V(...), which collides with ZMK's V keycode macro")
+    comprehensive = read(root / "validation/test_engine_comprehensive.c")
+    decoder_test = read(root / "validation/test_decoder.c")
+    for token in (
+        "189 fatigue-distribution",
+        "comma + u + final B = ppu",
+        "period + initial B + a = ppa",
+        "period with real final stays final-double",
+    ):
+        if token not in comprehensive and token not in decoder_test:
+            fail(f"mirrored-onset regression coverage missing: {token}")
     workflow = read(root / ".github/workflows/build.yml")
+    west = read(root / "config/west.yml")
+    pinned_zmk = "6e2ef41e022d555b10f116e395832913f71717b3"
+    pinned_cornix = "ee80f2475b4310e761f5f271371e41172db8b5ca"
+    if f"build-user-config.yml@{pinned_zmk}" not in workflow:
+        fail("GitHub Actions reusable workflow is not pinned to the package ZMK revision")
+    if f"revision: {pinned_zmk}" not in west or f"revision: {pinned_cornix}" not in west:
+        fail("west.yml no longer pins the audited ZMK/Cornix hardware revisions")
     for watched in ["src/**", "include/**", "dts/**", "zephyr/**", "CMakeLists.txt", "Kconfig"]:
         if f'"{watched}"' not in workflow:
             fail(f"workflow does not rebuild when {watched} changes")
@@ -590,11 +614,16 @@ def run_peripheral_led_syntax_check(root: Path) -> str:
 
 def validate_right_build_hardening(root: Path) -> None:
     build = (root / "build.yaml").read_text(encoding="utf-8")
-    reset_block = build.split("artifact-name: cornix_settings_reset")[0].rsplit("- board:", 1)[-1]
-    if "studio-rpc-usb-uart" in reset_block:
-        fail("settings_reset must not enable the Studio USB-UART transport on cornix_right")
-    if "snippet:" in reset_block:
-        fail("settings_reset must use the upstream Cornix board+shield form without extra snippets")
+    reset_prefix = build.split("artifact-name: cornix_settings_reset", 1)[0]
+    reset_block = reset_prefix.rsplit("- board:", 1)[-1]
+    if "cornix_right//zmk" not in reset_block or "shield: settings_reset" not in reset_block:
+        fail("settings_reset must target cornix_right//zmk with the settings_reset shield")
+    snippet_match = re.search(r"^\s*snippet:\s*(.*?)\s*$", reset_block, re.M)
+    if not snippet_match:
+        fail("settings_reset is missing the official Cornix reset snippets")
+    snippets = snippet_match.group(1).split()
+    if snippets != ["studio-rpc-usb-uart", "nrf52840-nosd"]:
+        fail("settings_reset must use exactly: studio-rpc-usb-uart nrf52840-nosd")
     shared_conf = read(root / "config/cornix.conf")
     if re.search(r"^CONFIG_CORNIX_STENO", shared_conf, re.M):
         fail("settings_reset would inherit STENO from shared cornix.conf")

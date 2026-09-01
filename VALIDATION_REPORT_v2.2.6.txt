@@ -1,0 +1,54 @@
+CORNIX ZMK STENO v2.2.6 — 종성→초성 피로분산 미러 / 전용 , . 교차 쌍자음 검증 보고서
+================================================================================
+
+적용 규칙
+---------
+1. 초성 없이 정확한 왼손 엄지 단모음 ㅗ/ㅡ/ㅜ와 오른손 종성 자음 하나를 누르면,
+   오른손 자음을 같은 자음의 초성으로 소비한다. 받침으로 중복 출력하지 않는다.
+2. 전용쌍초(단독 출력 ,) 또는 전용쌍종(단독 출력 .)은 이 미러 초성을
+   반대편에서도 쌍자음으로 바꿀 수 있다.
+3. 전용쌍종(.) 하나와 깨끗한 왼손 초성 ㅂ/ㅈ/ㄷ/ㄱ/ㅅ 및 모음을 누르면
+   왼손 초성을 ㅃ/ㅉ/ㄸ/ㄲ/ㅆ으로 바꾼다.
+4. 새 교차 규칙의 selector는 전용 ,/. 역할뿐이다. ㅋ/ㅇ alias는 새 경로에서
+   selector가 아니라 원래 자음으로 남는다.
+5. 종성→초성 미러는 ㅗ/ㅡ/ㅜ, 오른손 자음 정확히 하나에만 적용한다.
+   ㅏ/ㅣ/ㅓ, 복합·확장 모음, 두 종성, 전용 selector 둘 동시 입력은 제외한다.
+6. 실제 받침 자음이 period와 함께 있으면 기존 종성 쌍자음 해석을 유지한다.
+
+사용자 예시
+-----------
+- 전용쌍초(,) + ㅜ + 종ㅂ = 뿌
+- 전용쌍종(.) + ㅜ + 종ㅂ = 뿌
+- 전용쌍종(.) + 초ㅂ + ㅏ = 빠
+
+자동 검증 결과
+--------------
+- 패키지 구조/YAML/Kconfig/키맵/빌드 matrix 검사: PASS
+- pinned ZMK 및 CORNIX revision, 공식 settings_reset snippets 검사: PASS
+- ZMK/Zephyr API 형태 C 소스 20개: PASS
+- 역할 single/pair/triple 투영 12,383건: PASS
+- canonical 약어 43개 x 입력순서 4종 = 172건: PASS
+- 복합·확장 모음 release 차 38건: PASS
+- 기존 쌍자음 selector/target/release 60건: PASS
+- 새 피로분산 미러/교차 쌍자음 timing·release 189건: PASS
+- ㅗ/ㅡ/ㅜ x 오른손 자음 14종 decoder matrix 42건: PASS
+- 전용 ,/. 미러 쌍자음 및 period→왼손 초성 decoder matrix: PASS
+- 500ms 이후 늦게 다른 키가 합류하는 chord: PASS
+- 600ms 유지한 뿌 chord가 단독 수정으로 바뀌지 않는지: PASS
+- 제외 경계와 기존 종성 쌍자음 보존: PASS
+- 정확한 사용자 예시 뿌/빠: PASS
+- 직접 자모 34개 및 499/500ms 경계: PASS
+- GCC C11 -Wall -Wextra -Werror: PASS
+- Clang C11 -Wall -Wextra -Werror: PASS
+- AddressSanitizer + UndefinedBehaviorSanitizer comprehensive engine: PASS
+
+최종 결과
+---------
+CORNIX STENO v2.2.6 소스·입력 엔진·패키지 회귀검사: PASS
+
+실제 빌드/하드웨어 제한
+----------------------
+이 제작 환경에는 nRF52840용 ZMK cross toolchain과 실제 CORNIX 하드웨어가 없어,
+GitHub Actions UF2 생성 및 실기기 BLE/분할/키 입력 시험은 수행하지 않았다.
+최종 빌드 판정은 GitHub Actions의 left/right/settings_reset 세 작업이 모두 성공해야 한다.
+평상시에는 left UF2를 왼쪽, right UF2를 오른쪽에 기록하고 settings_reset은 초기화할 때만 쓴다.
