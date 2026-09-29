@@ -6,6 +6,7 @@
 #include <zephyr/sys/util.h>
 #include <drivers/behavior.h>
 #include <zmk/behavior.h>
+#include <cornix_steno/studio_metadata.h>
 
 #include <cornix_steno/led.h>
 
@@ -29,7 +30,7 @@ static const struct behavior_driver_api api = {
     .binding_released = on_released,
     .locality = BEHAVIOR_LOCALITY_GLOBAL,
 #if IS_ENABLED(CONFIG_ZMK_BEHAVIOR_METADATA)
-    .get_parameter_metadata = zmk_behavior_get_empty_param_metadata,
+    .get_parameter_metadata = cornix_steno_studio_led_metadata,
 #endif
 };
 

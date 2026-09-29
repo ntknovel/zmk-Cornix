@@ -1,0 +1,8 @@
+{
+  "branch": "zmk-autobuild-20260929-231101-0bfa2d65864d",
+  "builder_version": "1.0.0",
+  "snapshot_sha256": "e51cfdb53755f6fabf1ecb16d6bf52848f2d6965217aa90c1eab5ca6f6c780b2",
+  "source_sha256": "05dc059b3155b0c449102d2f5638a6dabe0650e61174305c80a37f6b22c13b92",
+  "submitted_utc": "2026-09-29T14:11:03.137972+00:00",
+  "workflow": ".github/workflows/build.yml"
+}

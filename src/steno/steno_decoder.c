@@ -50,17 +50,17 @@ static int decode_number(uint64_t position_mask, struct cornix_steno_decoded *de
     /*
      * Dubeol number layout: the old vertical two-key number chords are retired.
      * Either symbol key mirrors the entire physical top row:
-     *   SYMBOL-L or SYMBOL-R + Q/W/E/R/T/Y/U/I/O/P = 0..9
+     *   SYMBOL-L or SYMBOL-R + Q/W/E/R/T/Y/U/I/O/P = 1..0
      * Physical positions are used deliberately so the number layout is stable
      * even when logical STENO consonant roles are remapped. Exactly one symbol
      * position and one top-row position must be present, so SYMBOL-L+SYMBOL-R
      * keeps its existing reserved meaning instead of becoming a number.
      */
     static const struct { uint8_t symbol, top; uint32_t key; } numbers[] = {
-        {40,1,N0}, {40,2,N1}, {40,3,N2}, {40,4,N3}, {40,5,N4},
-        {40,6,N5}, {40,7,N6}, {40,8,N7}, {40,9,N8}, {40,10,N9},
-        {47,1,N0}, {47,2,N1}, {47,3,N2}, {47,4,N3}, {47,5,N4},
-        {47,6,N5}, {47,7,N6}, {47,8,N7}, {47,9,N8}, {47,10,N9},
+        {40,1,N1}, {40,2,N2}, {40,3,N3}, {40,4,N4}, {40,5,N5},
+        {40,6,N6}, {40,7,N7}, {40,8,N8}, {40,9,N9}, {40,10,N0},
+        {47,1,N1}, {47,2,N2}, {47,3,N3}, {47,4,N4}, {47,5,N5},
+        {47,6,N6}, {47,7,N7}, {47,8,N8}, {47,9,N9}, {47,10,N0},
     };
     for (size_t i = 0; i < sizeof(numbers)/sizeof(numbers[0]); i++) {
         if (exact_position_pair(position_mask, numbers[i].symbol, numbers[i].top)) {
@@ -72,16 +72,21 @@ static int decode_number(uint64_t position_mask, struct cornix_steno_decoded *de
 }
 
 static int decode_initial(uint64_t role_mask, uint32_t keys[1], uint8_t *count) {
-    const bool doubled = (role_mask & BITR(CST_R_I_DOUBLE)) != 0;
-    const uint64_t base = role_mask & (CST_INITIAL_MASK & ~BITR(CST_R_I_DOUBLE));
+    const uint64_t raw = role_mask & CST_INITIAL_MASK;
+    const uint64_t aliases = BITR(CST_R_I_DOUBLE) | BITR(CST_R_I_KH) | BITR(CST_R_I_NG);
+    const uint64_t target = raw & ~aliases;
+    const uint64_t alias_bits = raw & aliases;
     *count = 0;
-    if (bit_count(base) != 1) return -EINVAL;
 
-    enum cornix_steno_role role = CST_R_NONE;
-    for (enum cornix_steno_role r = CST_R_I_KH; r <= CST_R_I_R; r++) {
-        if (r != CST_R_I_DOUBLE && (base & BITR(r))) { role = r; break; }
-    }
-    if (doubled) {
+    /* ㅋ, ㅇ and the dedicated comma/double key are interchangeable double
+     * triggers when paired with one of ㅂㅈㄷㄱㅅ.  Alone, ㅋ and ㅇ keep their
+     * ordinary consonant meanings; the dedicated double key is handled by
+     * the exact punctuation rule before syllable decoding. */
+    if (alias_bits && bit_count(target) == 1) {
+        enum cornix_steno_role role = CST_R_NONE;
+        for (enum cornix_steno_role r = CST_R_I_KH; r <= CST_R_I_R; r++) {
+            if (r != CST_R_I_DOUBLE && (target & BITR(r))) { role = r; break; }
+        }
         switch (role) {
         case CST_R_I_G: keys[0] = LS(R); break;
         case CST_R_I_D: keys[0] = LS(E); break;
@@ -92,6 +97,12 @@ static int decode_initial(uint64_t role_mask, uint32_t keys[1], uint8_t *count) 
         }
         *count = 1;
         return 0;
+    }
+
+    if (bit_count(raw) != 1 || (raw & BITR(CST_R_I_DOUBLE))) return -EINVAL;
+    enum cornix_steno_role role = CST_R_NONE;
+    for (enum cornix_steno_role r = CST_R_I_KH; r <= CST_R_I_R; r++) {
+        if (r != CST_R_I_DOUBLE && (raw & BITR(r))) { role = r; break; }
     }
     switch (role) {
     case CST_R_I_KH: keys[0]=Z; break; case CST_R_I_B: keys[0]=Q; break;
@@ -118,18 +129,27 @@ static uint32_t final_single_key(enum cornix_steno_role role) {
 }
 
 static int decode_final(uint64_t role_mask, uint32_t keys[2], uint8_t *count) {
-    const bool doubled = (role_mask & BITR(CST_R_F_DOUBLE)) != 0;
-    const uint64_t base = role_mask & (CST_FINAL_MASK & ~BITR(CST_R_F_DOUBLE));
-    const unsigned n = bit_count(base);
+    const uint64_t raw = role_mask & CST_FINAL_MASK;
+    const uint64_t aliases = BITR(CST_R_F_DOUBLE) | BITR(CST_R_F_KH) | BITR(CST_R_F_NG);
+    const uint64_t target = raw & ~aliases;
+    const uint64_t alias_bits = raw & aliases;
     *count = 0;
-    if (doubled) {
-        if (n != 1) return -EINVAL;
-        if (base & BITR(CST_R_F_G)) keys[0] = LS(R);
-        else if (base & BITR(CST_R_F_S)) keys[0] = LS(T);
+
+    /* Mirrored double triggers: 종ㅋ, 종ㅇ and dedicated period/double. */
+    if (alias_bits && bit_count(target) == 1) {
+        if (target & BITR(CST_R_F_B)) keys[0] = LS(Q);
+        else if (target & BITR(CST_R_F_J)) keys[0] = LS(W);
+        else if (target & BITR(CST_R_F_D)) keys[0] = LS(E);
+        else if (target & BITR(CST_R_F_G)) keys[0] = LS(R);
+        else if (target & BITR(CST_R_F_S)) keys[0] = LS(T);
         else return -EINVAL;
         *count = 1;
         return 0;
     }
+
+    const uint64_t base = raw;
+    const unsigned n = bit_count(base);
+    if (base & BITR(CST_R_F_DOUBLE)) return -EINVAL;
     if (n == 1) {
         for (enum cornix_steno_role r=CST_R_F_NG; r<=CST_R_F_CH; r++) {
             if (r != CST_R_F_DOUBLE && (base & BITR(r))) {
@@ -158,6 +178,69 @@ static int decode_final(uint64_t role_mask, uint32_t keys[2], uint8_t *count) {
     }
 #undef PAIR
     *count = 2;
+    return 0;
+}
+
+/*
+ * Fatigue-distribution onset mirror.
+ *
+ * Exact left-thumb ㅗ/ㅡ/ㅜ may combine with one right-hand final-role
+ * consonant even when no ordinary left initial is present.  The right role is
+ * consumed as the onset, not emitted again as a final.  Only the dedicated
+ * comma/period roles cross hands as tense selectors; ㅋ/ㅇ aliases retain
+ * their ordinary consonant identity in this path.
+ */
+static bool is_left_thumb_mirrored_onset_vowel(uint64_t vowel_mask) {
+    return vowel_mask == BITR(CST_R_V_O) ||
+           vowel_mask == BITR(CST_R_V_EU) ||
+           vowel_mask == BITR(CST_R_V_U);
+}
+
+static bool is_clean_initial_tense_target(uint64_t initial_mask) {
+    return initial_mask == BITR(CST_R_I_B) ||
+           initial_mask == BITR(CST_R_I_J) ||
+           initial_mask == BITR(CST_R_I_D) ||
+           initial_mask == BITR(CST_R_I_G) ||
+           initial_mask == BITR(CST_R_I_S);
+}
+
+static uint32_t mirrored_initial_key_from_final(uint64_t target, bool doubled) {
+    if (doubled) {
+        if (target == BITR(CST_R_F_B)) return LS(Q); /* ㅃ */
+        if (target == BITR(CST_R_F_J)) return LS(W); /* ㅉ */
+        if (target == BITR(CST_R_F_D)) return LS(E); /* ㄸ */
+        if (target == BITR(CST_R_F_G)) return LS(R); /* ㄲ */
+        if (target == BITR(CST_R_F_S)) return LS(T); /* ㅆ */
+        return 0;
+    }
+
+    for (enum cornix_steno_role role = CST_R_F_NG;
+         role <= CST_R_F_CH; role++) {
+        if (role != CST_R_F_DOUBLE && target == BITR(role)) {
+            return final_single_key(role);
+        }
+    }
+    return 0;
+}
+
+static int decode_mirrored_initial_from_final(uint64_t initial_mask,
+                                               uint64_t final_mask,
+                                               uint32_t keys[1],
+                                               uint8_t *count) {
+    const bool cross_double = initial_mask == BITR(CST_R_I_DOUBLE); /* comma */
+    const bool same_side_double =
+        (final_mask & BITR(CST_R_F_DOUBLE)) != 0; /* period */
+    const uint64_t target = final_mask & ~BITR(CST_R_F_DOUBLE);
+
+    *count = 0;
+    if (initial_mask != 0 && !cross_double) return -EINVAL;
+    if (cross_double && same_side_double) return -EINVAL;
+    if (bit_count(target) != 1) return -EINVAL;
+
+    keys[0] = mirrored_initial_key_from_final(
+        target, cross_double || same_side_double);
+    if (!keys[0]) return -EINVAL;
+    *count = 1;
     return 0;
 }
 
@@ -217,11 +300,11 @@ int cornix_steno_decode(uint64_t role_mask, uint64_t position_mask,
     EXACT1(BITR(CST_R_F_DOUBLE), DOT);
     EXACT1(BITR(CST_R_I_DOUBLE)|BITR(CST_R_F_DOUBLE), SPACE);
     EXACT1(BITR(CST_R_VEXT_L), LBKT);
-    EXACT1(BITR(CST_R_VEXT_R), QUESTION);
-    EXACT1(BITR(CST_R_ABBR_L), EXCL);
+    EXACT1(BITR(CST_R_VEXT_R), RBKT);
+    EXACT1(BITR(CST_R_ABBR_L), TILDE);
     EXACT1(BITR(CST_R_ABBR_R), DQT);
-    EXACT1(BITR(CST_R_SYMBOL_L), RBKT);
-    EXACT1(BITR(CST_R_SYMBOL_R), BSPC);
+    EXACT1(BITR(CST_R_SYMBOL_L), LC(Z));
+    EXACT1(BITR(CST_R_SYMBOL_R), LC(Y));
     EXACT1(BITR(CST_R_VEXT_L)|BITR(CST_R_ABBR_L), TILDE);
     EXACT1(BITR(CST_R_VEXT_R)|BITR(CST_R_ABBR_R), SQT);
     EXACT1(BITR(CST_R_SYMBOL_L)|BITR(CST_R_ABBR_L), PRCNT);
@@ -263,29 +346,9 @@ int cornix_steno_decode(uint64_t role_mask, uint64_t position_mask,
     const uint64_t symbol_mask = role_mask & CST_SYMBOL_MASK;
     const bool has_base_vowel = (role_mask & CST_BASE_VOWEL_MASK) != 0;
 
-    /* Symbol + exactly one jamo group = direct correction output. */
-    if (symbol_mask) {
-        if (bit_count(symbol_mask) != 1 || (role_mask & CST_ABBR_MASK)) return 0;
-        unsigned groups = (initial_mask ? 1U : 0U) + (final_mask ? 1U : 0U) +
-                          (has_base_vowel ? 1U : 0U);
-        if (groups != 1) return 0;
-        uint32_t keys[2]={0}; uint8_t count=0;
-        if (initial_mask) {
-            if (vowel_mask || final_mask || decode_initial(initial_mask,keys,&count)) return 0;
-            decoded->kind=CST_DECODE_KEYS;
-            return append_array(decoded,keys,count);
-        }
-        if (final_mask) {
-            const uint64_t base_final = final_mask & ~BITR(CST_R_F_DOUBLE);
-            if (vowel_mask || initial_mask || (final_mask & BITR(CST_R_F_DOUBLE)) ||
-                bit_count(base_final) != 1 || decode_final(final_mask,keys,&count)) return 0;
-            decoded->kind=CST_DECODE_KEYS;
-            return append_array(decoded,keys,count);
-        }
-        if (decode_vowel(vowel_mask,keys,&count)) return 0;
-        decoded->kind=CST_DECODE_KEYS;
-        return append_array(decoded,keys,count);
-    }
+    /* SYMBOL keys are number/symbol/select anchors only. Direct jamo output
+     * comes exclusively from holding the complete jamo chord for the configured 500 ms deliberate-correction threshold. */
+    if (symbol_mask) return 0;
 
     /* Abbreviation markers and consonant-only VEXT strokes are looked up by the engine. */
     if ((role_mask & CST_ABBR_MASK) || ((role_mask & CST_VEXT_MASK) && !has_base_vowel)) return 0;
@@ -293,9 +356,32 @@ int cornix_steno_decode(uint64_t role_mask, uint64_t position_mask,
     if (has_base_vowel) {
         uint32_t ik[1]={0}, vk[2]={0}, fk[2]={0};
         uint8_t ic=0, vc=0, fc=0;
-        if (!initial_mask) return 0;
-        if (decode_initial(initial_mask,ik,&ic) || decode_vowel(vowel_mask,vk,&vc)) return 0;
-        if (final_mask && decode_final(final_mask,fk,&fc)) return 0;
+        if (decode_vowel(vowel_mask,vk,&vc)) return 0;
+
+        const uint64_t ordinary_initial =
+            initial_mask & ~BITR(CST_R_I_DOUBLE);
+        if (ordinary_initial) {
+            /* A lone opposite-hand period tenses a clean ordinary initial.
+             * If another right consonant accompanies it, preserve the
+             * established period-as-final-double behavior. */
+            if (final_mask == BITR(CST_R_F_DOUBLE)) {
+                if (!is_clean_initial_tense_target(initial_mask) ||
+                    decode_initial(initial_mask | BITR(CST_R_I_DOUBLE),ik,&ic)) {
+                    return 0;
+                }
+            } else {
+                if (decode_initial(initial_mask,ik,&ic)) return 0;
+                if (final_mask && decode_final(final_mask,fk,&fc)) return 0;
+            }
+        } else {
+            /* No ordinary initial: only exact ㅗ/ㅡ/ㅜ may borrow one right
+             * final role as the onset.  Comma or period may tense it. */
+            if (!is_left_thumb_mirrored_onset_vowel(vowel_mask) || !final_mask ||
+                decode_mirrored_initial_from_final(initial_mask,final_mask,ik,&ic)) {
+                return 0;
+            }
+        }
+
         decoded->kind=CST_DECODE_KEYS;
         int err=append_array(decoded,ik,ic); if(err)return err;
         err=append_array(decoded,vk,vc); if(err)return err;
@@ -359,6 +445,31 @@ int cornix_steno_decode_correction_unit(uint64_t unit_role_mask,
         (BITR(CST_R_I_DOUBLE) | BITR(CST_R_F_DOUBLE))) != 0;
     const uint64_t base_consonants = consonants &
         ~(BITR(CST_R_I_DOUBLE) | BITR(CST_R_F_DOUBLE));
+
+    if (consonants && !vowels && !(consonants & CST_FINAL_MASK)) {
+        const uint64_t aliases = BITR(CST_R_I_DOUBLE) | BITR(CST_R_I_KH) | BITR(CST_R_I_NG);
+        const uint64_t targets = BITR(CST_R_I_B) | BITR(CST_R_I_J) | BITR(CST_R_I_D) |
+                                 BITR(CST_R_I_G) | BITR(CST_R_I_S);
+        if ((consonants & aliases) && __builtin_popcountll(consonants & targets) == 1) {
+            uint32_t keys[1] = {0}; uint8_t count = 0;
+            if (decode_initial(consonants, keys, &count) == 0 && count) {
+                decoded->kind = CST_DECODE_KEYS;
+                return append_array(decoded, keys, count);
+            }
+        }
+    }
+    if (consonants && !vowels && !(consonants & CST_INITIAL_MASK)) {
+        const uint64_t aliases = BITR(CST_R_F_DOUBLE) | BITR(CST_R_F_KH) | BITR(CST_R_F_NG);
+        const uint64_t targets = BITR(CST_R_F_B) | BITR(CST_R_F_J) | BITR(CST_R_F_D) |
+                                 BITR(CST_R_F_G) | BITR(CST_R_F_S);
+        if ((consonants & aliases) && __builtin_popcountll(consonants & targets) == 1) {
+            uint32_t keys[2] = {0}; uint8_t count = 0;
+            if (decode_final(consonants, keys, &count) == 0 && count) {
+                decoded->kind = CST_DECODE_KEYS;
+                return append_array(decoded, keys, count);
+            }
+        }
+    }
 
     if (base_consonants) {
         if (vowels) return -EINVAL;

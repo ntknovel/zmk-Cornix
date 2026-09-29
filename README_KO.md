@@ -1,212 +1,121 @@
-# Cornix ZMK 한국어 STENO v1.8.0 — Full Parity
+# CORNIX STENO Studio v2.2.9 — 속기 48 단독 RAlt + 기존 SELECT SHIFT
 
-이 버전은 **v1.7.1 canonical 약어·어미 재배치판을 기준**으로, 이전 개발 분기에서 빠졌던
-키업·약어·이동·수정·LED 기능과 KLOR에서 최종 확정한 입력 규칙을 한 소스 트리에 다시
-통합한 Cornix 최신판이다.
+현재 기준은 KEYMAP_UPDATE_v2_2_9_KO.md / KEYMAPS_v2_2_9.html입니다.
+v2.2.8에서 속기 48을 순수 RAlt 전용키로 바꾼 부분을 정정했습니다.
+단독 500ms 미만 release: RAlt 1회. 500ms 홀드 또는 다른 키와 조합: 기존 SELECT SHIFT.
+BASE 48의 200ms RAlt/RCtrl 및 v2.2.8의 다른 요청 변경은 유지합니다.
+아래의 v2.2.8 이하 안내·로그·배열표는 과거 기록이며, 현재 48의 지시보다 우선하지 않습니다.
 
-## 1. 보존한 기반
+---
 
-- Cornix 일반 키보드 6개 기존 레이어
-- RF 안정화 설정: BLE 1M 우선, +8 dBm, 배터리 보고 300초
-- 공식 Bluetooth·배터리 상태 LED
-- 좌우 개별 UF2 빌드
-- `settings_reset` 별도 산출물
-- 최종 완전대칭 STENO 자음 배열
-- canonical exact-mask 약어 43개
-- GUI 편집형 Quick Macro 12개
-- v1.7.1 어미 재배치
+# CORNIX STENO Studio v2.2.8
 
-## 2. 최종 STENO 자음 배열
+현재 변경 키맵과 빌드 안내는 KEYMAP_UPDATE_v2_2_8_KO.md를 우선합니다.
+아래 v2.2.7 이하 내용은 이전 기능/검증 참고 기록입니다. 이전 배열표의 단독키 출력과 00+12 콤보는 현재와 다릅니다.
 
-```text
-                    왼손 초성                         오른손 종성
+---
 
-             Q      W      E      R      T       Y      U      I      O      P
-             ㅋ     ㅈ     ㄴ     ㅎ     ㅌ      종ㅌ   종ㅎ   종ㄴ   종ㅈ   종ㅋ
+# CORNIX STENO v2.2.7 — USB ZMK Studio / 상시 잠금 해제
 
-             A      S      D      F      G       H      J      K      L      ;
-             ㅅ     ㄱ     ㄹ     ㅇ    쌍초     쌍종   종ㅇ   종ㄹ   종ㄱ   종ㅅ
+## 이 ZIP의 정체
 
-             Z      X      C      V      B       N      M      ,      .      /
-             ㅊ     ㅂ     ㄷ     ㅁ     ㅍ      종ㅍ   종ㅁ   종ㄷ   종ㅂ   종ㅊ
-```
+CORNIX STENO **v2.2.6 MIRRORED_ONSET 전체본**에 USB Studio 지원을 더한 **빌드용 전체 소스**입니다.
+HalmaxCornix 비속기 키맵이나 KLOR 키맵으로 교체하지 않았습니다.
+완성 UF2는 들어 있지 않습니다. 소스·호스트 시험은 실시했지만, 이 환경에서 ARM 최종 컴파일 및 실물 Studio 접속은 실행하지 않았습니다.
+이 문서가 이번 릴리스의 사용 기준이며, 기존 v2.2.6 이하 문서/로그는 입력 규칙과 과거 검증 참고용으로 보존했습니다.
 
-## 3. 통일된 좌우 이동
+## 바로 빌드하기
 
-쌍초·쌍종키를 반복 탭키로 통일했다.
+1. 기존 **GitHub ZMK 자동 빌더 v1.1.0**의 `START.cmd`를 실행합니다.
+2. 파일 선택에서 `CORNIX_STENO_STUDIO_v2.2.7_Source.zip`을 선택합니다. 소스 ZIP은 풀 필요가 없습니다.
+3. 기존 저장소 URL을 입력하거나 **새 저장소 만들기**를 체크합니다. `HalmaxCornix`라는 이름의 레포는 필요 없습니다.
+4. GitHub 토큰을 입력하고 빌드 버튼을 누릅니다.
 
-| 홀드 | 반복 탭 | 출력 |
-|---|---|---|
-| 약어L | 쌍초 | `←` 한 칸 |
-| 약어R | 쌍종 | `→` 한 칸 |
-| 기호L | 쌍초 | `Shift+←` 한 칸 |
-| 기호R | 쌍종 | `Shift+→` 한 칸 |
+소스 전체를 선택해야 합니다. 비속기 소스나 이전 UF2 ZIP과 합치지 마세요.
+자동 빌더 v1.1.0의 실제 소스 검사 함수를 이용해 이 ZIP의 세 타깃/워크플로를 인식하는지 로컬에서 검사했습니다.
+온라인 토큰 인증·게시·빌드·다운로드는 별도이며, 로컬 호스트 검사 통과가 온라인 빌드 성공을 의미하지 않습니다.
 
-홀드키를 유지한 채 반복 탭할 수 있으며, 이동 뒤 `!`, `"`, `]`, Backspace, `,`, `.` 등의
-단독 기능은 추가로 나오지 않는다. 더 큰 정확 약어가 `약어+쌍자음`을 포함하는 경우에는
-전체 exact mask가 우선되어 방향키가 약어를 가로채지 않는다.
+## 생성 대상
 
-## 4. 직접 수정 모드
+| artifact-name / UF2 이름 | 용도 |
+|---|---|
+| `cornix_left_steno_studio_v2_2_7.uf2` | 왼쪽 central, 한국어 속기 + USB Studio |
+| `cornix_right_steno_v2_2_7.uf2` | 오른쪽 peripheral, 원래 무선 split + STENO LED |
+| `cornix_settings_reset_v2_2_7.uf2` | 초기화 전용, STENO/Studio 서버 없음 |
 
-기호L 또는 기호R을 누른 채 자음·모음을 하나씩 탭하면 두벌식 자모를 순서대로 직접 보낸다.
-수정 상태에서는 초성·종성 구분 없이 같은 자음으로 정규화한다.
+양쪽 일반 펌웨어와 reset 타깃의 Actions 성공을 확인합니다. 평상시 업데이트에는 left/right만 각각 해당 유닛에 넣습니다.
+이번 Studio 추가만을 이유로 settings reset을 넣지 마세요. 원래 정상 펌웨어는 복구용으로 보관하세요.
+이것은 CORNIX nRF52840용이며 RP2040 KLOR용이 아닙니다.
 
-```text
-기호 홀드 → 초ㄱ 탭      → ㄱ
-기호 홀드 → 종ㄱ 탭      → ㄱ
-기호 홀드 → ㄱ → ㅏ → ㄴ → 간
-```
+## 연결 동작
 
-쌍자음은 쌍초/쌍종 표식과 자음을 한 단위로 눌러 출력하고, 겹받침은 자음을 차례대로 입력한다.
-기호+같은 쪽 쌍자음만 정확히 사용하면 수정 모드가 아니라 Shift 좌우 선택이 된다.
+- USB Studio는 **왼쪽 유닛**에서만 제공합니다.
+- `CONFIG_ZMK_STUDIO_LOCKING=n`: 별도 unlock 키 입력이 없습니다.
+- `CONFIG_ZMK_STUDIO_TRANSPORT_BLE=n`: Studio 설정 연결만 USB 전용입니다. 일반 BLE 타이핑/좌우 BLE split은 유지합니다.
+- 데이터 USB가 HID 사용 가능 상태가 되면 비차단 작업으로 USB 출력을 한 번 선택합니다.
+- 충전 전용 연결은 출력 선택을 강제하지 않습니다. 연결 뒤 사용자가 수동으로 OUT_BLE를 고른 경우에는 다음 USB 재연결까지 존중합니다.
+- 재연결 시 다시 USB 출력을 선택합니다. 잠금 기능 자체는 계속 비활성입니다.
 
-## 5. ㅣ+JLKI와 인코더
+왼쪽에 **데이터 USB 케이블** 연결 → Chrome/Edge의 ZMK Studio 또는 네이티브 앱 → 장치 선택/접근 허용 → 키맵 편집/저장 순서입니다.
+펌웨어의 잠금은 없지만 브라우저 장치 권한 승인은 남습니다. USB를 꽂으면 웹사이트가 저절로 열리는 기능은 아닙니다.
+잠금 없는 설정이므로 신뢰하는 PC에 연결해서 사용하세요.
 
-- 물리 `ㅣ` 홀드 + I/J/K/L: 위/왼쪽/아래/오른쪽
-- Select Nav 레이어의 Shift+I/J/K/L 선택 이동 유지
-- 왼쪽 인코더 회전: `Shift+↑ / Shift+↓`
-- 오른쪽 인코더 회전: `↑ / ↓`
-- 한 노치당 한 번의 press/release
+## 보존한 속기 기능
 
-## 6. 영문 복귀 상태
+- 기존 8개 레이어, 각 50위치, 13개 콤보, 좌우 인코더 배정
+- ㅂㅈㄷㄱㅅ 미러 배열과 초성/종성/엄지 역할
+- canonical 약어 43개 + Quick Macro 12개
+- 단독 수정/직접 자모 500ms, modifier dual-role 200ms
+- 전역 key-up 역할 삭제 OFF(0ms), 마지막 release에서 일반 조합 확정
+- 합법 겹받침 rolling 90ms의 국소 판정
+- 종성 자음을 초성으로 사용하는 ㅗ/ㅡ/ㅜ 피로분산 규칙, 전용 ,/. 교차 쌍자음
+- `뿌`, `빠`, 기존 `박` 보존과 약어/편집/방향키 처리
+- 약어L + 전용쌍초 / 약어R + 전용쌍종 이동
+- 기호L + 전용쌍초 / 기호R + 전용쌍종 선택 이동
+- STENO LED, RF 출력, BLE, 보드/ZMK/표시 모듈 고정 커밋
 
-STENO에서 오른쪽 인코더 클릭:
+`config/cornix.keymap`, `config/cornix_steno.dtsi`, 사전/역할 TSV, 모든 `src/steno/` 파일은 v2.2.6과 바이트 단위로 같습니다.
+두 behavior 파일(arrow, 내부 LED)은 **Studio 파라미터 메타데이터만** 바로잡았습니다. 기존 key-down/key-up 입력 처리 함수는 바꾸지 않았습니다.
+파라미터가 있는 동작을 Studio에 '파라미터 없음'으로 알려주지 않도록 하는 변경입니다.
 
-```text
-RAlt 1회 → STENO OFF → BASE와 같은 키배치의 영문 상태
-```
+## Studio 편집 범위와 속기 고정 영역
 
-그 상태에서 오른쪽 인코더를 다시 누르거나 왼쪽 STENO 토글을 누르면:
+일반 레이어의 기본 키/동작 배정을 편집·저장하는 용도부터 사용하세요. 기존의 속기 역할 behavior도 표시될 수 있지만, 이것이 임의 재배열까지 지원한다는 뜻은 아닙니다.
 
-```text
-RAlt 1회 → STENO ON
-```
+**STENO 레이어 6과 SELECT_NAV 레이어 7의 번호/순서, 속기 자모·엄지·기호·약어 역할 위치는 유지하세요.**
+기존 엔진에는 위치에 의존하는 방향키/숫자/피로분산·보호 규칙이 있으며, 이번 작업은 그 알고리즘을 동적 재매핑용으로 바꾸지 않았습니다.
+Studio에서 속기 키를 일반 `&kp`로 바꾸면 해당 키가 속기 조합에 참여하지 않습니다. 내부 `st_led` 동작은 일반 키에 배정하지 마세요.
 
-일반 BASE에서 오른쪽 인코더 클릭은 기존 `Ctrl+F`를 유지한다. 별도 동적 레이어를 늘리지 않고
-런타임 복귀 상태로 구현했기 때문에 기존 8레이어 키맵과 편집기 구조를 깨지 않는다.
+약어 출력 문자열, Quick Macro 내부 문자열, 콤보 정의, 인코더 회전 바인딩, 탭/홀드 상세시간, 500ms 속기 판정값은 이번 Studio UI에서 직접 편집하는 항목이 아닙니다. 바꾸려면 소스 수정 후 재빌드합니다.
+예비 레이어는 요청 없이 추가하지 않았습니다. 기존 8개 레이어를 보존했습니다.
 
-## 7. 약어와 퀵 Macro
+Studio에 저장된 키맵은 이후 새 `.keymap` 기본값보다 우선할 수 있습니다. 예전에 같은 장치에 비속기 Studio 키맵을 저장했다면 앱의 **Restore Stock Settings**로 이번 펌웨어의 기본 키맵을 불러와야 할 수 있습니다.
+이 작업은 저장된 Studio 키맵 변경을 버리는 동작이므로 필요한 설정을 먼저 기록하세요. 이번 소스는 저장 설정이나 페어링을 자동 초기화하지 않습니다.
 
-- canonical exact-mask 약어: 43개
-- GUI 편집형 Quick Macro: 12개
-- 약어L과 약어R은 서로 다른 의미
-- 일반 AB2는 좌·우 겹모음 어느 쪽으로도 입력 가능
-- `였었다`만 오른쪽 겹모음 전용
-- 모든 키를 놓은 뒤 exact-mask로만 출력
-- 등록되지 않은 조합은 유사 추정 없이 무출력
-- 약어 후보인 동안 50ms key-up 보정이 필수 역할을 잘라내지 않음
+## 개발자 검사
 
-어미 ㅇㄷ군:
-
-```text
-종ㅇ + 종ㄷ                          → 였다
-약어L + 종ㅇ + 종ㄷ                 → 었다
-약어R + 종ㅇ + 종ㄷ                 → 없다
-약어L + 약어R + 종ㅇ + 종ㄷ         → 았다
-오른겹모 + 종ㅇ + 종ㄷ              → 였었다
-오른쌍종 + 종ㅇ + 종ㄷ              → 이었다
-겹모 + 약어R + 종ㅇ + 종ㄷ          → 었었다
-겹모 + 약어L + 종ㅇ + 종ㄷ          → 있다
-```
-
-Quick Macro의 기본 Text는 `config/steno_quick_text.tsv`에서 수정하고 다음을 실행한다.
+기존 역할 12,383건, canonical 입력순서 172건, 복합모음 38건, 쌍자음 60건, 피로분산 189건과 단독 입력 경계 검사를 유지합니다. USB 선택·메타데이터·빌드 설정 검사도 별도로 실행합니다.
 
 ```bash
-python3 tools/update_quick_macro_text.py
+bash validation/run_all.sh
 ```
 
-## 8. Key-up 보정과 겹받침 롤링
-
-- 일반 오입력 복구: 50ms
-- 합법 겹받침 11개 롤링: 90ms
-- 먼저 놓인 키가 사전 exact mask의 부분 조합이면 약어 후보로 보존
-- 약어/겹모 앵커를 누른 채 자음을 차례로 탭해도 최종 mask 유지
-- 팬텀 역할 감사: 42개 역할의 모든 단독·2키·3키, 총 12,383가지 검사
-- Cornix는 ZMK 표준 matrix driver를 사용하므로 KLOR의 커스텀 2µs 스캐너 수정은 적용하지 않음
-
-## 9. LED
-
-BASE에서는 공식 Bluetooth·배터리 표시가 LED를 담당한다. STENO가 활성화되면 일시적으로
-STENO 피드백이 제어권을 가져간다.
-
-- 진입 플래시
-- 현재 물리 홀드 수 1~4개 흰색 표시
-- 기본 약어: 초록
-- 접속 약어: 노랑
-- 어미 약어: 파랑
-- STENO 종료 시 공식 상태 표시로 복귀
-- Fn-BT의 STENO LED On/Off 유지
-
-## 10. 적용과 빌드
-
-저장소 루트에서 새 브랜치를 만든다.
+실제 ARM 빌드 폴더가 있을 때만 해당 설정을 검사합니다.
 
 ```bash
-cd /workspaces/zmk-Cornix
-git status
-git switch -c cornix-steno-v1.8.0-full-parity
+python3 tools/check_built_studio.py build/left/zephyr/.config left
+python3 tools/check_built_studio.py build/right/zephyr/.config right
+python3 tools/check_built_studio.py build/reset/zephyr/.config reset
 ```
 
-UPLOAD ZIP을 저장소 루트에 덮어쓴 뒤 검증한다.
+실제 빌드에는 compile-time 가드도 들어 있습니다. Studio locking/USB transport/central/STENO 설정이나 50위치 물리 레이아웃이 맞지 않으면 조용히 잘못된 펌웨어를 만드는 대신 빌드를 중단합니다.
+최종 실기 확인: 좌우 타이핑 → 한국어 속기/뿌/빠/약어 → USB Studio 무잠금 연결 → 일반 키 한 개 저장·재연결 → Bluetooth 재연결.
 
-```bash
-unzip -o Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip -d .
-rm Cornix_ZMK_STENO_FULL_PARITY_v1.8.0_UPLOAD.zip
+## 참조
 
-python3 tools/validate_package.py .
-bash validation/run_host_tests.sh
-```
+- ZMK Studio 사용/제약/USB snippet: https://zmk.dev/docs/features/studio
+- locking 옵션: https://zmk.dev/docs/config/studio
+- behavior metadata 구조: https://github.com/zmkfirmware/zmk/blob/main/app/include/drivers/behavior.h
+- Studio 패치의 USB 자동 선택 모듈은 앞서 제공한 HalmaxCornix Studio v1.3.1 모듈을 속기판에 독립 이식한 것입니다. 비속기 키맵은 가져오지 않았습니다.
 
-커밋·푸시:
-
-```bash
-git add -A
-git commit -m "Update Cornix STENO to v1.8.0 full parity"
-git push -u origin cornix-steno-v1.8.0-full-parity
-```
-
-GitHub Actions에서 다음을 모두 확인한다.
-
-```text
-cornix_left_maxrange_steno_indicator
-cornix_right_maxrange_steno_indicator
-cornix_settings_reset
-```
-
-왼쪽과 오른쪽 UF2는 서로 구분해 플래시한다. `settings_reset`은 페어링 초기화가 필요할 때만
-사용한다.
-
-## 11. 검증 범위
-
-로컬 패키지 검증은 다음을 실행한다.
-
-```bash
-python3 tools/validate_package.py .
-bash validation/run_host_tests.sh
-```
-
-검사 범위:
-
-- 8레이어 × 50키
-- canonical 43개 + Quick Macro 12개
-- 좌우 반복 이동과 Shift 선택
-- 연속 수정 모드
-- ㅣ+JLKI
-- 50ms key-up 복구
-- 11개 겹받침 90ms 롤링
-- 영문 복귀 상태
-- LED 카테고리
-- 12,383개 팬텀 역할 불변성
-- 좌우/peripheral API 형태
-
-전체 Zephyr cross build는 GitHub Actions에서 최종 확인한다.
-
-> `v1.7.x` 이름의 문서는 변경 이력 보존용이다. 현재 적용 기준은 이 README와
-> `FULL_PARITY_v1.8.0_KO.md`이다.
-
-약어L 홀드 + 쌍초
-약어R 홀드 + 쌍종
-기호L 홀드 + 쌍초
-기호R 홀드 + 쌍종
-영문 복귀 상태
-12,383
+검증 한계: 고정 커밋 의존성은 변경하지 않았으나, 이 실행 환경에서는 GitHub 원본을 내려받는 DNS 접속이 실패했고 ARM 툴체인이 확인되지 않았습니다. 실기나 최종 ARM 빌드 성공을 주장하지 않습니다.

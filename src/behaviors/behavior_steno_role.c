@@ -34,7 +34,6 @@ static int on_pressed(struct zmk_behavior_binding *binding,
         return err;
     }
     if (err == CST_ENGINE_EVENT_CONSUMED) {
-        cornix_steno_led_key_released(event.position);
         return ZMK_BEHAVIOR_OPAQUE;
     }
     return err;
@@ -45,10 +44,12 @@ static int on_released(struct zmk_behavior_binding *binding,
     const struct device *dev = zmk_behavior_get_binding(binding->behavior_dev);
     if (!dev) return -ENODEV;
     const struct behavior_steno_role_config *cfg = dev->config;
+    /* Physical LED state is independent from engine consumption. Every real
+     * key-up must clear exactly the bit set by its real key-down. */
+    cornix_steno_led_key_released(event.position);
     const int err = cornix_steno_engine_role_released(cfg->role, event.position, event.timestamp);
     if (err < 0) return err;
     if (err == CST_ENGINE_EVENT_CONSUMED) return ZMK_BEHAVIOR_OPAQUE;
-    cornix_steno_led_key_released(event.position);
     return err;
 }
 

@@ -1,6 +1,1 @@
-Cornix ZMK STENO Dubeol v2.1.0 FINAL
-Tap/Hold: 150 ms
-Base lineage: v1.8.0 FULL PARITY
-FULL PARITY
-Canonical exact-mask 43
-GUI Quick Macro 12
+CORNIX STENO Studio v2.2.9 — STENO 48 Select Shift + RAlt solo-tap correction

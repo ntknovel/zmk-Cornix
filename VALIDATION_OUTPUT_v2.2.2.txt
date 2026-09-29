@@ -1,0 +1,29 @@
+Cornix ZMK BASE+STENO package validation: PASS
+- YAML files: 13
+- Layers: 8 x 50 bindings
+- ABBR/SYMBOL repeat nav + ㅣ/JLKI + Shift/JLKI selection: PASS
+- Two-set consonant layout: PASS
+- Kconfig assignments checked: 13
+- Canonical exact-mask dictionary entries: 43 + 12 GUI-editable quick macros
+- Host decoder: Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+- ZMK/Zephyr API-shaped syntax: PASS (20 C sources)
+- Engine state: Cornix STENO v2.2.2 audited engine tests: PASS
+- English-return state: Cornix STENO English-return runtime-state tests: PASS
+- Vowel dual / one-shot Tab: Cornix STENO v2.2.2 80ms vowel tri-state/one-shot-Tab tests: PASS
+- BASE indicator + STENO count/category LED logic: Cornix STENO LED entry-flash/idle-off/held-count tests: PASS
+- Right/peripheral compile shape: PASS (peripheral LED receiver)
+- cornix.keymap SHA-256: 2cc4bccdcb90c8d74d404eb86a6d7e27b7b5f93776555d64df0e877ee76236cc
+generated 42 role positions -> /mnt/data/fix_cornix222/validation/role_position_map.h
+generated 43 canonical cases -> /mnt/data/fix_cornix222/validation/canonical_engine_cases.h
+Cornix canonical 43 logical-mask golden comparison: PASS
+Cornix physical LED edge ownership invariant: PASS
+Cornix role projection: 12383 single/pair/triple cases PASS
+Cornix decoder: 11 legal final pairs; D+B and D+B+M rejected by construction
+Cornix combos: all layer-gated away from STENO
+Cornix STENO phantom-role software invariant audit: PASS
+Cornix STENO English-return runtime-state tests: PASS
+Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+Cornix STENO LED entry-flash/idle-off/held-count tests: PASS
+Cornix STENO v2.2.2 audited engine tests: PASS
+Cornix comprehensive audit regressions: PASS (172 canonical-order + 38 vowel-skew + 60 double-matrix + 34 solo-jamo + threshold + specials)
+Cornix STENO v2.2.2 80ms vowel tri-state/one-shot-Tab tests: PASS

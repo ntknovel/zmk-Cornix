@@ -5,6 +5,7 @@
 #include <zephyr/sys/util.h>
 #include <drivers/behavior.h>
 #include <zmk/behavior.h>
+#include <cornix_steno/studio_metadata.h>
 #include <cornix_steno/output.h>
 
 #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
@@ -25,7 +26,7 @@ static const struct behavior_driver_api api = {
     .binding_released = on_released,
     .locality = BEHAVIOR_LOCALITY_CENTRAL,
 #if IS_ENABLED(CONFIG_ZMK_BEHAVIOR_METADATA)
-    .get_parameter_metadata = zmk_behavior_get_empty_param_metadata,
+    .get_parameter_metadata = cornix_steno_studio_hid_metadata,
 #endif
 };
 #define STENO_ARROW_INST(n)                                                                       \

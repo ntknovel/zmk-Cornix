@@ -58,8 +58,9 @@ static int on_released(struct zmk_behavior_binding *binding,
         return layer_err ? layer_err : ZMK_BEHAVIOR_OPAQUE;
     }
 
-    /* Ordinary BASE keeps its original right-encoder Ctrl+F action. */
-    const int err = cornix_steno_output_enqueue(LC(F));
+    /* v2.2.8: ordinary BASE right-encoder click is Menu.
+     * STENO and temporary-English return branches above stay unchanged. */
+    const int err = cornix_steno_output_enqueue(K_APP);
     return err ? err : ZMK_BEHAVIOR_OPAQUE;
 }
 

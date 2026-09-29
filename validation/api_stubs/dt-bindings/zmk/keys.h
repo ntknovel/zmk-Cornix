@@ -76,3 +76,5 @@
 #define RSHIFT 0xE5u
 #define RALT 0xE6u
 #define RGUI 0xE7u
+
+#define K_APP 101u

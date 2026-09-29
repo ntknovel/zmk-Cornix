@@ -50,3 +50,32 @@ if(CONFIG_CORNIX_STENO)
     )
   endif()
 endif()
+
+# CORNIX_STENO_USB_STUDIO_V2_2_7
+
+if(CONFIG_CORNIX_STENO_STUDIO_USB_AUTO_SELECT)
+  if(NOT CONFIG_CORNIX_STENO OR NOT CONFIG_CORNIX_STENO_LED
+      OR NOT CONFIG_ZMK_STUDIO OR NOT CONFIG_ZMK_STUDIO_RPC
+      OR NOT CONFIG_ZMK_USB OR NOT CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+      OR NOT CONFIG_ZMK_STUDIO_TRANSPORT_UART)
+    message(FATAL_ERROR "CORNIX STENO: central Studio + USB UART transport is required")
+  endif()
+  if(CONFIG_ZMK_STUDIO_LOCKING OR CONFIG_ZMK_STUDIO_LOCK_ON_DISCONNECT
+      OR CONFIG_ZMK_STUDIO_TRANSPORT_BLE)
+    message(FATAL_ERROR "CORNIX STENO: Studio must be unlocked and USB-only")
+  endif()
+  # Select the declared API from the actual checked-out ZMK headers. This
+  # handles the endpoint API rename without assuming a header from another
+  # revision. Unsupported APIs fail before the application is compiled.
+  file(READ "${APPLICATION_SOURCE_DIR}/include/zmk/endpoints.h" _cornix_ep_header)
+  if(_cornix_ep_header MATCHES "int[ \t\r\n]+zmk_endpoint_set_preferred_transport[ \t\r\n]*\\(")
+    set(_cornix_usb_select zmk_endpoint_set_preferred_transport)
+  elseif(_cornix_ep_header MATCHES "int[ \t\r\n]+zmk_endpoints_select_transport[ \t\r\n]*\\(")
+    set(_cornix_usb_select zmk_endpoints_select_transport)
+  else()
+    message(FATAL_ERROR "CORNIX STENO: no supported USB endpoint selection API was found")
+  endif()
+  target_compile_definitions(app PRIVATE CORNIX_SELECT_USB_TRANSPORT=${_cornix_usb_select})
+  target_sources(app PRIVATE src/studio/usb_auto_select.c src/studio/compile_checks.c)
+  message(STATUS "CORNIX STENO Studio: USB RPC / locking OFF / auto USB selection ON")
+endif()

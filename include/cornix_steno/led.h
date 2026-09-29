@@ -88,22 +88,11 @@ static inline uint8_t cornix_steno_led_global_color(uint8_t packed_state,
     if (cornix_steno_led_state_entry_flash(packed_state)) {
         return CST_LED_COLOR_WHITE;
     }
-
-    switch (cornix_steno_led_state_category(packed_state)) {
-    case CST_ABBR_CATEGORY_BASIC:
-        return global_led_index <= 1 ? CST_LED_COLOR_GREEN : CST_LED_COLOR_OFF;
-    case CST_ABBR_CATEGORY_CONNECTIVE:
-        return (global_led_index == 1 || global_led_index == 2)
-                   ? CST_LED_COLOR_YELLOW
-                   : CST_LED_COLOR_OFF;
-    case CST_ABBR_CATEGORY_TAIL:
-        return global_led_index >= 2 ? CST_LED_COLOR_BLUE : CST_LED_COLOR_OFF;
-    case CST_ABBR_CATEGORY_NONE:
-    default:
-        return cornix_steno_led_state_held_count(packed_state) > global_led_index
-                   ? CST_LED_COLOR_WHITE
-                   : CST_LED_COLOR_OFF;
-    }
+    /* After the one-shot entry flash, idle STENO is completely dark.
+     * LEDs illuminate strictly by the number of physical STENO keys held. */
+    return cornix_steno_led_state_held_count(packed_state) > global_led_index
+               ? CST_LED_COLOR_WHITE
+               : CST_LED_COLOR_OFF;
 }
 
 static inline bool cornix_steno_led_global_index_is_on(uint8_t packed_state,

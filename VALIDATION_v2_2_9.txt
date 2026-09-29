@@ -1,0 +1,204 @@
+CORNIX STENO Studio v2.2.9 — executed validation (2026-09-29)
+Baseline: v2.2.8 source ZIP eaa1f411da857c945ae1407bd4013111aba1a4ec8dad9225910603663e714ef3
+Change scope: STENO layer 6 / position 48 only, plus selector wrapper and package metadata/docs/tests.
+
+Actual command: PYTHONDONTWRITEBYTECODE=1 bash validation/run_all.sh
+Actual exit code: 0
+
+The selector timing tests below are binding-driven SPECIFICATION MODELS, not native ZMK/Zephyr queue tests.
+NOT RUN: ARM final compilation, real keyboard flashing/typing, Studio save/reconnect.
+The pinned native hold-tap source download attempt returned curl code 6 (DNS failure).
+No native ZMK event-queue success or new UF2 is claimed.
+
+Cornix ZMK BASE+STENO package validation: PASS
+- YAML files: 13
+- Layers: 8 x 50 bindings
+- ABBR/SYMBOL navigation + ㅣ/JLKI preserved; position 48 is pure RAlt: PASS
+- Two-set consonant layout: PASS
+- Kconfig assignments checked: 14
+- Canonical exact-mask dictionary entries: 43 + 12 GUI-editable quick macros
+- Host decoder: Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+- ZMK/Zephyr API-shaped syntax: PASS (20 C sources)
+- Engine state: Cornix STENO v2.2.6 500ms-solo no-global-keyup-guard engine tests: PASS
+- English-return state: Cornix STENO English-return runtime-state tests: PASS
+- Vowel dual / one-shot Tab: Cornix STENO v2.2.6 500ms solo-correction/no-keyup-guard vowel tests: PASS
+- BASE indicator + STENO count/category LED logic: Cornix STENO LED entry-flash/idle-off/held-count tests: PASS
+- Right/peripheral compile shape: PASS (peripheral LED receiver)
+- cornix.keymap SHA-256: 4f444836a3f4f48931b867c3709cc3cfaef72cfe93e12f4d410fa28c48f39e1d
+generated 42 role positions -> /mnt/data/cornix_229_task/CORNIX_STENO_STUDIO_v2.2.9/validation/role_position_map.h
+generated 43 canonical cases -> /mnt/data/cornix_229_task/CORNIX_STENO_STUDIO_v2.2.9/validation/canonical_engine_cases.h
+Cornix canonical 43 logical-mask golden comparison: PASS
+Cornix physical LED edge ownership invariant: PASS
+Cornix role projection: 12383 single/pair/triple cases PASS
+Cornix decoder: 11 legal final pairs; D+B and D+B+M rejected by construction
+Cornix combos: all layer-gated away from STENO
+Cornix STENO phantom-role software invariant audit: PASS
+Cornix STENO English-return runtime-state tests: PASS
+Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+Cornix STENO LED entry-flash/idle-off/held-count tests: PASS
+Cornix STENO v2.2.6 500ms-solo no-global-keyup-guard engine tests: PASS
+Cornix comprehensive audit regressions: PASS (172 canonical-order + 38 vowel-skew + 60 double-matrix + 189 fatigue-distribution + boundary cases + 34 solo-jamo + threshold + specials)
+Cornix STENO v2.2.6 500ms solo-correction/no-keyup-guard vowel tests: PASS
+PASS: Python syntax
+PASS: v2.2.6 bytes preserved: config/abbreviation_dictionary_canonical_v0.1.json
+PASS: v2.2.6 bytes preserved: config/boards/shields/cornix_compat/Kconfig.defconfig
+PASS: v2.2.6 bytes preserved: config/boards/shields/cornix_steno_led/Kconfig.defconfig
+PASS: v2.2.6 bytes preserved: config/boards/shields/cornix_steno_led/Kconfig.shield
+PASS: v2.2.6 bytes preserved: config/boards/shields/cornix_steno_led/cornix_steno_led.conf
+PASS: v2.2.6 bytes preserved: config/boards/shields/cornix_steno_led/cornix_steno_led.overlay
+PASS: v2.2.6 bytes preserved: config/cornix.conf
+PASS: v2.2.6 bytes preserved: config/cornix.json
+PASS: original preserved evidence for requested change: config/cornix.keymap
+PASS: approved v2.2.9 requested change: config/cornix.keymap
+PASS: v2.2.6 bytes preserved: config/cornix_steno.dtsi
+PASS: v2.2.6 bytes preserved: config/settings_reset.conf
+PASS: v2.2.6 bytes preserved: config/steno_dictionary.tsv
+PASS: v2.2.6 bytes preserved: config/steno_quick_abbreviations.tsv
+PASS: v2.2.6 bytes preserved: config/steno_quick_text.tsv
+PASS: v2.2.6 bytes preserved: config/steno_role_layout.tsv
+PASS: v2.2.6 bytes preserved: config/west.yml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-arrow.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-dual.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-language-return.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-led-toggle.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-led.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-mode.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-pulse.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-role.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-cornix-steno-tab.yaml
+PASS: v2.2.6 bytes preserved: dts/bindings/behaviors/zmk,behavior-rf-power.yaml
+PASS: v2.2.6 bytes preserved: include/cornix_steno/decoder.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/dictionary.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/dual.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/engine.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/english_return.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/led.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/output.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/quick.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/roles.h
+PASS: v2.2.6 bytes preserved: include/cornix_steno/tab.h
+PASS: v2.2.6 bytes preserved: include/dt-bindings/zmk/cornix_steno.h
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_rf_power.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_dual.c
+PASS: original preserved evidence for requested change: src/behaviors/behavior_steno_language_return.c
+PASS: approved v2.2.9 requested change: src/behaviors/behavior_steno_language_return.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_led_toggle.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_mode.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_pulse.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_role.c
+PASS: v2.2.6 bytes preserved: src/behaviors/behavior_steno_tab.c
+PASS: original preserved evidence for requested change: src/steno/steno_decoder.c
+PASS: approved v2.2.9 requested change: src/steno/steno_decoder.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_dictionary_generated.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_dual.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_engine.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_english_return.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_led.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_output.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_quick_dispatch.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_quick_generated.c
+PASS: v2.2.6 bytes preserved: src/steno/steno_tab.c
+PASS: v2.2.6 bytes preserved: zephyr/module.yml
+PASS: metadata-only difference, original handlers unchanged: src/behaviors/behavior_steno_arrow.c
+PASS: metadata-only difference, original handlers unchanged: src/behaviors/behavior_steno_led.c
+PASS: original config/source gates preserved: CMakeLists.txt
+PASS: original config/source gates preserved: Kconfig
+PASS: three isolated build targets
+PASS: left USB Studio snippet
+PASS: left unlocked USB-only Studio flags
+PASS: production indicator + STENO shield preserved
+PASS: production indicator + STENO shield preserved
+PASS: right Studio off, split unchanged
+PASS: reset has no STENO/Studio server; original reset USB/partition snippets
+PASS: unique artifact names
+PASS: USB selection deferred; no sleeping in key processing
+PASS: arrow metadata: get_parameter_metadata
+PASS: arrow metadata: cornix_steno_studio_hid_metadata
+PASS: packed LED has u8 metadata, not empty metadata
+PASS: metadata branch exists: behavior_steno_led_toggle.c
+PASS: metadata branch exists: behavior_steno_dual.c
+PASS: metadata branch exists: behavior_steno_tab.c
+PASS: metadata branch exists: behavior_steno_role.c
+PASS: metadata branch exists: behavior_steno_language_return.c
+PASS: metadata branch exists: behavior_rf_power.c
+PASS: metadata branch exists: behavior_steno_led.c
+PASS: metadata branch exists: behavior_steno_mode.c
+PASS: metadata branch exists: behavior_steno_arrow.c
+PASS: metadata branch exists: behavior_steno_pulse.c
+PASS: data-USB selection, stored BLE, reconnect, charge-only, no repeat, bounded retry
+PASS: gcc USB module actual host execution: zmk_endpoint_set_preferred_transport
+PASS: data-USB selection, stored BLE, reconnect, charge-only, no repeat, bounded retry
+PASS: gcc USB module actual host execution: zmk_endpoints_select_transport
+PASS: actual HID/LED metadata helper; parameter types, ranges, zero second parameter, NULL rejection
+PASS: gcc metadata-enabled syntax: 10 actual behavior drivers
+PASS: data-USB selection, stored BLE, reconnect, charge-only, no repeat, bounded retry
+PASS: clang USB module actual host execution: zmk_endpoint_set_preferred_transport
+PASS: data-USB selection, stored BLE, reconnect, charge-only, no repeat, bounded retry
+PASS: clang USB module actual host execution: zmk_endpoints_select_transport
+PASS: actual HID/LED metadata helper; parameter types, ranges, zero second parameter, NULL rejection
+PASS: clang metadata-enabled syntax: 10 actual behavior drivers
+PASS: CMake fixture: new
+PASS: central-only USB helper: new
+PASS: central-only Studio compile guards: new
+PASS: central-only STENO engine: new
+PASS: left/right indicator, reset excluded: new
+PASS: actual declared API chosen: new
+PASS: CMake fixture: old
+PASS: central-only USB helper: old
+PASS: central-only Studio compile guards: old
+PASS: central-only STENO engine: old
+PASS: left/right indicator, reset excluded: old
+PASS: actual declared API chosen: old
+PASS: CMake fixture: right
+PASS: central-only USB helper: right
+PASS: central-only Studio compile guards: right
+PASS: central-only STENO engine: right
+PASS: left/right indicator, reset excluded: right
+PASS: CMake fixture: reset
+PASS: central-only USB helper: reset
+PASS: central-only Studio compile guards: reset
+PASS: central-only STENO engine: reset
+PASS: left/right indicator, reset excluded: reset
+PASS: CMake fixture: locking
+PASS: configuration error from expected guard: locking
+PASS: CMake fixture: disconnect_lock
+PASS: configuration error from expected guard: disconnect_lock
+PASS: CMake fixture: ble
+PASS: configuration error from expected guard: ble
+PASS: CMake fixture: no_uart
+PASS: configuration error from expected guard: no_uart
+PASS: CMake fixture: no_steno
+PASS: configuration error from expected guard: no_steno
+PASS: CMake fixture: bad_api
+PASS: configuration error from expected guard: bad_api
+PASS: physical-layout compile guard fixture: good50
+PASS: physical-layout compile guard fixture: no_layout
+PASS: physical-layout compile guard fixture: old_chosen_transform
+PASS: physical-layout compile guard fixture: no_geometry
+PASS: physical-layout compile guard fixture: wrong_key_count
+SOURCE/HOST STUDIO TESTS PASSED. NOT an ARM build or USB hardware test.
+PASS: all 400 physical bindings; exactly 23 requested binding changes, other positions preserved
+PASS: NUM 01..10 use number-row N1..N0, not keypad usages; 09/10 are 9/0
+PASS: modifier-preserving Tab morph; 200ms hold-preferred modifier keys; old 00+12 grave conflict removed
+PASS: only STENO right encoder changed: CW Shift+PageUp / CCW Shift+PageDown
+PASS: other native behavior definitions, all quick macros and all other sensors unchanged
+PASS: decoder delta is exactly four singletons; language-return delta is only ordinary-BASE Menu fallback
+PASS: STENO RAlt solo / restored Select Shift hold; four edited singleton keys still retain their original STENO role anchors
+PASS: versioned v2.2.9 targets; ARM/USB hardware test remains separate
+PASS: actual STENO engine requested solo outputs / duration boundaries / number-anchor suppression (34 cases)
+PASS: actual right-click handler: ordinary BASE Menu / STENO English exit / return / missing device
+PASS: actual STENO engine requested solo outputs / duration boundaries / number-anchor suppression (34 cases)
+PASS: actual right-click handler: ordinary BASE Menu / STENO English exit / return / missing device
+PASS: 234 binding-driven shortcut SPECIFICATION-MODEL cases (not native ZMK firmware execution)
+Coverage: 199/200ms, modifier-first Ctrl/Alt/GUI+Tab, repeat-Tab, modifier release order, bracket/Shift interrupts, layer-only keys
+PASS: 134314 actual before/after decoder and correction cases; exactly four requested singleton differences; no other output change
+PASS: 400 bindings compared to v2.2.8; only STENO layer 6 / position 48 changed; 399 unchanged
+PASS: original Select Shift macro + Select Nav arrows and all encoder mappings unchanged
+PASS: 48 solo/hold term matches STENO solo 500ms; BASE 48 remains RAlt/RCtrl 200ms
+PASS: 63 runtime/board/config/dictionary files byte-identical to v2.2.8
+PASS: 1599 binding-driven SPECIFICATION-MODEL scenarios (not native ZMK firmware execution)
+PASS: 6 bad-config mutations rejected
+NOT RUN: pinned ZMK/Zephyr event+macro queues, ARM final build, physical typing, Studio save/reconnect
+ALL SOURCE/HOST CHECKS PASSED. ARM BUILD AND USB DEVICE TEST ARE SEPARATE.
+
+PASS: updated HTML all 400 cells match the new source keymap.

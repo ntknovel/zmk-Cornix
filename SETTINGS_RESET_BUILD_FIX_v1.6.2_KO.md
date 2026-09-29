@@ -1,14 +1,11 @@
-# Cornix STENO v1.6.2 — settings_reset 빌드 수정
+# Cornix STENO v1.6.2 — 과거 settings_reset 수정 기록 (v2.2.5에서 폐기)
 
-정상 좌/우 펌웨어는 이미 빌드에 성공했고, 선택 사항인 settings_reset 행만 실패한 상태를 수정한다.
+v1.6.2에서는 reset 행의 snippets를 제거했으나, 이후 공개 Actions 재감사에서 그 구성의 `cornix_right//zmk + settings_reset` 작업이 실패하는 것이 확인됐다. 당시 문서의 “공식 예시와 같다”는 판정은 잘못이었다.
 
-변경 사항:
+v2.2.5부터는 pinned Cornix 공식 하드웨어 모듈과 동일하게 다음을 사용한다.
 
-- `build.yaml`의 settings_reset 행에서 `snippet: nrf52840-nosd` 제거
-- Cornix 공식 예시와 같은 `board + settings_reset shield` 구성 사용
-- 공유 `config/cornix.conf`에서 STENO 설정 제거
-- 정상 좌/우 빌드에만 포함되는 `cornix_steno_led.conf`에서 STENO 코어 활성화
-- `CONFIG_CORNIX_STENO` 기본값을 `n`으로 변경
-- `config/settings_reset.conf`에서 STENO와 pointing을 명시적으로 비활성화
+```yaml
+snippet: studio-rpc-usb-uart nrf52840-nosd
+```
 
-이로써 reset 이미지에는 키맵·약어·LED 오버레이 엔진이 들어가지 않고, 페어링 설정 삭제에 필요한 최소 구성만 남는다.
+공유 `config/cornix.conf`에서 STENO를 분리하고 reset에서 `CONFIG_CORNIX_STENO=n`을 유지하는 구조 자체는 계속 유효하다. 현재 적용 기준은 `V2.2.5_SETTINGS_RESET_MATRIX_FIX_KO.md`를 따른다.
