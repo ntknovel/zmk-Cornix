@@ -1,0 +1,127 @@
+# SPDX-License-Identifier: MIT
+
+config ZMK_BEHAVIOR_RF_POWER
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_RF_POWER_ENABLED
+
+menuconfig CORNIX_STENO
+    bool "Cornix Korean STENO engine"
+    default n
+    help
+      Enable the Cornix BASE/STENO mode switch, Korean chord decoder,
+      context-sensitive STENO keys, and exact-mask abbreviation dictionary.
+
+if CORNIX_STENO
+
+config CORNIX_STENO_MAX_POSITIONS
+    int "Maximum physical positions tracked by the STENO engine"
+    range 50 64
+    default 50
+
+config CORNIX_STENO_KEYUP_CORRECTION_MS
+    int "Early-release role-deletion window (ms; 0 disables)"
+    range 0 150
+    default 0
+    help
+      Legacy typo recovery removed a key that was released while other STENO
+      keys remained held. Set this to 0 to preserve the full physical stroke
+      until every key is released. This avoids losing a deliberately rolled
+      final consonant such as the final ㄱ in 박.
+
+config CORNIX_STENO_FINAL_ROLL_MS
+    int "Legal final-cluster rolling window (ms)"
+    range 50 200
+    default 90
+    help
+      Non-blocking tolerance for the eleven legal Korean compound finals.
+      It never delays ordinary stroke output; it only recognizes a legal pair
+      if a second final is pressed within this window.
+
+config CORNIX_STENO_SOLO_CORRECTION_MS
+    int "Deliberate solo correction/direct-jamo hold (ms)"
+    range 100 1000
+    default 500
+    help
+      A correction/direct-jamo action is emitted only after its complete
+      independent direct-input stroke has been held for at least this long and
+      then released. Any ordinary STENO-key participation cancels the solo
+      candidate and enters the normal chord immediately.
+
+config CORNIX_STENO_DUAL_TAPPING_TERM_MS
+    int "STENO modifier dual-role tapping term (ms)"
+    range 80 500
+    default 200
+    help
+      Timeout for the optional modifier/tap dual-role policy only. It is kept
+      separate from the 500 ms deliberate correction hold so normal modifier
+      responsiveness is not slowed down.
+
+config CORNIX_STENO_OUTPUT_QUEUE_SIZE
+    int "STENO HID output queue length"
+    range 64 512
+    default 256
+
+config CORNIX_STENO_OUTPUT_HOLD_MS
+    int "STENO HID key hold time (ms)"
+    range 1 20
+    default 4
+
+config CORNIX_STENO_OUTPUT_GAP_MS
+    int "STENO HID inter-key gap (ms)"
+    range 1 30
+    default 4
+
+config CORNIX_STENO_DICTIONARY
+    bool "Enable the generated exact-mask abbreviation dictionary"
+    default y
+
+config CORNIX_STENO_LED
+    bool "Enable Cornix STENO input-count indicators"
+    default n
+    depends on RGBLED_WIDGET_WS2812
+    help
+      Keep the production Cornix battery/Bluetooth indicators in BASE and
+      temporarily take over the same two WS2812 LEDs on each half in STENO.
+      Entering STENO flashes all four physical indicators, then clears them.
+      Recognized held STENO keys light the four indicators one by one.
+
+if CORNIX_STENO_LED
+
+config CORNIX_STENO_LED_ENTRY_FLASH_MS
+    int "STENO mode-entry all-on duration (ms)"
+    range 100 3000
+    default 600
+    help
+      Duration of the all-indicators-on confirmation immediately after
+      switching from BASE to STENO.
+
+config CORNIX_STENO_LED_REASSERT_DELAY_MS
+    int "STENO overlay reassert delay after status events (ms)"
+    range 1 250
+    default 40
+    help
+      Delay before re-applying STENO input feedback after the normal Cornix
+      battery/Bluetooth widget reacts to the same system event.
+
+config CORNIX_STENO_LED_CATEGORY_FLASH_MS
+    int "Abbreviation category confirmation duration (ms)"
+    range 50 2000
+    default 350
+    help
+      Duration of the green/yellow/blue confirmation after an abbreviation.
+
+endif
+
+
+endif
+
+# Studio is enabled only on the left normal firmware, never reset/peripheral.
+config CORNIX_STENO_STUDIO_USB_AUTO_SELECT
+    bool "Select data USB output automatically for unlocked STENO Studio"
+    default n
+    depends on CORNIX_STENO && ZMK_STUDIO && ZMK_STUDIO_RPC && ZMK_USB && ZMK_SPLIT_ROLE_CENTRAL
+    help
+      Select USB once per enumerated data connection. No unlock key is needed.
+      Charge-only USB is ignored; BLE typing and the wireless split link remain.
+      Explicit OUT_BLE remains usable until the next data USB reconnection.

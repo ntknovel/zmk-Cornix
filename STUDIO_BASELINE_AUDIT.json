@@ -1,0 +1,24 @@
+{
+  "baseline_package": "CORNIX_STENO_v2.2.6_MIRRORED_ONSET_FULL_REPO.zip",
+  "baseline_zip_sha256": "3aae5f3436d0c730a695041e7dbea2de7a5b7a8b66ee5e87134395572e6ef5a9",
+  "metadata_only_changes": {
+    "src/behaviors/behavior_steno_arrow.c": {
+      "callback": "cornix_steno_studio_hid_metadata",
+      "baseline_sha256": "63a849481110ffda816b2cdd25b1966876300b071a8f0859f241b35634d966fe"
+    },
+    "src/behaviors/behavior_steno_led.c": {
+      "callback": "cornix_steno_studio_led_metadata",
+      "baseline_sha256": "dcce4a99fc7148df168015c3d7f4c374b003ab1de65d07652d805cac0d0abe26"
+    }
+  },
+  "original_prefixes": {
+    "CMakeLists.txt": {
+      "length": 1637,
+      "sha256": "17433307f56e2c9f9c179912ea598dab357af19315e5fb82d52ad1c6966ddc5c"
+    },
+    "Kconfig": {
+      "length": 3680,
+      "sha256": "f77c83785411cd2047dd28bcfea18d07be94faa9f0ff53acd344fdfba6f00fbe"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+description: Cornix STENO encoder arrow; EDIT adds Shift
+compatible: "zmk,behavior-cornix-steno-arrow"
+include: one_param.yaml

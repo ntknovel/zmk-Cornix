@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: MIT
+description: Key-up one-shot key pulse that can cancel a pending STENO stroke
+compatible: "zmk,behavior-cornix-steno-pulse"
+include: zero_param.yaml
+properties:
+  keycode:
+    type: int
+    required: true
+  cancel-stroke:
+    type: boolean

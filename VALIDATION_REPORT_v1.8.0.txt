@@ -1,0 +1,59 @@
+Cornix ZMK STENO v1.8.0 FULL PARITY 검증 보고서
+================================================
+
+기준 소스
+- v1.7.1 canonical exact-mask + tail remap
+- 초기 v1.7 key-up/abbreviation/navigation/LED 계보
+- Quick Macro 12개
+- phantom-role invariant audit
+- KLOR에서 확정한 ABBR/SYMBOL 좌우 이동 및 English-return 동작
+
+통합 기능
+- 8레이어 x 50키
+- 완전대칭 자음 배열
+- canonical exact-mask 43개
+- GUI 편집형 Quick Macro 12개
+- ABBR_L/R + 같은 쪽 쌍자음 반복 좌우 이동
+- SYMBOL_L/R + 같은 쪽 쌍자음 반복 Shift 좌우 선택
+- 기호 홀드 연속 자모 수정 모드
+- 물리 ㅣ+I/J/K/L 방향 이동
+- 왼쪽 인코더 Shift+상하, 오른쪽 인코더 상하
+- STENO → BASE형 영문 → STENO 복귀 상태
+- 50ms key-up 오입력 복구
+- 합법 겹받침 11개 90ms rolling
+- 기본/접속/어미 LED 카테고리
+- Cornix 공식 Bluetooth·배터리 LED 복귀
+- settings_reset 분리 빌드
+
+실행 검증
+1. Python/Bash/YAML/JSON 문법 검사: PASS
+2. 8레이어 50키 위치 검사: PASS
+3. 최종 역할표 및 손가락 그룹 검사: PASS
+4. canonical dictionary 재생성 일치: PASS
+5. Quick trigger/Text 재생성 멱등성: PASS
+6. 43개 canonical + 12개 Quick Macro: PASS
+7. decoder/dictionary 호스트 테스트: PASS
+8. 50ms key-up / 약어 prefix 보호: PASS
+9. ABBR 반복 좌우 이동: PASS
+10. SYMBOL 반복 Shift 선택: PASS
+11. 더 큰 exact 약어가 이동에 가로채지지 않음: PASS
+12. 연속 correction 자모 출력: PASS
+13. 물리 ㅣ+JLKI: PASS
+14. 11개 final rolling 및 이었다 동일 검지 rolling: PASS
+15. English-return runtime state: PASS
+16. dual vowel / one-shot Tab: PASS
+17. LED held-count/category: PASS
+18. peripheral LED receiver compile shape: PASS
+19. ZMK/Zephyr API-shaped C 20개 문법: PASS
+20. 42역할 single/pair/triple 12,383조합 phantom invariant: PASS
+21. 종ㄷ+종ㅂ 및 종ㄷ+종ㅂ+종ㅁ decoder 거부: PASS
+22. 모든 ZMK combo의 STENO layer 제외: PASS
+23. ASan/UBSan decoder/engine: PASS
+
+빌드 범위
+- 이 환경에서는 west/Zephyr 전체 cross build를 실행하지 못함
+- GitHub Actions reusable ZMK workflow에서 left/right/settings_reset 최종 빌드 필요
+- 좌우 UF2는 서로 다른 파일이며 각각 해당 반쪽에 플래시
+
+최종 판정
+Cornix STENO v1.8.0 FULL PARITY package validation: PASS

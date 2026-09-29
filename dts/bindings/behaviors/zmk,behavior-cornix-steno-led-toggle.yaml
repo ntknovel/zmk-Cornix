@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+description: Toggle Cornix STENO input-count LED feedback
+compatible: "zmk,behavior-cornix-steno-led-toggle"
+include: zero_param.yaml

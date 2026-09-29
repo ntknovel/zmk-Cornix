@@ -1,0 +1,42 @@
+Cornix ZMK STENO v1.8.0 FULL PARITY - VALIDATION OUTPUT
+=========================================================
+
+[tools/validate_package.py]
+Cornix ZMK BASE+STENO package validation: PASS
+- YAML files: 13
+- Layers: 8 x 50 bindings
+- ABBR/SYMBOL repeat nav + ㅣ/JLKI + Shift/JLKI selection: PASS
+- Final mirrored consonant layout: PASS
+- Kconfig assignments checked: 13
+- Canonical exact-mask dictionary entries: 43 + 12 GUI-editable quick macros
+- Host decoder: Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+- ZMK/Zephyr API-shaped syntax: PASS (20 C sources)
+- Engine state: Cornix STENO v1.8.0 full-parity engine tests: PASS
+- English-return state: Cornix STENO English-return runtime-state tests: PASS
+- Vowel dual / one-shot Tab: Cornix STENO vowel-dual/one-shot-Tab tests: PASS
+- BASE indicator + STENO count/category LED logic: Cornix STENO LED order/count/category tests: PASS
+- Right/peripheral compile shape: PASS (peripheral LED receiver)
+- cornix.keymap SHA-256: ff44182eda8d7cdf4c6cfc8a9f4565428b1adfc3d6b500cb5c59555c3e21f06c
+
+[validation/run_host_tests.sh]
+Cornix role projection: 12383 single/pair/triple cases PASS
+Cornix decoder: 11 legal final pairs; D+B and D+B+M rejected by construction
+Cornix combos: all layer-gated away from STENO
+Cornix STENO phantom-role software invariant audit: PASS
+Cornix STENO English-return runtime-state tests: PASS
+Cornix STENO decoder/dictionary tests: PASS (43 canonical exact masks + 12 GUI quick macros)
+Cornix STENO LED order/count/category tests: PASS
+Cornix STENO v1.8.0 full-parity engine tests: PASS
+Cornix STENO vowel-dual/one-shot-Tab tests: PASS
+
+[additional checks]
+Python syntax: PASS
+Bash syntax: PASS
+YAML syntax: PASS (inside package validator)
+JSON syntax: PASS
+TSV shape: PASS
+Dictionary generator idempotence: PASS
+Quick trigger generator idempotence: PASS
+Quick text macro generator idempotence: PASS
+AddressSanitizer/UndefinedBehaviorSanitizer decoder test: PASS
+AddressSanitizer/UndefinedBehaviorSanitizer engine test: PASS

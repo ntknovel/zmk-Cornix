@@ -1,0 +1,21 @@
+항목	최종 상태	구현/판정
+v1.6.1 BASE 키 수정	유지	기존 일반 레이어와 RF 키 보존
+v1.6.2 settings_reset 수정	유지	reset 산출물에서 STENO 명시 비활성
+v1.6.3 약어 앵커	확장	ABBR/VEXT 앵커와 canonical dictionary prefix 보호
+초기 v1.7 50ms key-up	유지	일반 오입력 제거, 약어 후보는 보호
+초기 v1.7 ㅣ+JLKI	복구	물리 I/J/K/L 즉시 방향 이동
+초기 v1.7 약어 LED	복구	기본 초록/접속 노랑/어미 파랑
+canonical dictionary	유지	43개 exact-mask, ABBR_L/R 구분
+Quick Macro	유지	12개 GUI 편집형 macro와 기본 Text
+v1.7.1 tail remap	유지	였었다/이었다/었었다/있다 최종 mask
+11개 겹받침 rolling	적용	90ms 양방향 rolling
+일반 좌우 이동	수정	ABBR_L+I_DOUBLE=Left, ABBR_R+F_DOUBLE=Right
+선택 좌우 이동	수정	SYMBOL_L+I_DOUBLE=Shift+Left, SYMBOL_R+F_DOUBLE=Shift+Right
+반복 이동	적용	앵커 홀드 중 쌍자음 key-up마다 한 칸
+연속 직접 수정	적용	SYMBOL 홀드 중 자음/모음 unit 순차 출력
+인코더	수정	왼쪽 Shift+Up/Down, 오른쪽 Up/Down
+영문 복귀 상태	적용	STENO RAlt→BASE형 영문→RAlt+STENO
+팬텀 역할 불변성	적용	42역할 single/pair/triple 12,383조합
+KLOR matrix active-discharge	해당 없음	Cornix는 ZMK 표준 matrix driver 사용
+KLOR Gothic OLED	해당 없음	Cornix는 상태 LED 기반
+KLOR Vial KSD2 사전	해당 없음	Cornix는 compile-time canonical + GUI Quick Macro

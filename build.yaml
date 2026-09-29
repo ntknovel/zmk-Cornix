@@ -1,0 +1,31 @@
+---
+include:
+  # Normal central: preserve both indicator shields; add unlocked USB Studio.
+  - board: cornix_left//zmk
+    shield: cornix_indicator cornix_steno_led
+    snippet: studio-rpc-usb-uart
+    cmake-args: >-
+      -DCONFIG_ZMK_STUDIO=y
+      -DCONFIG_ZMK_STUDIO_LOCKING=n
+      -DCONFIG_ZMK_STUDIO_TRANSPORT_BLE=n
+      -DCONFIG_CORNIX_STENO_STUDIO_USB_AUTO_SELECT=y
+    artifact-name: cornix_left_steno_studio_v2_2_9
+
+  # Normal peripheral: preserve STENO LED sync; do not enable a Studio server.
+  - board: cornix_right//zmk
+    shield: cornix_indicator cornix_steno_led
+    cmake-args: >-
+      -DCONFIG_ZMK_STUDIO=n
+      -DCONFIG_CORNIX_STENO_STUDIO_USB_AUTO_SELECT=n
+    artifact-name: cornix_right_steno_v2_2_9
+
+  # Recovery only. The official reset snippets provide its USB/partition path;
+  # neither Studio nor the STENO engine belongs in the reset image.
+  - board: cornix_right//zmk
+    shield: settings_reset
+    snippet: studio-rpc-usb-uart nrf52840-nosd
+    cmake-args: >-
+      -DCONFIG_ZMK_STUDIO=n
+      -DCONFIG_CORNIX_STENO=n
+      -DCONFIG_CORNIX_STENO_STUDIO_USB_AUTO_SELECT=n
+    artifact-name: cornix_settings_reset_v2_2_9

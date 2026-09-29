@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+description: Cornix STENO RAlt English state and one-click Korean STENO return
+compatible: "zmk,behavior-cornix-steno-language-return"
+include: zero_param.yaml
+properties:
+  layer:
+    type: int
+    required: true

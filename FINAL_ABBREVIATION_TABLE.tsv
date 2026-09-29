@@ -1,0 +1,44 @@
+category	output	logical_roles	physical_input	status
+basic_word	점점	I_J+F_J	W + O	confirmed
+basic_word	진짜	I_J+F_J+F_DOUBLE	W + O + N	confirmed
+basic_word	결국	I_G+F_G	R + U	confirmed
+basic_word	그렇게	I_G+I_R+F_G	R + F + U	confirmed
+basic_word	그렇군	I_G+F_R+F_G	R + J + U	confirmed
+basic_word	그런	I_G+F_R	R + J	confirmed
+basic_word	그럼	ABBR_L+I_G+F_R	약어L + R + J	confirmed
+basic_word	그래도	I_G+I_R+F_D	R + F + I	confirmed
+basic_word	그런데	ABBR_L+I_G+I_R+F_D	약어L + R + F + I	confirmed
+basic_word	그럼에도	I_G+I_R+I_NG+F_D	R + F + D + I	confirmed
+basic_word	그대로	I_G+I_D+F_R	R + E + J	confirmed
+basic_word	갑자기	I_G+F_J+I_DOUBLE	R + O + B	confirmed
+basic_word	완전히	I_NG+I_J+F_H	D + W + H	confirmed
+basic_word	조용히	I_NG+F_J+F_H	D + O + H	confirmed
+basic_word	되었	I_D+I_NG	E + D	confirmed
+basic_word	근데	I_G+F_D	R + I	confirmed
+basic_word	그때	I_G+F_D+F_DOUBLE	R + I + N	confirmed
+connective	게다가	I_G+I_D+I_DOUBLE	R + E + B	confirmed
+connective	그리고	I_G+I_R+I_DOUBLE	R + F + B	confirmed
+connective	그러자	I_G+I_R+F_J	R + F + O	confirmed
+connective	그러기	ABBR_L+I_G+I_R+I_DOUBLE	약어L + R + F + B	confirmed
+connective	그렇지	ABBR_L+I_G+I_R+F_J	약어L + R + F + O	confirmed
+connective	하지만	I_H+I_J+F_M	G + W + ;	confirmed
+tail	였다	F_NG+F_D	K + I	confirmed
+tail	없다	ABBR_R+F_NG+F_D	약어R + K + I	confirmed
+tail	었다	ABBR_L+F_NG+F_D	약어L + K + I	current
+tail	았다	ABBR_L+ABBR_R+F_NG+F_D	약어L + 약어R + K + I	current
+tail	이었다	F_DOUBLE+F_NG+F_D	N + K + I	confirmed
+tail	였었다	VEXT_R+F_NG+F_D	겹모R + K + I	confirmed
+tail	었었다	VEXT_L+ABBR_R+F_NG+F_D	겹모L + 약어R + K + I	current
+tail	있다	VEXT_L+ABBR_L+F_NG+F_D	겹모L + 약어L + K + I	current
+tail	에다	ABBR_R+I_NG+F_D	약어R + D + I	current
+tail	했다	F_H+F_D	H + I	confirmed
+tail	됐다	F_DOUBLE+F_D	N + I	confirmed
+tail	는데	VEXT_L+F_N	겹모L + L	confirmed
+tail	을지도	F_NG+F_J+F_D	K + O + I	confirmed
+tail	어졌다	ABBR_R+F_NG+F_J+F_D	약어R + K + O + I	confirmed
+tail	지만	F_J+F_M	O + ;	confirmed
+tail	습니다	VEXT_L+F_S+F_D	겹모L + Y + I	confirmed
+tail	었으면	VEXT_L+ABBR_R+F_M	겹모L + 약어R + ;	current
+tail	하는게	F_H+F_N+F_G	H + L + U	confirmed
+tail	오는게	F_NG+F_N+F_G	K + L + U	confirmed
+tail	가는게	F_DOUBLE+F_N+F_G	N + L + U	confirmed

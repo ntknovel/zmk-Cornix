@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+description: Cornix STENO Copy on tap and one-shot Tab on hold or modified use
+compatible: "zmk,behavior-cornix-steno-tab"
+include: zero_param.yaml

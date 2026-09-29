@@ -1,0 +1,27 @@
+CORNIX ZMK STENO v2.2.6 최종 검증 기준
+- package validator / YAML / source pin
+- 공식 settings_reset snippets 정확성
+- role projection single/pair/triple 12,383
+- canonical 43 x 4 input orders = 172
+- compound/extended vowel 19 x 2 release orders = 38
+- existing initial/final tense selector matrix = 60
+- fatigue-distribution mirrored onset and dedicated comma/period cross-double timing cases = 189
+- all 14 right consonants with exact ㅗ/ㅡ/ㅜ
+- exact examples: 전용쌍초(,)+ㅜ+종ㅂ=뿌; 전용쌍종(.)+초ㅂ+ㅏ=빠
+- right-vowel/compound-final/both-selector/ㅋ·ㅇ alias exclusion boundaries
+- ordinary initial + period + real final preserves final-double behavior
+- solo consonant/vowel 34 + 499/500ms boundary
+- ㅜ/ㅓ short tap vs 500ms direct input
+- 500ms가 지난 뒤 다른 키가 참여해도 정상 chord로 전환
+- 전역 key-up 역할 삭제 OFF
+- 종ㄱ 조기 release 뒤 300ms 경과에도 박 유지
+- 바 역할을 오래 누른 뒤 종ㄱ을 늦게 추가해도 박 출력
+- legal compound-final 90ms local tolerance
+- abbreviation, immediate numbers, Undo/Redo, LED and API compile regressions
+
+GitHub Actions 최종 조건
+- cornix_left_maxrange_steno_indicator: SUCCESS
+- cornix_right_maxrange_steno_indicator: SUCCESS
+- cornix_settings_reset: SUCCESS
+
+세 작업이 모두 성공하기 전에는 UF2를 최종 빌드 성공으로 간주하지 않습니다.
